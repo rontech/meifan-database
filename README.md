@@ -1,4 +1,4 @@
 meifan-database
 ===============
 
-models module
+models module for meifan
