@@ -138,10 +138,10 @@ object Stylist extends MeifanNetModelCompanion[Stylist] {
       paraStyleImpressions :::= List(para.styleImpression)
     }
 
-    val paraConsumerSocialScene = SocialStatus.findAll().toList
+    val paraConsumerSocialScene = SocialScene.findAll().toList
     var paraConsumerSocialScenes: List[String] = Nil
     paraConsumerSocialScene.map { para =>
-      paraConsumerSocialScenes :::= List(para.socialStatus)
+      paraConsumerSocialScenes :::= List(para.socialScene)
     }
 
     val paraConsumerSex = Sex.findAll().toList

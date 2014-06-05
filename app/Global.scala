@@ -157,14 +157,14 @@ object InitialData {
         FaceShape(new ObjectId, "diamond-face", "菱形")).foreach(FaceShape.save)
     }
 
-    if (SocialStatus.findAll.isEmpty) {
+    if (SocialScene.findAll.isEmpty) {
       Seq(
-        SocialStatus(new ObjectId, "evening-wear", "晚装"),
-        SocialStatus(new ObjectId, "brief", "简约"),
-        SocialStatus(new ObjectId, "star", "明星"),
-        SocialStatus(new ObjectId, "street", "街拍"),
-        SocialStatus(new ObjectId, "T-stage", "T台"),
-        SocialStatus(new ObjectId, "others", "其它")).foreach(SocialStatus.save)
+        SocialScene(new ObjectId, "evening-wear", "晚装"),
+        SocialScene(new ObjectId, "brief", "简约"),
+        SocialScene(new ObjectId, "star", "明星"),
+        SocialScene(new ObjectId, "street", "街拍"),
+        SocialScene(new ObjectId, "T-stage", "T台"),
+        SocialScene(new ObjectId, "others", "其它")).foreach(SocialScene.save)
     }
 
     if (Sex.findAll.isEmpty) {

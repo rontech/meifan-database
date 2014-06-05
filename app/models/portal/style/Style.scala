@@ -605,10 +605,10 @@ object Style extends MeifanNetModelCompanion[Style] {
     paraConsumerSex.map { para =>
       paraConsumerSexs :::= List(para.sex)
     }
-    val paraConsumerSocialScene = SocialStatus.findAll().toList
+    val paraConsumerSocialScene = SocialScene.findAll().toList
     var paraConsumerSocialScenes: List[String] = Nil
     paraConsumerSocialScene.map { para =>
-      paraConsumerSocialScenes :::= List(para.socialStatus)
+      paraConsumerSocialScenes :::= List(para.socialScene)
     }
     val paraStylePicDescription = StylePicDescription.findAll().toList
     var paraStylePicDescriptions: List[String] = Nil

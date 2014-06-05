@@ -129,18 +129,18 @@ object FaceShape extends MeifanNetModelCompanion[FaceShape] {
 }
 
 /**
- * The table of socialStatus
+ * The table of socialScene
  * @param id ObjectId
- * @param socialStatus 发型适合场合
+ * @param socialScene 发型适合场合
  * @param description 描述
  */
-case class SocialStatus(
+case class SocialScene(
   id: ObjectId = new ObjectId,
-  socialStatus: String,
+  socialScene: String,
   description: String)
 
-object SocialStatus extends MeifanNetModelCompanion[SocialStatus] {
-  val dao = new MeifanNetDAO[SocialStatus](collection = loadCollection()) {}
+object SocialScene extends MeifanNetModelCompanion[SocialScene] {
+  val dao = new MeifanNetDAO[SocialScene](collection = loadCollection()) {}
 }
 
 /**
