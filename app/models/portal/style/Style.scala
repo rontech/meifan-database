@@ -52,7 +52,7 @@ trait StyleIdUsed {
  * @param faceShape 适合脸型主表数据
  * @param consumerAgeGroup 发型适合年龄段主表数据
  * @param consumerSex 发型适合性别主表数据
- * @param consumerSocialStatus 发型适合场合主表数据
+ * @param consumerSocialScene 发型适合场合主表数据
  * @param stylePicDescription 发型图片描述主表数据（用于发型展示）
  */
 case class StylePara(
@@ -66,7 +66,7 @@ case class StylePara(
   faceShape: List[String],
   consumerAgeGroup: List[String],
   consumerSex: List[String],
-  consumerSocialStatus: List[String],
+  consumerSocialScene: List[String],
   stylePicDescription: List[String])
 
 /**
@@ -115,7 +115,7 @@ case class StyleWithAllInfo(
  * @param description 发型描述
  * @param consumerAgeGroup 适合年龄段
  * @param consumerSex 适合性别
- * @param consumerSocialStatus 适合场合
+ * @param consumerSocialScene 适合场合
  * @param createDate 发型创建时间
  * @param isValid 是否有效
  */
@@ -135,7 +135,7 @@ case class Style(
   description: String,
   consumerAgeGroup: List[String],
   consumerSex: String,
-  consumerSocialStatus: List[String],
+  consumerSocialScene: List[String],
   createDate: Date,
   isValid: Boolean)
 
@@ -322,7 +322,7 @@ object Style extends MeifanNetModelCompanion[Style] {
   def findByRankingAndSex(consumerSex: String, limitCnt: Int = 0): List[StyleWithAllInfo] = {
     // get all reservations with styleId, ignore the data without style.
     val bestRsv = Reservation.findBestReservedStyles(0)
-    var styleInfo: List[StyleWithAllInfo] = getStyleInfoFromRanking(bestRsv)(limitCnt)(x =>
+    val styleInfo: List[StyleWithAllInfo] = getStyleInfoFromRanking(bestRsv)(limitCnt)(x =>
       (x.consumerSex == consumerSex))
 
     styleInfo
@@ -373,10 +373,10 @@ object Style extends MeifanNetModelCompanion[Style] {
   def findTopStylesInSalon[T <: StyleIdUsed](data: List[T], topN: Int = 0): List[Style] = {
     // sort by reserved counts.
     val styleWithCnt = data.groupBy(x => x.styleId).map(y => (y._1, y._2.length)).toList.filter(_._1 != None).sortWith(_._2 > _._2)
-    // get all stylesId or only top N stylesId of a salon according the topN parameters.  
+    // get all stylesId or only top N stylesId of a salon according the topN parameters.
     val hot = if (topN == 0) styleWithCnt else styleWithCnt.slice(0, topN)
     var hotStyles: List[Style] = Nil
-    // get all styles of a salon.  
+    // get all styles of a salon.
     hot.map { itm =>
       val stl = Style.findOneById(itm._1.getOrElse(new ObjectId))
       stl match {
@@ -392,14 +392,14 @@ object Style extends MeifanNetModelCompanion[Style] {
   /**
    * 根据最热发型id的列表中，查找排名前N位的发型信息列表
    *   应用场景: 从预约表中得到了最热的前N个发型id列表，要求返回具体发型信息。全局搜索，与具体店铺无关。
-   *   
+   *
    * @param hottestStyles 最热发型id列表
    * @param topN 指定前N
    * @return 给定id列表的发型信息列表
    */
   def findTopStylesInSalon(hottestStyles: List[ObjectId], topN: Int = 0): List[Style] = {
     var hotStyles: List[Style] = Nil
-    // get all styles of a salon.  
+    // get all styles of a salon.
     hottestStyles.map { stid =>
       val stl = Style.findOneById(stid)
       stl match {
@@ -415,7 +415,7 @@ object Style extends MeifanNetModelCompanion[Style] {
    * 根据预约情况，取得指定店铺的最热发型前N名
    * N = 0, 默认值，为取得所有
    *
-   * @param sid 店铺id 
+   * @param sid 店铺id
    * @param topN 前N名
    * @return 发型列表
    */
@@ -478,8 +478,8 @@ object Style extends MeifanNetModelCompanion[Style] {
     if (style.faceShape.nonEmpty) {
       srchConds :::= List("faceShape" $in style.faceShape)
     }
-    if (style.consumerSocialStatus.nonEmpty) {
-      srchConds :::= List("consumerSocialStatus" $in style.consumerSocialStatus)
+    if (style.consumerSocialScene.nonEmpty) {
+      srchConds :::= List("consumerSocialScene" $in style.consumerSocialScene)
     }
     if (!style.consumerSex.equals("all")) {
       srchConds :::= List(commonsDBObject("consumerSex" -> style.consumerSex))
@@ -539,10 +539,13 @@ object Style extends MeifanNetModelCompanion[Style] {
     stylists.map { stylist =>
       stylistIds :::= List(stylist.stylistId)
     }
-    //检索条件中包含技师ID时，将技师ID作为检索条件
+    //检索条件中包含技师ID时，将技师ID作为检索条件,否则检索该店铺所有技师的发型
     if (stylistIds.contains(style.stylistId)) {
       srchConds :::= List(commonsDBObject("stylistId" -> style.stylistId))
+    } else {
+      srchConds :::= List("stylistId" $in stylistIds)
     }
+
     dao.find($and(srchConds)).toList.sortBy(_.createDate).reverse
   }
 
@@ -552,10 +555,10 @@ object Style extends MeifanNetModelCompanion[Style] {
    */
   def findParaAll = {
     //获得相应主表数据
-    val paraStyleImpression = StyleImpression.findAll().toList
+    val paraStyleImpression = StyleImpression.findAllStyleImpression("Hairdressing").toList
     var paraStyleImpressions: List[String] = Nil
     paraStyleImpression.map { para =>
-      paraStyleImpressions :::= List(para.styleImpression)
+      paraStyleImpressions :::= List(para)
     }
     val paraServiceType = ServiceType.findAllServiceType("Hairdressing").toList
     var paraServiceTypes: List[String] = Nil
@@ -567,10 +570,10 @@ object Style extends MeifanNetModelCompanion[Style] {
     paraStyleLength.map { para =>
       paraStyleLengths :::= List(para.styleLength)
     }
-    val paraStyleColor = StyleColor.findAll().toList
+    val paraStyleColor = StyleColor.findAllStyleColor("Hairdressing").toList
     var paraStyleColors: List[String] = Nil
     paraStyleColor.map { para =>
-      paraStyleColors :::= List(para.styleColor)
+      paraStyleColors :::= List(para)
     }
     val paraStyleAmount = StyleAmount.findAll().toList
     var paraStyleAmounts: List[String] = Nil
@@ -602,10 +605,10 @@ object Style extends MeifanNetModelCompanion[Style] {
     paraConsumerSex.map { para =>
       paraConsumerSexs :::= List(para.sex)
     }
-    val paraConsumerSocialStatus = SocialStatus.findAll().toList
-    var paraConsumerSocialStatuss: List[String] = Nil
-    paraConsumerSocialStatus.map { para =>
-      paraConsumerSocialStatuss :::= List(para.socialStatus)
+    val paraConsumerSocialScene = SocialScene.findAllSocialScene("Hairdressing").toList
+    var paraConsumerSocialScenes: List[String] = Nil
+    paraConsumerSocialScene.map { para =>
+      paraConsumerSocialScenes :::= List(para)
     }
     val paraStylePicDescription = StylePicDescription.findAll().toList
     var paraStylePicDescriptions: List[String] = Nil
@@ -613,7 +616,7 @@ object Style extends MeifanNetModelCompanion[Style] {
       paraStylePicDescriptions :::= List(para.stylePicDescription)
     }
     //将检索出来的主表数据放到发型主表字段整合类中
-    val styleList = new StylePara(paraStyleImpressions, paraServiceTypes, paraStyleLengths, paraStyleColors, paraStyleAmounts, paraStyleQualitys, paraStyleDiameters, paraFaceShapes, paraConsumerAgeGroups, paraConsumerSexs, paraConsumerSocialStatuss, paraStylePicDescriptions)
+    val styleList = new StylePara(paraStyleImpressions, paraServiceTypes, paraStyleLengths, paraStyleColors, paraStyleAmounts, paraStyleQualitys, paraStyleDiameters, paraFaceShapes, paraConsumerAgeGroups, paraConsumerSexs, paraConsumerSocialScenes, paraStylePicDescriptions)
     styleList
   }
 
