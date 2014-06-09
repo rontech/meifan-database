@@ -111,7 +111,7 @@ case class StylistApply(
 
 object Stylist extends MeifanNetModelCompanion[Stylist] {
   val dao = new MeifanNetDAO[Stylist](collection = loadCollection()) {}
-  loadCollection().ensureIndex(DBObject("stylistId" -> 1), "stylistId", unique = true)
+  //loadCollection().ensureIndex(DBObject("stylistId" -> 1), "stylistId", unique = true)
 
   /**
    * 查找发型属性的所有主表，
