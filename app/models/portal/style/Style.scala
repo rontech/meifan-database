@@ -52,7 +52,7 @@ trait StyleIdUsed {
  * @param faceShape 适合脸型主表数据
  * @param consumerAgeGroup 发型适合年龄段主表数据
  * @param consumerSex 发型适合性别主表数据
- * @param consumerSocialStatus 发型适合场合主表数据
+ * @param consumerSocialScene 发型适合场合主表数据
  * @param stylePicDescription 发型图片描述主表数据（用于发型展示）
  */
 case class StylePara(
@@ -66,7 +66,7 @@ case class StylePara(
   faceShape: List[String],
   consumerAgeGroup: List[String],
   consumerSex: List[String],
-  consumerSocialStatus: List[String],
+  consumerSocialScene: List[String],
   stylePicDescription: List[String])
 
 /**
@@ -115,7 +115,7 @@ case class StyleWithAllInfo(
  * @param description 发型描述
  * @param consumerAgeGroup 适合年龄段
  * @param consumerSex 适合性别
- * @param consumerSocialStatus 适合场合
+ * @param consumerSocialScene 适合场合
  * @param createDate 发型创建时间
  * @param isValid 是否有效
  */
@@ -135,7 +135,7 @@ case class Style(
   description: String,
   consumerAgeGroup: List[String],
   consumerSex: String,
-  consumerSocialStatus: List[String],
+  consumerSocialScene: List[String],
   createDate: Date,
   isValid: Boolean)
 
@@ -478,8 +478,8 @@ object Style extends MeifanNetModelCompanion[Style] {
     if (style.faceShape.nonEmpty) {
       srchConds :::= List("faceShape" $in style.faceShape)
     }
-    if (style.consumerSocialStatus.nonEmpty) {
-      srchConds :::= List("consumerSocialStatus" $in style.consumerSocialStatus)
+    if (style.consumerSocialScene.nonEmpty) {
+      srchConds :::= List("consumerSocialScene" $in style.consumerSocialScene)
     }
     if (!style.consumerSex.equals("all")) {
       srchConds :::= List(commonsDBObject("consumerSex" -> style.consumerSex))
@@ -539,10 +539,13 @@ object Style extends MeifanNetModelCompanion[Style] {
     stylists.map { stylist =>
       stylistIds :::= List(stylist.stylistId)
     }
-    //检索条件中包含技师ID时，将技师ID作为检索条件
+    //检索条件中包含技师ID时，将技师ID作为检索条件,否则检索该店铺所有技师的发型
     if (stylistIds.contains(style.stylistId)) {
       srchConds :::= List(commonsDBObject("stylistId" -> style.stylistId))
+    } else {
+      srchConds :::= List("stylistId" $in stylistIds)
     }
+
     dao.find($and(srchConds)).toList.sortBy(_.createDate).reverse
   }
 
@@ -602,10 +605,10 @@ object Style extends MeifanNetModelCompanion[Style] {
     paraConsumerSex.map { para =>
       paraConsumerSexs :::= List(para.sex)
     }
-    val paraConsumerSocialStatus = SocialStatus.findAll().toList
-    var paraConsumerSocialStatuss: List[String] = Nil
-    paraConsumerSocialStatus.map { para =>
-      paraConsumerSocialStatuss :::= List(para.socialStatus)
+    val paraConsumerSocialScene = SocialScene.findAll().toList
+    var paraConsumerSocialScenes: List[String] = Nil
+    paraConsumerSocialScene.map { para =>
+      paraConsumerSocialScenes :::= List(para.socialScene)
     }
     val paraStylePicDescription = StylePicDescription.findAll().toList
     var paraStylePicDescriptions: List[String] = Nil
@@ -613,7 +616,7 @@ object Style extends MeifanNetModelCompanion[Style] {
       paraStylePicDescriptions :::= List(para.stylePicDescription)
     }
     //将检索出来的主表数据放到发型主表字段整合类中
-    val styleList = new StylePara(paraStyleImpressions, paraServiceTypes, paraStyleLengths, paraStyleColors, paraStyleAmounts, paraStyleQualitys, paraStyleDiameters, paraFaceShapes, paraConsumerAgeGroups, paraConsumerSexs, paraConsumerSocialStatuss, paraStylePicDescriptions)
+    val styleList = new StylePara(paraStyleImpressions, paraServiceTypes, paraStyleLengths, paraStyleColors, paraStyleAmounts, paraStyleQualitys, paraStyleDiameters, paraFaceShapes, paraConsumerAgeGroups, paraConsumerSexs, paraConsumerSocialScenes, paraStylePicDescriptions)
     styleList
   }
 

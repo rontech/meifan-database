@@ -41,7 +41,7 @@ import models.portal.reservation.Reservation
  * @param tel
  * @param email
  * @param optContactMethods
- * @param socialStatus
+ * @param socialScene
  * @param userTyp
  * @param userBehaviorLevel
  * @param point
@@ -62,7 +62,7 @@ case class User(
                  tel: Option[String],
                  email: String,
                  optContactMethods: Seq[OptContactMethod],
-                 socialStatus: Option[String],
+                 socialScene: Option[String],
                  userTyp: String,
                  userBehaviorLevel: String,
                  point: Int,
