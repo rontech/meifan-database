@@ -26,6 +26,43 @@ import com.mongodb.casbah.query.Imports._
 import com.meifannet.framework.db._
 import java.text.SimpleDateFormat
 import models.portal.style.StyleIdUsed
+import models.portal.reservation.ResvInfoItemPart
+import scala.Some
+import models.portal.reservation.ResvItem
+import models.portal.reservation.ResvInfoPart
+import models.portal.reservation.ResvSreachCondition
+import models.portal.reservation.DaysPart
+import models.portal.reservation.YearsPart
+import models.portal.user.User
+import com.mongodb.casbah.commons.Imports.{ DBObject => commonsDBObject }
+
+/**
+ * 用于沙龙后台处理预约
+ * @param handleType 处理类型，-1：取消预约， 1：完成预约， 2：过期预约
+ * @param reservs 处理的预约番号list
+ */
+case class HandleReservation(
+  handleType: String,
+  reservs: List[Reservation]
+)
+
+/**
+ * 沙龙后台预约管理的检索Form
+ * @param startExpectedDate 从（预约期望时间）
+ * @param endExpectedDate 到（预约期望时间）
+ * @param resvId 预约号码，目前先用预约中ObjectId
+ * @param nickName 昵称
+ * @param userTel 预约时所留的手机号码
+ * @param resvStatus 预约状态
+ */
+case class ResvSreachCondition(
+  startExpectedDate: String,
+  endExpectedDate: String,
+  resvId: String,
+  nickName: String,
+  userTel: String,
+  resvStatus: List[String]
+)
 
 /**
  * 预约内容，用于内嵌在预约表中
@@ -295,5 +332,69 @@ object Reservation extends MeifanNetModelCompanion[Reservation] {
   def getMainResvItem(resvItems: List[ResvItem]): ResvItem = {
     resvItems.filter(resvItem => (resvItem.resvOrder == 1)).head
   }
-  
+
+  /**
+   * 查找出某个店铺的所有处理中（预约状态为已预约）的预约
+   * @param salonId 沙龙id
+   * @return
+   */
+  def findProcessingResvBySalon(salonId: ObjectId): List[Reservation] = dao.find(MongoDBObject("salonId" -> salonId, "status" -> 0)).toList
+
+  /**
+   * 根据传入的处理类型，对对应的预约做取消，完成，过期等修改
+   * @param handleType 处理类型，对其做取消，完成，过期等修改
+   * @param resvId 预约id
+   */
+  def handleResv(handleType: String, resvId: ObjectId) = {
+    var reservation = findOneById(resvId)
+
+    reservation.map(resv => {
+        val newResv = resv.copy(status = handleType.toInt)
+        Reservation.save(newResv)
+      }
+    ).getOrElse("not found.")
+  }
+
+  /**
+   * 根据预约检索条件查找出预约信息
+   * 用于沙龙后台检索使用
+   * @param resvSreachCond 检索条件
+   */
+  def findResvFromCondition(salonId: ObjectId, resvSreachCond: ResvSreachCondition): List[Reservation] = {
+    println("resvSreachCond = " + resvSreachCond)
+    var srchConds: List[commonsDBObject] = Nil
+    srchConds :::= List(commonsDBObject("salonId" -> salonId))
+    if(!resvSreachCond.resvId.isEmpty) {
+      srchConds :::= List(commonsDBObject("_id" -> new ObjectId(resvSreachCond.resvId)))
+    }
+    if(!resvSreachCond.userTel.isEmpty) {
+      srchConds :::= List(commonsDBObject("userPhone" -> resvSreachCond.userTel))
+    }
+    if(!resvSreachCond.nickName.isEmpty) {
+      val user = User.find(MongoDBObject("nickName" -> (".*" + resvSreachCond.nickName.trim + ".*").r)).toList
+      val userIds = user.map(u => (u.userId + "|"))
+      val userIdRegex = userIds.mkString.dropRight(1).r
+      srchConds :::= List(commonsDBObject("userId" -> userIdRegex))
+    }
+    if(!resvSreachCond.startExpectedDate.isEmpty) {
+      srchConds :::= List("expectedDate" $gte new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(resvSreachCond.startExpectedDate))
+    }
+    if(!resvSreachCond.endExpectedDate.isEmpty) {
+      srchConds :::= List("expectedDate" $lte new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(resvSreachCond.endExpectedDate))
+    }
+    if(!resvSreachCond.resvStatus.isEmpty) {
+      val statuss = resvSreachCond.resvStatus.map(status => (status.toInt))
+      srchConds :::= List("status" $in statuss)
+    }
+    println("srchConds = " + srchConds)
+    dao.find($and(srchConds)).toList
+  }
+
+  /**
+   * 查找出相关店铺的所有预约信息
+   * 用于沙龙后台预约履历
+   * @param salonId
+   * @return
+   */
+  def findAllResvBySalon(salonId: ObjectId): List[Reservation] = dao.find(MongoDBObject("salonId" -> salonId)).toList
 }
