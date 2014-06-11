@@ -51,6 +51,7 @@ import models.portal.common.OptContactMethod
 import models.portal.search.SalonGeneralSrchRst
 import models.portal.search.SortByConditions
 import models.portal.common.Address
+import models.portal.manager._
 
 
 /**
@@ -94,8 +95,10 @@ case class Salon(
   salonFacilities: Option[SalonFacilities],
   salonPics: List[OnUsePicture],
   registerDate: Date,
-  isValid: Boolean
+  salonStatus: SalonStatus
   )
+
+case class SalonStatus(applyMeifanFlag :Int, isValid :Boolean)
 
 object Salon extends MeifanNetModelCompanion[Salon] {
 
@@ -730,7 +733,7 @@ object Salon extends MeifanNetModelCompanion[Salon] {
    */
   def isValid(value: String, loggedSalon: Salon, f: String => Option[Salon]) = f(value).map(_.id == loggedSalon.id).getOrElse(true)
 
-  def findSalonsByIndustry(industry: String) :List[Salon] = dao.find(MongDBObject("industry" $in industry)).toList
+  //def findSalonsByIndustry(industry: String) :List[Salon] = dao.find(MongDBObject("industry" $in industry)).toList
 
 }
 

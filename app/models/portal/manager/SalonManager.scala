@@ -19,6 +19,12 @@ import models.portal.salon._
 import java.util.Date
 import scala.util.matching.Regex
 import mongoContext._
+//import com.mongodb.casbah.query.Imports._
+import com.mongodb.casbah.query._
+import com.mongodb.casbah.commons.Imports.{ DBObject => commonsDBObject }
+import models.portal.salon.SalonStatus
+import models.portal.manager.MeifanSalonApySearch
+
 /**
  * Created by Ping-dou on 14/06/06.
  */
@@ -29,12 +35,12 @@ case class Page[A](items: Seq[A], page: Int, offset: Long, total: Long) {
   lazy val next = Option(page + 1).filter(_ => (offset + items.size) < total)
 }
 
-case class MeifanSalonApySearch(id :String,
-                                 salonName :String,
-                                 industry :String,
-                                 registerStarDate: Date,
-                                 registerEndDate: Date,
-                                 flag: Int
+case class MeifanSalonApySearch(id :Option[String],
+                                 salonName :Option[String],
+                                 industry :Option[String],
+                                 registerStarDate: Option[Date],
+                                 registerEndDate: Option[Date],
+                                 flag: Option[Int]
                                 )
 
 case class SalonApply (salon: models.portal.salon.Salon,
@@ -44,39 +50,43 @@ object SalonApply extends MeifanNetModelCompanion[SalonApply] {
 
   val dao = new MeifanNetDAO[SalonApply](collection = loadCollection()) {}
 
-  def isApply(salon: models.portal.salon.Salon, f: Salon => Boolean): Boolean = {
-    var finishedItem: List[String] = Nil
-    if(f(salon)) false else true
-  }
+  /**
+   * check the salon information is finish
+   * @param salon object salon for check
+   * @param f function for verify salon
+   * @return false or true
+   */
+  def infoIsFinish(salon: models.portal.salon.Salon, f: Salon => Boolean): Boolean = f(salon)
 
+  def date(d: Date) = new java.text.SimpleDateFormat("yyyy-MM-dd").format(d)
   /**
    * Find all applied salons then return a list that contains SalonApply object
    * @param salons all salon  which is exits in database
    * @return
    */
-  def findAllAPSalons(salons: List[models.portal.salon.Salon]) :List[SalonApply] = {
+  def findAllAPSalons(salons: List[models.portal.salon.Salon], meifanSalonFlag :Int) :List[SalonApply] = {
     var salonApplies :List[SalonApply] = Nil
-    var finishedItem :List[String] = Nil
-    var flag :Boolean = false
     salons.map{ salon =>
-      if(isApply(salon, salon => Salon.checkBasicInfoIsFill(salon))) {
-        finishedItem :::= List("basicInfo")
-        flag = true
+      var flag :Boolean = false
+      var finishedItem :List[String] = Nil
+      if(infoIsFinish(salon, salon => Salon.checkBasicInfoIsFill(salon))) {
+        finishedItem :::= List("BasicInfo")
+      }else { flag = true }
+
+      if(infoIsFinish(salon, salon => Salon.checkDetailIsFill(salon) )) {
+        finishedItem :::= List("DetailInfo")
+
       }
 
-      if(isApply(salon, salon => Salon.checkDetailIsFill(salon) )) {
-        finishedItem :::= List("detailInfo")
-        flag = true
-      }
+      if(infoIsFinish(salon, salon => Salon.checkImgIsExist(salon))) {
+        finishedItem :::= List("ImageInfo")
+      }else { flag = true }
 
-      if(isApply(salon, salon => Salon.checkImgIsExist(salon))) {
-        finishedItem :::= List("imageInfo")
-        flag = true
-      }
+      if(flag || salon.salonStatus.applyMeifanFlag == meifanSalonFlag) {salonApplies :::= List(new SalonApply(salon,finishedItem))} else salonApplies
 
-      if(flag && salon.isValid == false) {salonApplies :::= List(new SalonApply(salon,finishedItem))} else salonApplies
     }
     salonApplies
+
   }
 
   /**
@@ -85,30 +95,79 @@ object SalonApply extends MeifanNetModelCompanion[SalonApply] {
    * @return unit
    */
   def agreeSalonApy(salon: models.portal.salon.Salon) = {
-    models.portal.salon.Salon.save(salon.copy(id = salon.id, isValid = true))
+    models.portal.salon.Salon.save(salon.copy(id = salon.id, salonStatus =new SalonStatus(1,true)))
   }
 
   /**
-   * Agree the apply item from salon, set the verification valid is false
+   * Reject the apply item from salon, set the verification valid is false
    * @param salon The salon item which is apply
-   * @return unit
+   * @return
    */
   def rejectSalonApy(salon: models.portal.salon.Salon) = {
-    models.portal.salon.Salon.save(salon.copy(id = salon.id, isValid = false))
+    models.portal.salon.Salon.save(salon.copy(id = salon.id, salonStatus =new SalonStatus (2,false)))
   }
 
-  def findSalonApyByCondition(salonApySearch :MeifanSalonApySearch) = {
+  /**
+   * Find salon by search condition object
+   * @param salonApySearch
+   */
+  def findSalonApyByCondition(salonApySearch :MeifanSalonApySearch) :List[SalonApply] = {
+    println("method in ..........")
+    var srchConds: List[commonsDBObject] = Nil
     if(salonApySearch.id.nonEmpty){
-      val obj="""ObjectId//(/"[0-9a-z]{24}/"//)"""
-      if(salonApySearch.id.matches(obj)){
-        val salon = Salon.findOneById(new ObjectId(salonApySearch.id))
-      }esle{
-        val salon = Salon.findOneByAccountId(salonApySearch.id)
+      val id = salonApySearch.id.get
+      val obj="""[0-9a-z]{24}"""
+      //check the id is objectId or accountId
+      if(id.matches(obj)){
+        srchConds :::= List(commonsDBObject("_id" -> salonApySearch.id))
+      }else{
+        srchConds :::= List(commonsDBObject("salonAccount.accountId" -> salonApySearch.id))
       }
     }
+
+    //industry condition
     if(salonApySearch.industry.nonEmpty) {
-      Salon.find(MongoDBObject("salonIndustry" $in salonApySearch.industry ))
+      srchConds :::= List("salonIndustry" $in List(salonApySearch.industry.get))
     }
+
+    if(salonApySearch.registerStarDate.nonEmpty){
+      srchConds :::= List("registerDate" $gte salonApySearch.registerStarDate.get)
+    }
+
+    if(salonApySearch.registerStarDate.nonEmpty){
+      srchConds :::= List("registerDate" $lte salonApySearch.registerEndDate.get)
+    }
+
+    if(salonApySearch.flag.nonEmpty) {
+      srchConds :::= List(commonsDBObject("salonStatus.applyMeifanFlag" -> salonApySearch.flag.get))
+    }
+
+    val salons :List[Salon] = Salon.find($and(srchConds)).toList
+
+    findAllAPSalons(salons, salonApySearch.flag.get)
   }
 
+}
+
+object SalonManager {
+
+  /**
+   * Delete salon by change it's valid is false
+   * @param salon
+   * @return
+   */
+  def deleteSalon(salon :Salon) = {
+    val flag = salon.salonStatus.applyMeifanFlag
+    Salon.save(salon.copy(id = salon.id, salonStatus =  new SalonStatus(flag, false)))
+  }
+
+  /**
+   * Active salon account by change it's valid is true
+   * @param salon
+   * @return
+   */
+  def activeSalon(salon :Salon) = {
+    val flag = salon.salonStatus.applyMeifanFlag
+    Salon.save(salon.copy(id = salon.id, salonStatus =  new SalonStatus(flag, true)))
+  }
 }
