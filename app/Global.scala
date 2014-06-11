@@ -265,6 +265,17 @@ object InitialData {
         SeatNums(21, 100)).foreach(SeatNums.save)
     }
 
+    if (Brand.findAll.isEmpty) {
+      Seq(
+        Brand(new ObjectId(), "Hairdressing", "悦美月容吧", 5, ""),
+        Brand(new ObjectId(), "Hairdressing", "千美千寻吧", 4, ""),
+        Brand(new ObjectId(), "Hairdressing", "忆荣吧", 3, ""),
+        Brand(new ObjectId(), "Hairdressing", "虞美人", 4, ""),
+        Brand(new ObjectId(), "Manicures", "浪漫满屋", 3, ""),
+        Brand(new ObjectId(), "Manicures", "会美", 5, ""),
+        Brand(new ObjectId(), "Manicures", "驻容坊", 4, "")).foreach(Brand.save)
+    }
+
     if (HotestKeyword.findAll.isEmpty) {
       Seq(
         HotestKeyword(new ObjectId, "烫发", "HairSalon", 1, true),
