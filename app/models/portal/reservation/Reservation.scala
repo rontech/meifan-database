@@ -26,6 +26,15 @@ import com.mongodb.casbah.query.Imports._
 import com.meifannet.framework.db._
 import java.text.SimpleDateFormat
 import models.portal.style.StyleIdUsed
+import models.portal.reservation.ResvInfoItemPart
+import scala.Some
+import models.portal.reservation.ResvItem
+import models.portal.reservation.ResvInfoPart
+import models.portal.reservation.DaysPart
+import models.portal.reservation.YearsPart
+import models.portal.coupon.Coupon
+import models.portal.menu.Menu
+import models.portal.service.Service
 
 /**
  * 预约内容，用于内嵌在预约表中
@@ -126,7 +135,7 @@ case class Reservation(
   id: ObjectId = new ObjectId,
   userId: String,
   salonId: ObjectId,
-  status: Int, // 0：已预约; 1：已消费; 2：已过期; -1：已取消
+  status: Int, // 0：已预约; 1：已消费; 2：已过期; -1：已取消; 3 : 已评论
   expectedDate: Date, // 预约时间 + 预约日期
   serviceDuration: Int,
   stylistId: Option[ObjectId], // 技师表中的stylistId
@@ -295,5 +304,123 @@ object Reservation extends MeifanNetModelCompanion[Reservation] {
   def getMainResvItem(resvItems: List[ResvItem]): ResvItem = {
     resvItems.filter(resvItem => (resvItem.resvOrder == 1)).head
   }
-  
+
+  /**
+   * 取得指定用户的处理中的预约（预约的时间还未到，预约状态是0）的数据，用于用户后台取自己处理中预约的情况
+   *
+   * @param userId
+   * @return
+   */
+  def findResving(userId : String) : List[Reservation] = {
+    dao.find($and(DBObject("userId" -> userId, "status" -> 0), "expectedDate" $gt new Date())).sort(
+      MongoDBObject("expectedDate" -> 1)).toList
+  }
+
+  /**
+   * 删除（取消）指定的一条预约，用于用户的后台本人删除和salon后台管理员删除
+   *
+   * @param reservId
+   * @return
+   */
+  def delete(reservId : ObjectId) = {
+    dao.update(MongoDBObject("_id" -> reservId), MongoDBObject("$set" -> MongoDBObject("status" -> -1)))
+  }
+
+  /**
+   * 查找指定用户的预约履历的数据，用于用户后台查看自己的预约履历
+   *
+   * @param userId
+   * @return
+   */
+  def findReservationHistory(userId : String) : List[Reservation] = {
+    dao.find($and(DBObject("userId" -> userId), $or("expectedDate" $lt new Date(), "status" $in (1,2,-1)))).toList
+  }
+
+  /**
+   * 技师查找正在处理中的预约自己的预约数据
+   * 用于技师后台查看自己被预约的预约履历
+   *
+   * @param stylistId Stylist model中的stylistId这个字段
+   * @return
+   */
+  def findReservingByStylistId(stylistId : ObjectId) : List[Reservation] = {
+    dao.find($and(DBObject("stylistId" -> Some(stylistId), "status" -> 0), "expectedDate" $gt new Date())).sort(
+      MongoDBObject("expectedDate" -> 1)).toList
+  }
+
+  /**
+   * 技师查找预约自己的预约数据
+   * 用于技师后台查看自己被预约的预约履历
+   *
+   * @param stylistId Stylist model中的stylistId这个字段
+   * @return
+   */
+  def findReservationHistoryByStylistId(stylistId : ObjectId) : List[Reservation] = {
+    dao.find($and(DBObject("stylistId" -> Some(stylistId)), $or("expectedDate" $lt new Date(), "status" $in (1,2,-1)))).toList
+  }
+
+  /**
+   * 查找指定店铺的已经被评论（只有预约完成，并且用户评论后，状态才是已评论）的预约，
+   * 用于Comment model中调用，查找店铺的评论
+   *
+   * @param salonId 店铺的主键 ，id
+   * @return
+   */
+  def findCommentedReservBySalon(salonId : ObjectId) : List[Reservation] = {
+    dao.find(DBObject("salonId" -> salonId, "status" -> 3)).toList
+  }
+
+  /**
+   * 当一条预约记录的状态是已消费后，并且当事人对这条预约做评论时，这条预约的状态就变成已评论（3）
+   *
+   * @param id 预约表的主键 id
+   * @return
+   */
+  def changeReservStatusToCommented(id : ObjectId) = {
+    dao.update(MongoDBObject("_id" -> id), MongoDBObject("$set" -> MongoDBObject("status" -> 3)))
+  }
+
+  /**
+   * 查找指定预约号所用到的优惠券的名字
+   *
+   * @param reservId
+   * @return
+   */
+  def getUsedCouponById(reservId : ObjectId) : String = {
+    val reserv = dao.findOneById(reservId).get
+    reserv.resvItems.map(
+    resvItem => if(resvItem.resvType.equals("coupon")){
+      return  Coupon.findOneById(resvItem.mainResvObjId).get.couponName
+    }else{
+      return "没有使用优惠券"
+    }
+    )
+    return ""
+
+  }
+
+  /**
+   * 查找指定预约号的主预约的服务名
+   *
+   * @param reservId
+   * @return
+   */
+  def getUsedServiceById(reservId : ObjectId) : List[Service] ={
+    val reserv = dao.findOneById(reservId).get
+    reserv.resvItems.map(
+      resvItem =>
+        if(resvItem.resvOrder == 1){
+          if(resvItem.resvType.equals("coupon")){
+            return  Coupon.findOneById(resvItem.mainResvObjId).get.serviceItems
+          }else if(resvItem.resvType.equals("menu")){
+            return Menu.findOneById(resvItem.mainResvObjId).get.serviceItems
+          }else{
+            return Service.findOneById(resvItem.mainResvObjId).toList
+          }
+        }
+    )
+    return Nil
+  }
+
+
 }
