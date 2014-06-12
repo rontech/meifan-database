@@ -26,6 +26,40 @@ import com.mongodb.casbah.query.Imports._
 import com.meifannet.framework.db._
 import java.text.SimpleDateFormat
 import models.portal.style.StyleIdUsed
+import scala.Some
+import models.portal.user.User
+import models.portal.coupon.Coupon
+import models.portal.menu.Menu
+import models.portal.service.Service
+import com.mongodb.casbah.commons.Imports.{ DBObject => commonsDBObject }
+
+/**
+ * 用于沙龙后台处理预约
+ * @param handleType 处理类型，-1：取消预约， 1：完成预约， 2：过期预约
+ * @param reservs 处理的预约番号list
+ */
+case class HandleReservation(
+  handleType: String,
+  reservs: List[Reservation]
+)
+
+/**
+ * 沙龙后台预约管理的检索Form
+ * @param startExpectedDate 从（预约期望时间）
+ * @param endExpectedDate 到（预约期望时间）
+ * @param resvId 预约号码，目前先用预约中ObjectId
+ * @param nickName 昵称
+ * @param userTel 预约时所留的手机号码
+ * @param resvStatus 预约状态
+ */
+case class ResvSreachCondition(
+  startExpectedDate: String,
+  endExpectedDate: String,
+  resvId: String,
+  nickName: String,
+  userTel: String,
+  resvStatus: List[String]
+)
 
 /**
  * 预约内容，用于内嵌在预约表中
@@ -126,7 +160,7 @@ case class Reservation(
   id: ObjectId = new ObjectId,
   userId: String,
   salonId: ObjectId,
-  status: Int, // 0：已预约; 1：已消费; 2：已过期; -1：已取消
+  status: Int, // 0：已预约; 1：已消费; 2：已过期; -1：已取消; 3 : 已评论
   expectedDate: Date, // 预约时间 + 预约日期
   serviceDuration: Int,
   stylistId: Option[ObjectId], // 技师表中的stylistId
@@ -295,5 +329,180 @@ object Reservation extends MeifanNetModelCompanion[Reservation] {
   def getMainResvItem(resvItems: List[ResvItem]): ResvItem = {
     resvItems.filter(resvItem => (resvItem.resvOrder == 1)).head
   }
-  
+
+  /**
+   * 查找出某个店铺的所有处理中（预约状态为已预约）的预约
+   * @param salonId 沙龙id
+   * @return
+   */
+  def findProcessingResvBySalon(salonId: ObjectId): List[Reservation] = dao.find(MongoDBObject("salonId" -> salonId, "status" -> 0)).toList
+
+  /**
+   * 根据传入的处理类型，对对应的预约做取消，完成，过期等修改
+   * @param handleType 处理类型，对其做取消，完成，过期等修改
+   * @param resvId 预约id
+   */
+  def handleResv(handleType: String, resvId: ObjectId) = {
+    dao.update(MongoDBObject("_id" -> resvId), MongoDBObject("$set" -> MongoDBObject("status" -> handleType.toInt)))
+  }
+
+  /**
+   * 根据预约检索条件查找出预约信息
+   * 用于沙龙后台检索使用
+   * @param resvSreachCond 检索条件
+   */
+  def findResvFromCondition(salonId: ObjectId, resvSreachCond: ResvSreachCondition): List[Reservation] = {
+    println("resvSreachCond = " + resvSreachCond)
+    var srchConds: List[commonsDBObject] = Nil
+    srchConds :::= List(commonsDBObject("salonId" -> salonId))
+    if(!resvSreachCond.resvId.isEmpty) {
+      srchConds :::= List(commonsDBObject("_id" -> new ObjectId(resvSreachCond.resvId)))
+    }
+    if(!resvSreachCond.userTel.isEmpty) {
+      srchConds :::= List(commonsDBObject("userPhone" -> resvSreachCond.userTel))
+    }
+    if(!resvSreachCond.nickName.isEmpty) {
+      val user = User.find(MongoDBObject("nickName" -> (".*" + resvSreachCond.nickName.trim + ".*").r)).toList
+      val userIds = user.map(u => (u.userId + "|"))
+      val userIdRegex = userIds.mkString.dropRight(1).r
+      srchConds :::= List(commonsDBObject("userId" -> userIdRegex))
+    }
+    if(!resvSreachCond.startExpectedDate.isEmpty) {
+      srchConds :::= List("expectedDate" $gte new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(resvSreachCond.startExpectedDate))
+    }
+    if(!resvSreachCond.endExpectedDate.isEmpty) {
+      srchConds :::= List("expectedDate" $lte new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(resvSreachCond.endExpectedDate))
+    }
+    if(!resvSreachCond.resvStatus.isEmpty) {
+      val statuss = resvSreachCond.resvStatus.map(status => (status.toInt))
+      srchConds :::= List("status" $in statuss)
+    }
+    println("srchConds = " + srchConds)
+    dao.find($and(srchConds)).toList
+  }
+
+  /**
+   * 查找出相关店铺的所有预约信息
+   * 用于沙龙后台预约履历
+   * @param salonId
+   * @return
+   */
+  def findAllResvBySalon(salonId: ObjectId): List[Reservation] = dao.find(MongoDBObject("salonId" -> salonId)).toList
+
+   /**
+   * 取得指定用户的处理中的预约（预约的时间还未到，预约状态是0）的数据，用于用户后台取自己处理中预约的情况
+   *
+   * @param userId
+   * @return
+   */
+  def findResving(userId : String) : List[Reservation] = {
+    dao.find($and(DBObject("userId" -> userId, "status" -> 0), "expectedDate" $gt new Date())).sort(
+      MongoDBObject("expectedDate" -> 1)).toList
+  }
+
+  /**
+   * 删除（取消）指定的一条预约，用于用户的后台本人删除和salon后台管理员删除
+   *
+   * @param reservId
+   * @return
+   */
+  def delete(reservId : ObjectId) = {
+    dao.update(MongoDBObject("_id" -> reservId), MongoDBObject("$set" -> MongoDBObject("status" -> -1)))
+  }
+
+  /**
+   * 查找指定用户的预约履历的数据，用于用户后台查看自己的预约履历
+   *
+   * @param userId
+   * @return
+   */
+  def findReservationHistory(userId : String) : List[Reservation] = {
+    dao.find($and(DBObject("userId" -> userId), $or("expectedDate" $lt new Date(), "status" $in (1,2,-1)))).toList
+  }
+
+  /**
+   * 技师查找正在处理中的预约自己的预约数据
+   * 用于技师后台查看自己被预约的预约履历
+   *
+   * @param stylistId Stylist model中的stylistId这个字段
+   * @return
+   */
+  def findReservingByStylistId(stylistId : ObjectId) : List[Reservation] = {
+    dao.find($and(DBObject("stylistId" -> Some(stylistId), "status" -> 0), "expectedDate" $gt new Date())).sort(
+      MongoDBObject("expectedDate" -> 1)).toList
+  }
+
+  /**
+   * 技师查找预约自己的预约数据
+   * 用于技师后台查看自己被预约的预约履历
+   *
+   * @param stylistId Stylist model中的stylistId这个字段
+   * @return
+   */
+  def findReservationHistoryByStylistId(stylistId : ObjectId) : List[Reservation] = {
+    dao.find($and(DBObject("stylistId" -> Some(stylistId)), $or("expectedDate" $lt new Date(), "status" $in (1,2,-1)))).toList
+  }
+
+  /**
+   * 查找指定店铺的已经被评论（只有预约完成，并且用户评论后，状态才是已评论）的预约，
+   * 用于Comment model中调用，查找店铺的评论
+   *
+   * @param salonId 店铺的主键 ，id
+   * @return
+   */
+  def findCommentedReservBySalon(salonId : ObjectId) : List[Reservation] = {
+    dao.find(DBObject("salonId" -> salonId, "status" -> 3)).toList
+  }
+
+  /**
+   * 当一条预约记录的状态是已消费后，并且当事人对这条预约做评论时，这条预约的状态就变成已评论（3）
+   *
+   * @param id 预约表的主键 id
+   * @return
+   */
+  def changeReservStatusToCommented(id : ObjectId) = {
+    dao.update(MongoDBObject("_id" -> id), MongoDBObject("$set" -> MongoDBObject("status" -> 3)))
+  }
+
+  /**
+   * 查找指定预约号所用到的优惠券的名字
+   *
+   * @param reservId
+   * @return
+   */
+  def getUsedCouponById(reservId : ObjectId) : String = {
+    val reserv = dao.findOneById(reservId).get
+    reserv.resvItems.map(
+    resvItem => if(resvItem.resvType.equals("coupon")){
+      return  Coupon.findOneById(resvItem.mainResvObjId).get.couponName
+    }else{
+      return "没有使用优惠券"
+    }
+    )
+    return ""
+
+  }
+
+  /**
+   * 查找指定预约号的主预约的服务名
+   *
+   * @param reservId
+   * @return
+   */
+  def getUsedServiceById(reservId : ObjectId) : List[Service] ={
+    val reserv = dao.findOneById(reservId).get
+    reserv.resvItems.map(
+      resvItem =>
+        if(resvItem.resvOrder == 1){
+          if(resvItem.resvType.equals("coupon")){
+            return  Coupon.findOneById(resvItem.mainResvObjId).get.serviceItems
+          }else if(resvItem.resvType.equals("menu")){
+            return Menu.findOneById(resvItem.mainResvObjId).get.serviceItems
+          }else{
+            return Service.findOneById(resvItem.mainResvObjId).toList
+          }
+        }
+    )
+    return Nil
+  }
 }

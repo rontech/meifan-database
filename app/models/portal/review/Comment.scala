@@ -24,6 +24,7 @@ import mongoContext._
 import com.meifannet.framework.db._
 import models.portal.coupon.Coupon
 import models.portal.salon.Salon
+import models.portal.reservation.Reservation
 
 /**
  * A All Info structs of comment including belows
@@ -124,9 +125,11 @@ object Comment extends MeifanNetModelCompanion[Comment] {
   def findBySalon(salonId: ObjectId): List[Comment] = {
     var commentListOfSalon: List[Comment] = Nil
     var commentList: List[Comment] = Nil
-    val couponList = Coupon.findBySalon(salonId)
+//    val couponList = Coupon.findBySalon(salonId
+    val reservList = Reservation.findCommentedReservBySalon(salonId)
     var comment: List[Comment] = Nil
-    couponList.foreach(
+//    couponList.foreach(
+    reservList.foreach(
       {
         r =>
           comment = Comment.find(DBObject("commentObjType" -> 2, "commentObjId" -> r.id, "isValid" -> true)).sort(MongoDBObject("createTime" -> -1)).toList
@@ -214,8 +217,10 @@ object Comment extends MeifanNetModelCompanion[Comment] {
     val commentList = dao.find(MongoDBObject("isValid" -> true, "commentObjType" -> CommentType.ToSalon.id)).sort(MongoDBObject("createTime" -> -1)).limit(num).toList
     commentList.foreach({
       row =>
-        val coupon = Coupon.findOneById(row.commentObjId)
-        coupon match {
+//        val coupon = Coupon.findOneById(row.commentObjId)
+//        coupon match {
+        val reservation = Reservation.findOneById(row.commentObjId)
+        reservation match {
           case None => None
           case Some(coupon) => {
             val salon = Salon.findOneById(coupon.salonId)

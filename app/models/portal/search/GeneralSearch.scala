@@ -239,3 +239,19 @@ object SeatNums extends SeatNumsDAO
 trait SeatNumsDAO extends MeifanNetModelCompanion[SeatNums] {
   val dao = new MeifanNetDAO[SeatNums](collection = loadCollection()) {}
 }
+
+
+case class Brand(
+  id:ObjectId,
+  salonIndustry : String,
+  salonName : String,
+  point : Int,
+  description : String)
+object Brand extends BrandDAO
+trait BrandDAO extends MeifanNetModelCompanion[Brand] {
+  val dao = new MeifanNetDAO[Brand](collection = loadCollection()) {}
+
+  def findBrandByIndustry(salonIndustry : String) : List[Brand] = {
+    dao.find(DBObject("salonIndustry" -> salonIndustry)).sort(MongoDBObject("point" -> -1)).toList
+  }
+}
