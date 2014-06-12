@@ -40,6 +40,18 @@ import models.portal.coupon.Coupon
 import models.portal.review.Comment
 import models.portal.relation.SalonAndStylist
 import models.portal.service.Service
+import models.portal.search.SearchParaForSalon
+import models.portal.salon.WorkTime
+import models.portal.salon.SalonAccount
+import scala.Some
+import models.portal.salon.RestDay
+import models.portal.salon.BriefIntroduction
+import models.portal.salon.Contact
+import models.portal.common.OptContactMethod
+import models.portal.search.SalonGeneralSrchRst
+import models.portal.search.SortByConditions
+import models.portal.common.Address
+import models.portal.manager._
 
 
 /**
@@ -82,7 +94,11 @@ case class Salon(
   seatNums: Option[Int],
   salonFacilities: Option[SalonFacilities],
   salonPics: List[OnUsePicture],
-  registerDate: Date)
+  registerDate: Date,
+  salonStatus: SalonStatus
+  )
+
+case class SalonStatus(applyMeifanFlag :Int, isValid :Boolean)
 
 object Salon extends MeifanNetModelCompanion[Salon] {
 
@@ -321,7 +337,7 @@ object Salon extends MeifanNetModelCompanion[Salon] {
    * @param salon 已登录的沙龙
    * @return
    */
-  def checkDetailIsFill(salon: Salon): Boolean = {
+  def checkDetailIsFill(salon: Salon) = {
     salon.seatNums.nonEmpty &&
       salon.salonIntroduction.exists(pic => pic.introHeader.nonEmpty) && salon.salonIntroduction.exists(pic => pic.introContent.nonEmpty) &&
       salon.salonIntroduction.exists(pic => pic.introFooter.nonEmpty)
@@ -333,7 +349,7 @@ object Salon extends MeifanNetModelCompanion[Salon] {
    * @param salon 已登录的沙龙
    * @return
    */
-  def checkImgIsExist(salon: Salon): Boolean = {
+ def checkImgIsExist(salon: Salon) = {
     salon.salonPics.exists(a => a.picUse.equals("Navigate")) && salon.salonPics.exists(a => a.picUse.equals("Atmosphere")) &&
       salon.salonPics.exists(a => a.picUse.equals("SalonCheck"))
   }
@@ -716,6 +732,8 @@ object Salon extends MeifanNetModelCompanion[Salon] {
    * @return
    */
   def isValid(value: String, loggedSalon: Salon, f: String => Option[Salon]) = f(value).map(_.id == loggedSalon.id).getOrElse(true)
+
+  //def findSalonsByIndustry(industry: String) :List[Salon] = dao.find(MongDBObject("industry" $in industry)).toList
 
 }
 
