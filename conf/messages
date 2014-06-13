@@ -26,6 +26,7 @@ common.isValidMsg = 无效后无法恢复，请确认是否无效？
 common.seat = 位
 common.userLogin = 会员登陆
 common.pleaseInputSrchKeyword=请输入您要查找的内容
+common.unLimit = 不限
 
 
 # Index page
