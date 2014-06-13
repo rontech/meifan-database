@@ -196,11 +196,36 @@ case class SalonGeneralSrchRst(
  *
  * @param minPrice
  * @param maxPrice
+ * @param industryName
  */
-case class PriceRange(minPrice: BigDecimal, maxPrice: BigDecimal)
+case class PriceRange(id: ObjectId, minPrice: BigDecimal, maxPrice: BigDecimal,industryName: String)
 object PriceRange extends PriceRangeDAO
 trait PriceRangeDAO extends MeifanNetModelCompanion[PriceRange] {
   val dao = new MeifanNetDAO[PriceRange](collection = loadCollection()) {}
+  /**
+   * 根据行业名获取该行业所有相关价格区间集合
+   * @param industryName 行业名
+   * @return
+   */
+  def findAllPriceRange(industryName: String) = {
+    dao.find(MongoDBObject("industryName" -> industryName)).toList.map {
+      priceRange => (priceRange.minPrice,priceRange.maxPrice)
+    }
+  }
+
+  /**
+   * 根据行业名获得所有相关价格区间集合
+   * @param salonIndustrys 行业名集合
+   *@return
+   */
+  def findAllPriceRange(salonIndustrys: List[String]) = {
+    var priceRanges: List[PriceRange] = Nil
+    for (salonIndustry <- salonIndustrys) {
+      val priceRange: List[PriceRange] = dao.find(MongoDBObject("industryName" -> salonIndustry)).toList
+      priceRanges = priceRanges ::: priceRange
+    }
+    priceRanges
+  }
 }
 
 /**

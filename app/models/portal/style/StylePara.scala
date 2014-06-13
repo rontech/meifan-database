@@ -26,7 +26,7 @@ import com.meifannet.framework.db._
 /**
  * The table of styleLength
  * @param id ObjectId ObjectId
- * @param styleLength 发型适合长度
+ * @param styleLength 适合长度
  * @param description 描述
  */
 case class StyleLength(
@@ -41,37 +41,88 @@ object StyleLength extends MeifanNetModelCompanion[StyleLength] {
 /**
  * The table of styleColor
  * @param id ObjectId ObjectId
- * @param styleColor 发型适合颜色
+ * @param industryName 行业类别
+ * @param styleColor 适合颜色
  * @param description 描述
  */
 case class StyleColor(
   id: ObjectId = new ObjectId,
+  industryName: String,
   styleColor: String,
   description: String)
 
 object StyleColor extends MeifanNetModelCompanion[StyleColor] {
   val dao = new MeifanNetDAO[StyleColor](collection = loadCollection()) {}
+
+  /**
+   * 根据行业名获取该行业所有颜色
+   * @param industryName 行业名
+   * @return
+   */
+  def findAllStyleColor(industryName: String) = dao.find(MongoDBObject("industryName" -> industryName)).toList.map {
+    styleColor => styleColor.styleColor
+  }
+
+  /**
+   * 根据行业名获得所有颜色
+   * @param salonIndustrys 行业名集合
+   *@return
+   */
+  def findAllStyleColor(salonIndustrys: List[String]) = {
+    var styleColors: List[StyleColor] = Nil
+    for (salonIndustry <- salonIndustrys) {
+      val styleColor: List[StyleColor] = dao.find(MongoDBObject("industryName" -> salonIndustry)).toList
+      styleColors = styleColors ::: styleColor
+    }
+    styleColors
+  }
 }
 
 /**
- * The table of StyleStyleImpression
+ * The table of StyleImpression
  * @param id ObjectId ObjectId
- * @param styleImpression 发型适合风格
+ * @param industryName 行业类别
+ * @param styleImpression 适合风格
  * @param description 描述
  */
 case class StyleImpression(
   id: ObjectId = new ObjectId,
+  industryName: String,
   styleImpression: String,
   description: String)
 
 object StyleImpression extends MeifanNetModelCompanion[StyleImpression] {
   val dao = new MeifanNetDAO[StyleImpression](collection = loadCollection()) {}
+
+  /**
+   * 根据行业名获取该行业所有相关风格
+   * @param industryName 行业名
+   * @return
+   */
+  def findAllStyleImpression(industryName: String) = dao.find(MongoDBObject("industryName" -> industryName)).toList.map {
+    styleImpression => styleImpression.styleImpression
+  }
+
+  /**
+   * 根据行业名获得所有相关风格
+   * @param salonIndustrys 行业名集合
+   *@return
+   */
+  def findAllStyleImpression(salonIndustrys: List[String]) = {
+    var styleImpressions: List[StyleImpression] = Nil
+    for (salonIndustry <- salonIndustrys) {
+      val styleImpression: List[StyleImpression] = dao.find(MongoDBObject("industryName" -> salonIndustry)).toList
+      styleImpressions = styleImpressions ::: styleImpression
+    }
+    styleImpressions
+  }
+
 }
 
 /**
  * The table of styleAmount
  * @param id ObjectId ObjectId
- * @param styleAmount 发型适合发量
+ * @param styleAmount 适合发量
  * @param description 描述
  */
 case class StyleAmount(
@@ -86,7 +137,7 @@ object StyleAmount extends MeifanNetModelCompanion[StyleAmount] {
 /**
  * The table of styleQuality
  * @param id ObjectId
- * @param styleQuality 发型适合发质
+ * @param styleQuality 适合发质
  * @param description 描述
  */
 case class StyleQuality(
@@ -101,7 +152,7 @@ object StyleQuality extends MeifanNetModelCompanion[StyleQuality] {
 /**
  * The table of styleDiameter
  * @param id ObjectId
- * @param styleDiameter 发型适合直径
+ * @param styleDiameter 适合直径
  * @param description 描述
  */
 case class StyleDiameter(
@@ -116,7 +167,7 @@ object StyleDiameter extends MeifanNetModelCompanion[StyleDiameter] {
 /**
  * The table of faceShape
  * @param id ObjectId
- * @param faceShape 发型适合脸型
+ * @param faceShape 适合脸型
  * @param description 描述
  */
 case class FaceShape(
@@ -131,22 +182,48 @@ object FaceShape extends MeifanNetModelCompanion[FaceShape] {
 /**
  * The table of socialScene
  * @param id ObjectId
- * @param socialScene 发型适合场合
+ * @param industryName 行业类别
+ * @param socialScene 适合场合
  * @param description 描述
  */
 case class SocialScene(
   id: ObjectId = new ObjectId,
+  industryName: String,
   socialScene: String,
   description: String)
 
 object SocialScene extends MeifanNetModelCompanion[SocialScene] {
   val dao = new MeifanNetDAO[SocialScene](collection = loadCollection()) {}
+
+  /**
+   * 根据行业名获取该行业所有相关风格
+   * @param industryName 行业名
+   * @return
+   */
+  def findAllSocialScene(industryName: String) = dao.find(MongoDBObject("industryName" -> industryName)).toList.map {
+    socialScene => socialScene.socialScene
+  }
+
+  /**
+   * 根据行业名获得所有相关风格
+   * @param salonIndustrys 行业名集合
+   *@return
+   */
+  def findAllSocialScene(salonIndustrys: List[String]) = {
+    var socialScenes: List[SocialScene] = Nil
+    for (salonIndustry <- salonIndustrys) {
+      val socialScene: List[SocialScene] = dao.find(MongoDBObject("industryName" -> salonIndustry)).toList
+      socialScenes = socialScenes ::: socialScene
+    }
+    socialScenes
+  }
+
 }
 
 /**
  * The table of ageGroup
  * @param id ObjectId
- * @param ageGroup 发型适合年龄段
+ * @param ageGroup 适合年龄段
  * @param description 描述
  */
 case class AgeGroup(
@@ -161,7 +238,7 @@ object AgeGroup extends MeifanNetModelCompanion[AgeGroup] {
 /**
  * The table of sex
  * @param id ObjectId
- * @param sex 发型适合性别
+ * @param sex 适合性别
  */
 case class Sex(
   id: ObjectId = new ObjectId,
@@ -174,7 +251,7 @@ object Sex extends MeifanNetModelCompanion[Sex] {
 /**
  * The table of stylePicDescription
  * @param id ObjectId
- * @param stylePicDescription 发型图片描述
+ * @param stylePicDescription 图片描述
  * @param description 描述
  */
 case class StylePicDescription(
@@ -260,3 +337,126 @@ object SearchByImpression extends MeifanNetModelCompanion[SearchByImpression] {
       MongoDBObject("$set" -> (MongoDBObject("stylePic" -> imgId))), false, true)
   }
 }
+
+/**
+ * The table of styleMaterial
+ * @param id ObjectId
+ * @param industryName 行业类别
+ * @param styleMaterial 材质名
+ * @param description 描述
+ */
+case class StyleMaterial(
+  id: ObjectId = new ObjectId,
+  industryName: String,
+  styleMaterial: String,
+  description: String)
+
+object StyleMaterial extends MeifanNetModelCompanion[StyleMaterial] {
+  val dao = new MeifanNetDAO[StyleMaterial](collection = loadCollection()) {}
+
+  /**
+   * 根据行业名获取该行业所有相关材质
+   * @param industryName 行业名
+   * @return
+   */
+  def findAllStyleMaterial(industryName: String) = dao.find(MongoDBObject("industryName" -> industryName)).toList.map {
+    styleMaterial => styleMaterial.styleMaterial
+  }
+
+  /**
+   * 根据行业名获得所有相关材质
+   * @param salonIndustrys 行业名集合
+   *@return
+   */
+  def findAllStyleMaterial(salonIndustrys: List[String]) = {
+    var styleMaterials: List[StyleMaterial] = Nil
+    for (salonIndustry <- salonIndustrys) {
+      val styleMaterial: List[StyleMaterial] = dao.find(MongoDBObject("industryName" -> salonIndustry)).toList
+      styleMaterials = styleMaterials ::: styleMaterial
+    }
+    styleMaterials
+  }
+
+}
+
+/**
+ * The table of styleBase
+ * @param id ObjectId
+ * @param industryName 行业类别
+ * @param styleBase 该服务在人体那些部位（手、足。。。）
+ * @param description 描述
+ */
+case class StyleBase(
+  id: ObjectId = new ObjectId,
+  industryName: String,
+  styleBase: String,
+  description: String)
+
+object StyleBase extends MeifanNetModelCompanion[StyleBase] {
+  val dao = new MeifanNetDAO[StyleBase](collection = loadCollection()) {}
+
+  /**
+   * 根据行业名获取该行业所有相关身体部位集合
+   * @param industryName 行业名
+   * @return
+   */
+  def findAllStyleBase(industryName: String) = dao.find(MongoDBObject("industryName" -> industryName)).toList.map {
+    styleBase => styleBase.styleBase
+  }
+
+  /**
+   * 根据行业名获得所有相关身体部位集合
+   * @param salonIndustrys 行业名集合
+   *@return
+   */
+  def findAllStyleBase(salonIndustrys: List[String]) = {
+    var styleBases: List[StyleBase] = Nil
+    for (salonIndustry <- salonIndustrys) {
+      val styleBase: List[StyleBase] = dao.find(MongoDBObject("industryName" -> salonIndustry)).toList
+      styleBases = styleBases ::: styleBase
+    }
+    styleBases
+  }
+
+}
+
+/*/**
+ * The table of styleDesign
+ * @param id ObjectId
+ * @param industryName 行业类别
+ * @param styleDesign 款式名
+ * @param description 描述
+ */
+case class StyleDesign(
+  id: ObjectId = new ObjectId,
+  industryName: String,
+  styleDesign: String,
+  description: String)
+
+object StyleDesign extends MeifanNetModelCompanion[StyleDesign] {
+  val dao = new MeifanNetDAO[StyleDesign](collection = loadCollection()) {}
+
+  /**
+   * 根据行业名获取该行业所有相关款式集合
+   * @param industryName 行业名
+   * @return
+   */
+  def findAllStyleDesign(industryName: String) = dao.find(MongoDBObject("industryName" -> industryName)).toList.map {
+    styleDesign => styleDesign.styleDesign
+  }
+
+  /**
+   * 根据行业名获得所有相关款式集合
+   * @param salonIndustrys 行业名集合
+   *@return
+   */
+  def findAllStyleDesign(salonIndustrys: List[String]) = {
+    var styleDesigns: List[StyleDesign] = Nil
+    for (salonIndustry <- salonIndustrys) {
+      val styleDesign: List[StyleDesign] = dao.find(MongoDBObject("industryName" -> salonIndustry)).toList
+      styleDesigns = styleDesigns ::: styleDesign
+    }
+    styleDesigns
+  }
+
+}*/
