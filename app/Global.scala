@@ -23,7 +23,8 @@ import models.portal.search._
 import models.portal.service._ 
 import models.portal.style._ 
 import models.portal.stylist._ 
-import models.portal.user._ 
+import models.portal.user._
+import models.portal.nail._
 
 
 object Global extends GlobalSettings {
@@ -91,17 +92,39 @@ object InitialData {
         ServiceType(new ObjectId("53167ae7d4d5cb7e816db355"), "Hairdressing", "Perm", "烫"),
         ServiceType(new ObjectId("53167b3cd4d5cb7e816db359"), "Hairdressing", "Supple", "柔顺"),
         ServiceType(new ObjectId("5316c443d4d57997ce3e6d68"), "Hairdressing", "Other", "其他"),
-        ServiceType(new ObjectId("5316c443d4d57997ce3e6d69"), "Manicures", "setColor", "上色")).foreach(ServiceType.save)
+
+        ServiceType(new ObjectId("5316c443d4d57997ce3e6d69"), "Manicures", "Pen", "笔绘甲"),
+        ServiceType(new ObjectId("5316c443d4d57997ce3e6d71"), "Manicures", "Delineation", "勾绘甲"),
+        ServiceType(new ObjectId("5316c443d4d57997ce3e6d72"), "Manicures", "Airbrush", "喷绘甲"),
+        ServiceType(new ObjectId("5316c443d4d57997ce3e6d73"), "Manicures", "Patch", "贴片甲"),
+        ServiceType(new ObjectId("5316c443d4d57997ce3e6d74"), "Manicures", "Crystal", "水晶甲"),
+        ServiceType(new ObjectId("5316c443d4d57997ce3e6d75"), "Manicures", "Gel", "光疗树脂甲")).foreach(ServiceType.save)
     }
 
     if (StyleColor.findAll.isEmpty) {
       Seq(
-        StyleColor(new ObjectId, "black", "黑色"),
-        StyleColor(new ObjectId, "chocolate", "巧克力色"),
-        StyleColor(new ObjectId, "brown", "棕色"),
-        StyleColor(new ObjectId, "flax", "亚麻"),
-        StyleColor(new ObjectId, "red", "红色"),
-        StyleColor(new ObjectId, "alternative", "另类")).foreach(StyleColor.save)
+        StyleColor(new ObjectId, "Hairdressing", "black", "黑色"),
+        StyleColor(new ObjectId, "Hairdressing", "chocolate", "巧克力色"),
+        StyleColor(new ObjectId, "Hairdressing", "brown", "棕色"),
+        StyleColor(new ObjectId, "Hairdressing", "flax", "亚麻"),
+        StyleColor(new ObjectId, "Hairdressing", "red", "红色"),
+        StyleColor(new ObjectId, "Hairdressing", "alternative", "另类"),
+
+        StyleColor(new ObjectId, "Manicures", "pink", "粉红色"),
+        StyleColor(new ObjectId, "Manicures", "white", "白色"),
+        StyleColor(new ObjectId, "Manicures", "silver", "银色"),
+        StyleColor(new ObjectId, "Manicures", "beige", "浅褐色"),
+        StyleColor(new ObjectId, "Manicures", "gold", "金色"),
+        StyleColor(new ObjectId, "Manicures", "orange", "橙色"),
+        StyleColor(new ObjectId, "Manicures", "brown", "棕色"),
+        StyleColor(new ObjectId, "Manicures", "yellow", "黄色"),
+        StyleColor(new ObjectId, "Manicures", "green", "绿色"),
+        StyleColor(new ObjectId, "Manicures", "blue", "蓝色"),
+        StyleColor(new ObjectId, "Manicures", "purple", "紫色"),
+        StyleColor(new ObjectId, "Manicures", "red", "红色"),
+        StyleColor(new ObjectId, "Manicures", "black", "黑色"),
+        StyleColor(new ObjectId, "Manicures", "clear", "透明"),
+        StyleColor(new ObjectId, "Manicures", "multi", "混合色")).foreach(StyleColor.save)
     }
 
     if (StyleLength.findAll.isEmpty) {
@@ -116,13 +139,19 @@ object InitialData {
 
     if (StyleImpression.findAll.isEmpty) {
       Seq(
-        StyleImpression(new ObjectId, "natural", "自然"),
-        StyleImpression(new ObjectId, "intellectual", "知性"),
-        StyleImpression(new ObjectId, "sweet", "甜美"),
-        StyleImpression(new ObjectId, "fashion", "时尚"),
-        StyleImpression(new ObjectId, "fresh", "清新"),
-        StyleImpression(new ObjectId, "gorgeous", "华丽"),
-        StyleImpression(new ObjectId, "personality", "个性")).foreach(StyleImpression.save)
+        StyleImpression(new ObjectId, "Hairdressing", "natural", "自然"),
+        StyleImpression(new ObjectId, "Hairdressing", "intellectual", "知性"),
+        StyleImpression(new ObjectId, "Hairdressing", "sweet", "甜美"),
+        StyleImpression(new ObjectId, "Hairdressing", "fashion", "时尚"),
+        StyleImpression(new ObjectId, "Hairdressing", "fresh", "清新"),
+        StyleImpression(new ObjectId, "Hairdressing", "gorgeous", "华丽"),
+        StyleImpression(new ObjectId, "Hairdressing", "personality", "个性"),
+
+        StyleImpression(new ObjectId, "Manicures", "natural", "自然"),
+        StyleImpression(new ObjectId, "Manicures", "fashion", "时尚"),
+        StyleImpression(new ObjectId, "Manicures", "fresh", "清新"),
+        StyleImpression(new ObjectId, "Manicures", "gorgeous", "华丽"),
+        StyleImpression(new ObjectId, "Manicures", "personality", "个性")).foreach(StyleImpression.save)
     }
 
     if (StyleAmount.findAll.isEmpty) {
@@ -159,12 +188,34 @@ object InitialData {
 
     if (SocialScene.findAll.isEmpty) {
       Seq(
-        SocialScene(new ObjectId, "evening-wear", "晚装"),
-        SocialScene(new ObjectId, "brief", "简约"),
-        SocialScene(new ObjectId, "star", "明星"),
-        SocialScene(new ObjectId, "street", "街拍"),
-        SocialScene(new ObjectId, "T-stage", "T台"),
-        SocialScene(new ObjectId, "others", "其它")).foreach(SocialScene.save)
+        SocialScene(new ObjectId, "Hairdressing", "evening-wear", "晚装"),
+        SocialScene(new ObjectId, "Hairdressing", "brief", "简约"),
+        SocialScene(new ObjectId, "Hairdressing", "star", "明星"),
+        SocialScene(new ObjectId, "Hairdressing", "street", "街拍"),
+        SocialScene(new ObjectId, "Hairdressing", "T-stage", "T台"),
+        SocialScene(new ObjectId, "Hairdressing", "others", "其它"),
+
+        SocialScene(new ObjectId, "Manicures", "office", "办公室"),
+        SocialScene(new ObjectId, "Manicures", "party", "聚会"),
+        SocialScene(new ObjectId, "Manicures", "sport", "运动"),
+        SocialScene(new ObjectId, "Manicures", "date", "约会"),
+        SocialScene(new ObjectId, "Manicures", "bridal", "婚礼")).foreach(SocialScene.save)
+    }
+
+    if (StyleMaterial.findAll.isEmpty) {
+      Seq(
+        StyleMaterial(new ObjectId, "Manicures", "rhinestone", "水钻"),
+        StyleMaterial(new ObjectId, "Manicures", "pearl", "珍珠"),
+        StyleMaterial(new ObjectId, "Manicures", "metal", "金属"),
+        StyleMaterial(new ObjectId, "Manicures", "peucine", "树脂"),
+        StyleMaterial(new ObjectId, "Manicures", "bridal", "玉石"),
+        StyleMaterial(new ObjectId, "Manicures", "fruitSlices", "水果片")).foreach(StyleMaterial.save)
+    }
+
+    if (StyleBase.findAll.isEmpty) {
+      Seq(
+        StyleBase(new ObjectId, "Manicures", "hand", "手"),
+        StyleBase(new ObjectId, "Manicures", "foot", "足")).foreach(StyleBase.save)
     }
 
     if (Sex.findAll.isEmpty) {
@@ -250,11 +301,18 @@ object InitialData {
 
     if (PriceRange.findAll.isEmpty) {
       Seq(
-        PriceRange(0, 20),
-        PriceRange(21, 50),
-        PriceRange(51, 100),
-        PriceRange(101, 1000),
-        PriceRange(1001, 100000)).foreach(PriceRange.save)
+        PriceRange(new ObjectId, 0, 20, "Hairdressing"),
+        PriceRange(new ObjectId, 21, 50,"Hairdressing"),
+        PriceRange(new ObjectId, 51, 100,"Hairdressing"),
+        PriceRange(new ObjectId, 101, 1000,"Hairdressing"),
+        PriceRange(new ObjectId, 1001, 100000,"Hairdressing"),
+
+        PriceRange(new ObjectId, 0, 50, "Manicures"),
+        PriceRange(new ObjectId, 51, 100,"Manicures"),
+        PriceRange(new ObjectId, 101, 200,"Manicures"),
+        PriceRange(new ObjectId, 201, 500,"Manicures"),
+        PriceRange(new ObjectId, 501, 1000,"Manicures"),
+        PriceRange(new ObjectId, 1001, 100000,"Manicures")).foreach(PriceRange.save)
     }
 
     if (SeatNums.findAll.isEmpty) {
@@ -315,7 +373,7 @@ object InitialData {
         Salon(new ObjectId("530d7288d7f2861457771aab"), SalonAccount("salon06", "$2a$10$q0rl.qI.X9UTPZ6mDRbVhOvxYjk9S7RsrAmJ3aXaJaEcLV/3f/bU."), "佳人阁", Some("佳人阁"), List("Hairdressing"), Some("www.jiaren.com"), Some("只为佳人顾！"), Some(BriefIntroduction("只为佳人顾", "最新的潮流资讯、最顶尖的时尚发布、最贴心的造型设计、最合理的价格优势。我们立志以最时尚的理念,打造最生活的状态,塑造最自信的你！", "欢迎光临悦美月容！")), Contact("0512-68320328", "王经理", "wzw1991@126.com"), List(OptContactMethod("QQ", List("99198121"))), Some(date("2014-03-12")), Some(Address("重庆市", Option("重庆市"), Option("沙坪坝区"), None, "三峡广场", Some(100.0), Some(110.0), "轻轨三号号线汾湖路站1号出口向西步行500米可达")), Some(WorkTime("9:00", "18:00")), Some(RestDay("Fixed", List("Monday"))), Some(25), Some(SalonFacilities(true, true, false, false, true, true, true, true, true, "附近有")), List(new OnUsePicture(new ObjectId, "LOGO", Some(1), None), new OnUsePicture(new ObjectId, "Navigate", Some(1), None), new OnUsePicture(new ObjectId, "Navigate", Some(2), None), new OnUsePicture(new ObjectId, "Navigate", Some(3), Some("清新怡人")), new OnUsePicture(new ObjectId, "Atmosphere", Some(1), Some("清新怡人")), new OnUsePicture(new ObjectId, "Atmosphere", Some(2), Some("环境优雅！")), new OnUsePicture(new ObjectId, "Atmosphere", Some(3), Some("安静典雅！")), new OnUsePicture(new ObjectId, "SalonCheck", Some(1), Some("营业执照！"))), date("2014-01-12")),
         Salon(new ObjectId("530d7292d7f2861457771aac"), SalonAccount("salon07", "$2a$10$q0rl.qI.X9UTPZ6mDRbVhOvxYjk9S7RsrAmJ3aXaJaEcLV/3f/bU."), "浪漫满屋", Some("浪漫满屋"), List("Hairdressing"), Some("www.langman.com"), Some("美丽,你也可以！"), Some(BriefIntroduction("美丽,你也可以", "将细节打造为上品,力求体贴与舒适,经典与时尚。您的秀发将在这里得到个性的张扬,以更加自我的方式追寻生活的美和真谛。您的美丽人生,将在这里从“头”开始。专业和完善的美发设备,将尽显您的身份与尊贵。专业的美发产品和精湛的技术,体贴入微的全程服务,完美是您的追求,专业是我的宗旨。", "欢迎光临千美千寻！")), Contact("051268320328", "李经理", "hz-han@rontech.co.jp"), List(OptContactMethod("QQ", List("99198121"))), Some(date("2014-03-12")), Some(Address("江苏省", Option("苏州市"), Option("高新区"), None, "狮山路58号汇豪国际1-2楼", Some(100.0), Some(110.0), "地铁一号线滨河路站1号出口向西步行500米可达")), Some(WorkTime("9:00", "18:00")), Some(RestDay("Fixed", List("Monday"))), Some(25), Some(SalonFacilities(true, true, true, true, false, true, true, true, true, "附近有")), List(new OnUsePicture(new ObjectId, "LOGO", None, None), new OnUsePicture(new ObjectId, "Navigate", Some(1), None), new OnUsePicture(new ObjectId, "Navigate", Some(2), None), new OnUsePicture(new ObjectId, "Navigate", Some(3), None), new OnUsePicture(new ObjectId, "Atmosphere", Some(1), Some("清新怡人")), new OnUsePicture(new ObjectId, "Atmosphere", Some(2), Some("环境优雅！")), new OnUsePicture(new ObjectId, "Atmosphere", Some(3), Some("安静典雅！")), new OnUsePicture(new ObjectId, "SalonCheck", Some(1), Some("营业执照！"))), date("2014-03-12")),
         Salon(new ObjectId("530d7288d7f2861457771aad"), SalonAccount("salon08", "$2a$10$q0rl.qI.X9UTPZ6mDRbVhOvxYjk9S7RsrAmJ3aXaJaEcLV/3f/bU."), "驻容坊", Some("驻容坊"), List("Hairdressing"), Some("www.zhurong.com"), Some("青春常在,驻容有方！"), Some(BriefIntroduction("青春常在,驻容有方", " 简约、干净、充满新古典风格的环境里,忆容沙龙将让每一位客人在自在的空间里,在优美旋律的陪伴下,感受专业美发技术和造型设计的美妙。", "欢迎光临忆容吧！")), Contact("0512-68320328", "冯先生", "hz-han@rontech.co.jp"), List(OptContactMethod("QQ", List("99198121"))), Some(date("2014-03-12")), Some(Address("江苏省", Option("苏州市"), Option("工业园区"), None, "星港街158号湖滨新天地103-1店铺", Some(100.0), Some(110.0), "地铁一号线汾湖路站1号出口向西步行500米可达")), Some(WorkTime("9:00", "18:00")), Some(RestDay("Fixed", List("Monday"))), Some(25), Some(SalonFacilities(true, true, false, false, true, true, true, true, true, "附近有")), List(new OnUsePicture(new ObjectId, "LOGO", Some(1), None), new OnUsePicture(new ObjectId, "Navigate", Some(1), None), new OnUsePicture(new ObjectId, "Navigate", Some(2), None), new OnUsePicture(new ObjectId, "Navigate", Some(3), None), new OnUsePicture(new ObjectId, "Atmosphere", Some(1), Some("清新怡人")), new OnUsePicture(new ObjectId, "Atmosphere", Some(2), Some("环境优雅！")), new OnUsePicture(new ObjectId, "Atmosphere", Some(3), Some("安静典雅！")), new OnUsePicture(new ObjectId, "SalonCheck", Some(1), Some("营业执照！"))), date("2014-01-12")),
-        Salon(new ObjectId("530d7292d7f2861457771aae"), SalonAccount("salon09", "$2a$10$q0rl.qI.X9UTPZ6mDRbVhOvxYjk9S7RsrAmJ3aXaJaEcLV/3f/bU."), "美肌阁", Some("美肌阁"), List("Hairdressing"), Some("www.meijige.com"), Some("肌肤护理,美丽依旧！"), Some(BriefIntroduction("肌肤护理,美丽依旧", "为了您更美好的生活,我们一直在关注,我们一直在努力！您的肯定是我们最大的收获,您的信赖更是我们最满足的奖赏！", "欢迎光临虞美人！")), Contact("0512-68320328", "马先生", "hz-han@rontech.co.jp"), List(OptContactMethod("QQ", List("99198121"))), Some(date("2014-03-12")), Some(Address("江苏省", Option("苏州市"), Option("姑苏区"), None, "人民路1322-1326号", Some(100.0), Some(110.0), "地铁一号线汾湖路站1号出口向西步行500米可达")), Some(WorkTime("9:00", "18:00")), Some(RestDay("Fixed", List("Monday"))), Some(25), Some(SalonFacilities(true, true, true, true, false, true, true, true, true, "附近有")), List(new OnUsePicture(new ObjectId, "LOGO", None, None), new OnUsePicture(new ObjectId, "Navigate", Some(1), None), new OnUsePicture(new ObjectId, "Navigate", Some(2), None), new OnUsePicture(new ObjectId, "Navigate", Some(3), None), new OnUsePicture(new ObjectId, "Atmosphere", Some(1), Some("清新怡人")), new OnUsePicture(new ObjectId, "Atmosphere", Some(2), Some("环境优雅！")), new OnUsePicture(new ObjectId, "Atmosphere", Some(3), Some("安静典雅！")), new OnUsePicture(new ObjectId, "SalonCheck", Some(1), Some("营业执照！"))), date("2014-03-12")),
+        Salon(new ObjectId("530d7292d7f2861457771aae"), SalonAccount("salon09", "$2a$10$q0rl.qI.X9UTPZ6mDRbVhOvxYjk9S7RsrAmJ3aXaJaEcLV/3f/bU."), "靓甲吧", Some("靓甲吧"), List("Manicures"), Some("www.meijige.com"), Some("肌肤护理,美丽依旧！"), Some(BriefIntroduction("肌肤护理,美丽依旧", "为了您更美好的生活,我们一直在关注,我们一直在努力！您的肯定是我们最大的收获,您的信赖更是我们最满足的奖赏！", "欢迎光临会美h！")), Contact("0512-68320328", "马先生", "hz-han@rontech.co.jp"), List(OptContactMethod("QQ", List("99198121"))), Some(date("2014-03-12")), Some(Address("江苏省", Option("苏州市"), Option("姑苏区"), None, "人民路1322-1326号", Some(100.0), Some(110.0), "地铁一号线汾湖路站1号出口向西步行500米可达")), Some(WorkTime("9:00", "18:00")), Some(RestDay("Fixed", List("Monday"))), Some(25), Some(SalonFacilities(true, true, true, true, false, true, true, true, true, "附近有")), List(new OnUsePicture(new ObjectId, "LOGO", None, None), new OnUsePicture(new ObjectId, "Navigate", Some(1), None), new OnUsePicture(new ObjectId, "Navigate", Some(2), None), new OnUsePicture(new ObjectId, "Navigate", Some(3), None), new OnUsePicture(new ObjectId, "Atmosphere", Some(1), Some("清新怡人")), new OnUsePicture(new ObjectId, "Atmosphere", Some(2), Some("环境优雅！")), new OnUsePicture(new ObjectId, "Atmosphere", Some(3), Some("安静典雅！")), new OnUsePicture(new ObjectId, "SalonCheck", Some(1), Some("营业执照！"))), date("2014-03-12")),
         Salon(new ObjectId("530d7292d7f2861457771aaf"), SalonAccount("salon10", "$2a$10$q0rl.qI.X9UTPZ6mDRbVhOvxYjk9S7RsrAmJ3aXaJaEcLV/3f/bU."), "会美", Some("会美"), List("Hairdressing"), Some("www.huimei.com"), Some("我们都会美！"), Some(BriefIntroduction("我们都会美", "为了您更美好的生活,我们一直在关注,我们一直在努力！您的肯定是我们最大的收获,您的信赖更是我们最满足的奖赏！", "欢迎光临美吧！")), Contact("0512-68320328", "张女士", "hz-han@rontech.co.jp"), List(OptContactMethod("QQ", List("99198121"))), Some(date("2014-03-12")), Some(Address("江苏省", Option("苏州市"), Option("高新区"), None, "长江路211号泉屋百货1楼", Some(100.0), Some(110.0), "地铁一号线玉山站1号出口向西步行500米可达")), Some(WorkTime("9:00", "18:00")), Some(RestDay("Fixed", List("Monday"))), Some(25), Some(SalonFacilities(true, true, true, true, false, true, true, true, true, "附近有")), List(new OnUsePicture(new ObjectId, "LOGO", None, None), new OnUsePicture(new ObjectId, "Navigate", Some(1), None), new OnUsePicture(new ObjectId, "Navigate", Some(2), None), new OnUsePicture(new ObjectId, "Navigate", Some(3), None), new OnUsePicture(new ObjectId, "Atmosphere", Some(1), Some("清新怡人")), new OnUsePicture(new ObjectId, "Atmosphere", Some(2), Some("环境优雅！")), new OnUsePicture(new ObjectId, "Atmosphere", Some(3), Some("安静典雅！")), new OnUsePicture(new ObjectId, "SalonCheck", Some(1), Some("营业执照！"))), date("2014-03-12"))).foreach(Salon.save)
     }
 
@@ -332,7 +390,8 @@ object InitialData {
         Stylist(new ObjectId, new ObjectId("53202c29d4d5e3cd47effff1"), 5, List(new IndustryAndPosition(new ObjectId, "Assistant", "Healthcare")), List("fresh"), List("street"), List("Cut", "Wash", "Care"), List("male", "female"), List("1~10", "10~20", "20~30", "30~40"), "☆染发：色度/宁深一度,不浅半度。色调/宁暗勿亮。", "按照头皮通过样式建议☆脑袋矿泉根据（季节）的麻烦的建议,一个健康的状态样式建议☆日本四季可再生按照客户的后顾之忧,即使从后面的房子,改善☆（头按摩）", "*（自主开发,本作的,运动员都特别喜欢）（印象系统,人类系统特别喜欢）阅读*电影DVD观看是一个（*易清洁,整齐*厨师,健康食物卡在）", "建议适合女性的身材和喜好的麻烦,希望每一位客户,下一次不只是这一次,它建的故事,包括发型到下一个,但一☆砍你强​​调“易用性对待”,风格建议♪", (List(new OnUsePicture(new ObjectId, "logo", Some(1), None))), true, true),
         Stylist(new ObjectId, new ObjectId("53202c29d4d5e3cd47effff2"), 5, List(new IndustryAndPosition(new ObjectId, "ChiefStylist", "Hairdressing")), List("fresh"), List("street"), List("Blow", "Dye", "Wash"), List("male", "female"), List("1~10", "10~20", "20~30", "30~40"), "☆美发师的成长经历 =模仿 + 吸收 +发挥。", "按照头皮通过样式建议☆脑袋矿泉根据（季节）的麻烦的建议,一个健康的状态样式建议☆日本四季可再生按照客户的后顾之忧,即使从后面的房子,改善☆（头按摩）", "*（自主开发,本作的,运动员都特别喜欢）（印象系统,人类系统特别喜欢）阅读*电影DVD观看是一个（*易清洁,整齐*厨师,健康食物卡在）", "建议适合女性的身材和喜好的麻烦,希望每一位客户,下一次不只是这一次,它建的故事,包括发型到下一个,但一☆砍你强​​调“易用性对待”,风格建议♪", (List(new OnUsePicture(new ObjectId, "logo", Some(1), None))), true, true),
         Stylist(new ObjectId, new ObjectId("53202c29d4d5e3cd47effff3"), 5, List(new IndustryAndPosition(new ObjectId, "Assistant", "Healthcare")), List("fresh"), List("T-stage"), List("Blow", "Dye", "Wash"), List("male", "female"), List("1~10", "10~20", "20~30", "30~40"), "☆染发：色度/宁深一度,不浅半度。色调/宁暗勿亮。", "按照头皮通过样式建议☆脑袋矿泉根据（季节）的麻烦的建议,一个健康的状态样式建议☆日本四季可再生按照客户的后顾之忧,即使从后面的房子,改善☆（头按摩）", "*（自主开发,本作的,运动员都特别喜欢）（印象系统,人类系统特别喜欢）阅读*电影DVD观看是一个（*易清洁,整齐*厨师,健康食物卡在）", "建议适合女性的身材和喜好的麻烦,希望每一位客户,下一次不只是这一次,它建的故事,包括发型到下一个,但一☆砍你强​​调“易用性对待”,风格建议♪", (List(new OnUsePicture(new ObjectId, "logo", Some(1), None))), true, true),
-        Stylist(new ObjectId, new ObjectId("53202c29d4d5e3cd47effff4"), 5, List(new IndustryAndPosition(new ObjectId, "Assistant", "Healthcare")), List("fresh"), List("T-stage"), List("Perm", "Supple", "Wash"), List("male", "female"), List("1~10", "10~20", "20~30", "30~40"), "☆美发师的成长经历 =模仿 + 吸收 +发挥。", "按照头皮通过样式建议☆脑袋矿泉根据（季节）的麻烦的建议,一个健康的状态样式建议☆日本四季可再生按照客户的后顾之忧,即使从后面的房子,改善☆（头按摩）", "*（自主开发,本作的,运动员都特别喜欢）（印象系统,人类系统特别喜欢）阅读*电影DVD观看是一个（*易清洁,整齐*厨师,健康食物卡在）", "建议适合女性的身材和喜好的麻烦,希望每一位客户,下一次不只是这一次,它建的故事,包括发型到下一个,但一☆砍你强​​调“易用性对待”,风格建议♪", (List(new OnUsePicture(new ObjectId, "logo", Some(1), None))), true, true)).foreach(Stylist.save)
+        Stylist(new ObjectId, new ObjectId("53202c29d4d5e3cd47effff4"), 5, List(new IndustryAndPosition(new ObjectId, "Assistant", "Healthcare")), List("fresh"), List("T-stage"), List("Perm", "Supple", "Wash"), List("male", "female"), List("1~10", "10~20", "20~30", "30~40"), "☆美发师的成长经历 =模仿 + 吸收 +发挥。", "按照头皮通过样式建议☆脑袋矿泉根据（季节）的麻烦的建议,一个健康的状态样式建议☆日本四季可再生按照客户的后顾之忧,即使从后面的房子,改善☆（头按摩）", "*（自主开发,本作的,运动员都特别喜欢）（印象系统,人类系统特别喜欢）阅读*电影DVD观看是一个（*易清洁,整齐*厨师,健康食物卡在）", "建议适合女性的身材和喜好的麻烦,希望每一位客户,下一次不只是这一次,它建的故事,包括发型到下一个,但一☆砍你强​​调“易用性对待”,风格建议♪", (List(new OnUsePicture(new ObjectId, "logo", Some(1), None))), true, true),
+        Stylist(new ObjectId, new ObjectId("53202c29d4d5e3cd47efffe3"), 5, List(new IndustryAndPosition(new ObjectId, "Assistant", "Manicures")), List("natural"), List("office"), List("Pen", "Delineation", "Gel"), List("male", "female"), List("1~10", "10~20", "20~30", "30~40"), "☆美发师的成长经历 =模仿 + 吸收 +发挥。", "按照头皮通过样式建议☆脑袋矿泉根据（季节）的麻烦的建议,一个健康的状态样式建议☆日本四季可再生按照客户的后顾之忧,即使从后面的房子,改善☆（头按摩）", "*（自主开发,本作的,运动员都特别喜欢）（印象系统,人类系统特别喜欢）阅读*电影DVD观看是一个（*易清洁,整齐*厨师,健康食物卡在）", "建议适合女性的身材和喜好的麻烦,希望每一位客户,下一次不只是这一次,它建的故事,包括发型到下一个,但一☆砍你强​​调“易用性对待”,风格建议♪", (List(new OnUsePicture(new ObjectId, "logo", Some(1), None))), true, true)).foreach(Stylist.save)
     }
 
     if (User.findAll.isEmpty) {
@@ -381,7 +440,10 @@ object InitialData {
         })), Some("程序员"), "normalUser", "userLevel.0", 20, 0, date("2014-03-18").getTime, "LoggedIn", true),
         User(new ObjectId("53202c29d4d5e3cd47efffe2"), "demo11", "红叶", "$2a$10$q0rl.qI.X9UTPZ6mDRbVhOvxYjk9S7RsrAmJ3aXaJaEcLV/3f/bU.", "F", Some(date("1991-03-18")), Some(Address("江苏省", Option("苏州市"), Option("高新区"), None, "竹园路209号", Some(100.0), Some(110.0), "")), new ObjectId, Some("15269845698"), "12313@123.com", Seq(OptContactMethod("QQ", List {
           "845654891"
-        })), Some("程序员"), "normalUser", "userLevel.0", 20, 0, date("2014-03-18").getTime, "LoggedIn", true)).foreach(User.save)
+        })), Some("程序员"), "normalUser", "userLevel.0", 20, 0, date("2014-03-18").getTime, "LoggedIn", true),
+        User(new ObjectId("53202c29d4d5e3cd47efffe3"), "demo12", "百晓生", "$2a$10$q0rl.qI.X9UTPZ6mDRbVhOvxYjk9S7RsrAmJ3aXaJaEcLV/3f/bU.", "F", Some(date("1991-03-18")), Some(Address("江苏省", Option("苏州市"), Option("高新区"), None, "竹园路209号", Some(100.0), Some(110.0), "")), new ObjectId, Some("15269845698"), "12313@123.com", Seq(OptContactMethod("QQ", List {
+        "845654891"
+        })), Some("程序员"), "stylist", "userLevel.0", 20, 0, date("2014-03-18").getTime, "LoggedIn", true)).foreach(User.save)
     }
 
     if (SalonAndStylist.findAll.isEmpty) {
@@ -397,7 +459,8 @@ object InitialData {
         SalonAndStylist(new ObjectId, new ObjectId("530d7288d7f2861457771bdf"), new ObjectId("53202c29d4d5e3cd47effff1"), List(new IndustryAndPosition(new ObjectId, "美甲师", "高级技师")), new Date, None, true),
         SalonAndStylist(new ObjectId, new ObjectId("530d7288d7f2861457771bdf"), new ObjectId("53202c29d4d5e3cd47effff2"), List(new IndustryAndPosition(new ObjectId, "美甲师", "技师")), new Date, None, true),
         SalonAndStylist(new ObjectId, new ObjectId("530d7288d7f2861457771bdf"), new ObjectId("53202c29d4d5e3cd47effff3"), List(new IndustryAndPosition(new ObjectId, "美甲师", "首席技师")), new Date, None, true),
-        SalonAndStylist(new ObjectId, new ObjectId("530d7288d7f2861457771bdf"), new ObjectId("53202c29d4d5e3cd47effff4"), List(new IndustryAndPosition(new ObjectId, "美甲师", "店长")), new Date, None, true)).foreach(SalonAndStylist.save)
+        SalonAndStylist(new ObjectId, new ObjectId("530d7288d7f2861457771bdf"), new ObjectId("53202c29d4d5e3cd47effff4"), List(new IndustryAndPosition(new ObjectId, "美甲师", "店长")), new Date, None, true),
+        SalonAndStylist(new ObjectId, new ObjectId("530d7292d7f2861457771aae"), new ObjectId("53202c29d4d5e3cd47efffe3"), List(new IndustryAndPosition(new ObjectId, "美甲师", "店长")), new Date, None, true)).foreach(SalonAndStylist.save)
     }
 
     if (Style.findAll.isEmpty) {
@@ -469,6 +532,18 @@ object InitialData {
         Style(new ObjectId("533151209aa6b4dfc54a1876"), "男士过肩大长发", new ObjectId("530d8010d7f2861457771bf8"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT")), new OnUsePicture(new ObjectId, "side", Some(1), Option("SIDE")), new OnUsePicture(new ObjectId, "back", Some(1), Option("BACK"))), "personality", List("Supple", "Perm"), "super-short", List("brown", "flax"), List("much"), List("silky", "greasy", "general"), List("bold", "thin", "moderate"), List("round-face", "oval-face"), "此种发型清爽怡人,迎面而过,回眸一笑百媚生", List("one--twenty-five", "twenty-five--thirty-five"), "male", List("star", "evening-wear", "others"), date("2014-03-12"), true),
         Style(new ObjectId("533151209aa6b4dfc54a1877"), "中分长发", new ObjectId("53202c29d4d5e3cd47effff2"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT")), new OnUsePicture(new ObjectId, "side", Some(1), Option("SIDE")), new OnUsePicture(new ObjectId, "back", Some(1), Option("BACK"))), "sweet", List("Supple", "Perm"), "short", List("chocolate", "brown", "flax", "red"), List("much"), List("silky", "greasy", "dry", "general"), List("bold", "thin"), List("long-face", "oval-face"), "此种发型清爽怡人,迎面而过,回眸一笑百媚生", List("one--twenty-five", "twenty-five--thirty-five"), "male", List("star", "street", "others"), date("2014-03-12"), true)).foreach(Style.save)
     }
+
+    if (Nail.findAll.isEmpty) {
+      Seq(
+        Nail(new ObjectId("5317c0d1d4d57996ce4b2a31"), "法式浪漫", new ObjectId("53202c29d4d5e3cd47efffe3"), 188, List("Delineation","Pen"), List("pink","white","silver","beige","gold","orange","brown","yellow"), List("rhinestone","pearl","metal"), List("hand","foot"), "natural", List("office","bridal"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "清新动人", date("2014-03-12"), true),
+        Nail(new ObjectId("5317c0d1d4d57996ce4b2a32"), "反转法式", new ObjectId("53202c29d4d5e3cd47efffe3"), 50, List("Airbrush","Patch","Crystal","Gel"), List("pink","white","purple","red","black","clear","multi"), List("metal","peucine","bridal","fruitSlices"), List("hand","foot"), "fresh", List("office","party","sport","date"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "超炫闪亮登场", date("2014-03-12"), true),
+        Nail(new ObjectId("5317c0d1d4d57996ce4b2a33"), "清新~(ˇˍˇ）", new ObjectId("53202c29d4d5e3cd47efffe3"), 100, List("Airbrush","Patch","Crystal","Gel"), List("green","blue","purple","red","black","clear","multi"), List("metal","peucine","bridal","fruitSlices"), List("hand","foot"), "fresh", List("office","party","sport","date"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "超炫闪亮登场", date("2014-03-12"), true),
+        Nail(new ObjectId("5317c0d1d4d57996ce4b2a34"), "炫丽", new ObjectId("53202c29d4d5e3cd47efffe3"), 199, List("Airbrush","Delineation"), List("green","blue","purple","beige","gold","orange","brown","yellow"), List("metal","peucine","bridal","fruitSlices"), List("hand","foot"), "fresh", List("office","party","sport","date"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "超炫闪亮登场", date("2014-03-12"), true),
+        Nail(new ObjectId("5317c0d1d4d57996ce4b2a35"), "可爱(～ o ～)Y", new ObjectId("53202c29d4d5e3cd47efffe3"), 600, List("Airbrush","Patch","Crystal","Gel"), List("green","blue","purple","red","black","clear","multi"), List("metal","peucine","bridal","fruitSlices"), List("hand","foot"), "fresh", List("office","party","sport","date"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "超炫闪亮登场", date("2014-03-12"), true),
+        Nail(new ObjectId("5317c0d1d4d57996ce4b2a36"), "多色变幻", new ObjectId("53202c29d4d5e3cd47efffe3"), 266, List("Delineation","Patch","Pen","Gel"), List("green","blue","purple","red","black","clear","multi"), List("metal","peucine","bridal","fruitSlices"), List("hand","foot"), "fresh", List("office","party","sport","date"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "超炫闪亮登场", date("2014-03-12"), true),
+        Nail(new ObjectId("5317c0d1d4d57996ce4b2a38"), "跳动的精灵", new ObjectId("53202c29d4d5e3cd47efffe3"), 166, List("Airbrush","Pen","Crystal","Gel"), List("silver","beige","gold","orange","black","clear","multi"), List("metal","peucine","bridal","fruitSlices"), List("hand","foot"), "fresh", List("office","party","sport","date"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "超炫闪亮登场", date("2014-03-12"), true)).foreach(Nail.save)
+    }
+
     if (Coupon.findAll.isEmpty) {
       Seq(
         Coupon(new ObjectId("5317c0d1d4d57997ce3e6d6a"), "xjc01", "吹剪经典组合", new ObjectId("530d7288d7f2861457771bdd"), List(Service(new ObjectId("53168b38d4d5cb7e816db35c"), "剪刘海", "专门剪刘海", "Cut", new ObjectId("530d7288d7f2861457771bdd"), 10, 10, date("2014-03-31"), null, true), Service(new ObjectId("5316bb36d4d57997ce3e6d49"), "离子烫", "离子烫对头发保护性最强", "Perm", new ObjectId("530d7288d7f2861457771bdd"), 90, 100, date("2014-03-31"), null, true)), 110, 100, 90, date("2014-03-01"), date("2015-03-31"), "你看到的HOTPEPPER美容♪字", "在预订时间", "◆体验到自己可爱虽然是♪我们自然要授予风格，你想仔细咨询☆◆您可以选择洗发水是一种根据请求的皮肤和头发，定型剂", true),
@@ -984,6 +1059,21 @@ object InitialData {
             val defaultLogImgId = Image.save(defaultLog)
             val defaultLogImg = DefaultLog.findAll.toList(index)
             DefaultLog.saveLogImg(defaultLogImg, defaultLogImgId)
+          }
+        }
+      }
+    }
+
+    if (!Nail.findAll.isEmpty) {
+      if (Image.fuzzyFindByName("nail").isEmpty) {
+        // save picture of nail
+        val stylefile = new File(play.Play.application().path() + "/public/images/nail/nail")
+        val stylefiles = Image.listFilesInFolder(stylefile)
+        for ((styf, index) <- stylefiles.zipWithIndex) {
+          if (index < Nail.findAll.toList.length) {
+            val styleImgId = Image.save(styf)
+            val nail = Nail.findAll.toList(index)
+            Nail.updateNailImage(nail, styleImgId)
           }
         }
       }
