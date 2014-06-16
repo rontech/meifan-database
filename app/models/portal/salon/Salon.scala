@@ -40,6 +40,7 @@ import models.portal.coupon.Coupon
 import models.portal.review.Comment
 import models.portal.relation.SalonAndStylist
 import models.portal.service.Service
+import models.portal.nail.Nail
 
 
 /**
@@ -716,6 +717,36 @@ object Salon extends MeifanNetModelCompanion[Salon] {
    * @return
    */
   def isValid(value: String, loggedSalon: Salon, f: String => Option[Salon]) = f(value).map(_.id == loggedSalon.id).getOrElse(true)
+
+  /**
+   * 通过店铺Id获取其行业类型
+   * @param salonId 店铺Id
+   * @return
+   */
+  def findIndustryBySalonId(salonId: ObjectId) = {
+    val salonIndustry = dao.findOneById(salonId).map(_.salonIndustry(0)).getOrElse(None)
+    salonIndustry
+  }
+
+  /**
+   * Get all nails of a salon.
+   * 取得指定沙龙的所有美甲
+   *
+   * @param salonId 沙龙id
+   * @return 美甲列表
+   */
+  def getAllNails(salonId: ObjectId): List[Nail] = {
+    var styles: List[Nail] = Nil
+    // find styles of all stylists via the relationship between [salon] and [stylist].
+    val stylists = SalonAndStylist.findBySalonId(salonId)
+    stylists.map { stls =>
+      var style = Nail.findByStylistId(stls.stylistId)
+      styles :::= style
+    }
+    // order by create time desc.
+    styles.sortBy(_.createDate).reverse
+  }
+
 
 }
 
