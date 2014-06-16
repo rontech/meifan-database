@@ -40,18 +40,7 @@ import models.portal.coupon.Coupon
 import models.portal.review.Comment
 import models.portal.relation.SalonAndStylist
 import models.portal.service.Service
-import models.portal.search.SearchParaForSalon
-import models.portal.salon.WorkTime
-import models.portal.salon.SalonAccount
-import scala.Some
-import models.portal.salon.RestDay
-import models.portal.salon.BriefIntroduction
-import models.portal.salon.Contact
-import models.portal.common.OptContactMethod
-import models.portal.search.SalonGeneralSrchRst
-import models.portal.search.SortByConditions
-import models.portal.common.Address
-import models.portal.manager._
+import models.portal.nail.Nail
 
 
 /**
@@ -95,8 +84,7 @@ case class Salon(
   salonFacilities: Option[SalonFacilities],
   salonPics: List[OnUsePicture],
   registerDate: Date,
-  salonStatus: SalonStatus
-  )
+  salonStatus: SalonStatus)
 
 case class SalonStatus(applyMeifanFlag :Int, isValid :Boolean)
 
@@ -337,7 +325,7 @@ object Salon extends MeifanNetModelCompanion[Salon] {
    * @param salon 已登录的沙龙
    * @return
    */
-  def checkDetailIsFill(salon: Salon) = {
+  def checkDetailIsFill(salon: Salon): Boolean = {
     salon.seatNums.nonEmpty &&
       salon.salonIntroduction.exists(pic => pic.introHeader.nonEmpty) && salon.salonIntroduction.exists(pic => pic.introContent.nonEmpty) &&
       salon.salonIntroduction.exists(pic => pic.introFooter.nonEmpty)
@@ -349,7 +337,7 @@ object Salon extends MeifanNetModelCompanion[Salon] {
    * @param salon 已登录的沙龙
    * @return
    */
- def checkImgIsExist(salon: Salon) = {
+  def checkImgIsExist(salon: Salon): Boolean = {
     salon.salonPics.exists(a => a.picUse.equals("Navigate")) && salon.salonPics.exists(a => a.picUse.equals("Atmosphere")) &&
       salon.salonPics.exists(a => a.picUse.equals("SalonCheck"))
   }
@@ -733,7 +721,35 @@ object Salon extends MeifanNetModelCompanion[Salon] {
    */
   def isValid(value: String, loggedSalon: Salon, f: String => Option[Salon]) = f(value).map(_.id == loggedSalon.id).getOrElse(true)
 
-  //def findSalonsByIndustry(industry: String) :List[Salon] = dao.find(MongDBObject("industry" $in industry)).toList
+  /**
+   * 通过店铺Id获取其行业类型
+   * @param salonId 店铺Id
+   * @return
+   */
+  def findIndustryBySalonId(salonId: ObjectId) = {
+    val salonIndustry = dao.findOneById(salonId).map(_.salonIndustry(0)).getOrElse(None)
+    salonIndustry
+  }
+
+  /**
+   * Get all nails of a salon.
+   * 取得指定沙龙的所有美甲
+   *
+   * @param salonId 沙龙id
+   * @return 美甲列表
+   */
+  def getAllNails(salonId: ObjectId): List[Nail] = {
+    var styles: List[Nail] = Nil
+    // find styles of all stylists via the relationship between [salon] and [stylist].
+    val stylists = SalonAndStylist.findBySalonId(salonId)
+    stylists.map { stls =>
+      var style = Nail.findByStylistId(stls.stylistId)
+      styles :::= style
+    }
+    // order by create time desc.
+    styles.sortBy(_.createDate).reverse
+  }
+
 
 }
 
