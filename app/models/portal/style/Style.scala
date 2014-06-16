@@ -553,14 +553,14 @@ object Style extends MeifanNetModelCompanion[Style] {
    * 获取发型检索字段、图片描述的主表数据,并将它们放入整合类StylePara中
    * @return StylePara
    */
-  def findParaAll = {
+  def findParaAll(industry: String) = {
     //获得相应主表数据
-    val paraStyleImpression = StyleImpression.findAllStyleImpression("Hairdressing").toList
+    val paraStyleImpression = StyleImpression.findAllStyleImpression(industry).toList
     var paraStyleImpressions: List[String] = Nil
     paraStyleImpression.map { para =>
       paraStyleImpressions :::= List(para)
     }
-    val paraServiceType = ServiceType.findAllServiceType("Hairdressing").toList
+    val paraServiceType = ServiceType.findAllServiceType(industry).toList
     var paraServiceTypes: List[String] = Nil
     paraServiceType.map { para =>
       paraServiceTypes :::= List(para)
@@ -570,7 +570,7 @@ object Style extends MeifanNetModelCompanion[Style] {
     paraStyleLength.map { para =>
       paraStyleLengths :::= List(para.styleLength)
     }
-    val paraStyleColor = StyleColor.findAllStyleColor("Hairdressing").toList
+    val paraStyleColor = StyleColor.findAllStyleColor(industry).toList
     var paraStyleColors: List[String] = Nil
     paraStyleColor.map { para =>
       paraStyleColors :::= List(para)
@@ -605,7 +605,7 @@ object Style extends MeifanNetModelCompanion[Style] {
     paraConsumerSex.map { para =>
       paraConsumerSexs :::= List(para.sex)
     }
-    val paraConsumerSocialScene = SocialScene.findAllSocialScene("Hairdressing").toList
+    val paraConsumerSocialScene = SocialScene.findAllSocialScene(industry).toList
     var paraConsumerSocialScenes: List[String] = Nil
     paraConsumerSocialScene.map { para =>
       paraConsumerSocialScenes :::= List(para)
