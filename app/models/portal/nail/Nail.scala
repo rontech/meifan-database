@@ -20,7 +20,6 @@ package models.portal.nail
 import java.util.Date
 import models.portal.style._
 import models.portal.service.ServiceType
-import models.portal.search.PriceRange
 import com.mongodb.casbah.query.Imports._
 import com.mongodb.casbah.commons.Imports.{ DBObject => commonsDBObject }
 import mongoContext._
@@ -58,7 +57,6 @@ case class NailWithAllInfo(
  * @param styleBase 美甲作用部位主表数据
  * @param styleImpression 美甲风格主表数据
  * @param socialScene 美甲适用场合主表数据
- * @param priceRange 美甲价格区间主表数据
  */
 case class StylePara (
   serviceType: List[String],
@@ -66,8 +64,7 @@ case class StylePara (
   styleMaterial: List[String],
   styleBase: List[String],
   styleImpression: List[String],
-  socialScene: List[String],
-  priceRange:List[Tuple2[BigDecimal,BigDecimal]])
+  socialScene: List[String])
 
 /**
  * 美甲检索字段整合类
@@ -81,7 +78,6 @@ case class StylePara (
  * @param styleBase 美甲作用部位
  * @param styleImpression 美甲风格
  * @param socialScene 美甲适用场合
- * @param priceRange 美甲价格
  */
 case class SearchPara(
    keyWord: Option[String],
@@ -93,15 +89,13 @@ case class SearchPara(
    styleMaterial: List[String],
    styleBase: List[String],
    styleImpression: List[String],
-   socialScene: List[String],
-   priceRange: PriceRange)
+   socialScene: List[String])
 
 /**
  * 美甲主类
  * @param id 美甲ID
  * @param styleName 美甲名称
  * @param stylistId 技师Id
- * @param stylePrice 美甲的价格
  * @param serviceType 技术类别
  * @param styleColor 颜色
  * @param styleMaterial 材质
@@ -117,7 +111,6 @@ case class Nail(
   id: ObjectId = new ObjectId,
   styleName: String,
   stylistId: ObjectId,
-  stylePrice: BigDecimal,
   serviceType: List[String],
   styleColor: List[String],
   styleMaterial: List[String],
@@ -137,45 +130,40 @@ object Nail extends MeifanNetModelCompanion[Nail] {
    * 获取美甲检索字段主表数据,并将它们放入整合类StylePara中
    * @return StylePara
    */
-  def findParaAll = {
+  def findParaAll(industry: String) = {
     //获得相应主表数据
-    val paraServiceType = ServiceType.findAllServiceType("Manicures").toList
+    val paraServiceType = ServiceType.findAllServiceType(industry).toList
     var paraServiceTypes: List[String] = Nil
     paraServiceType.map { para =>
       paraServiceTypes :::= List(para)
     }
-    val paraStyleColor = StyleColor.findAllStyleColor("Manicures").toList
+    val paraStyleColor = StyleColor.findAllStyleColor(industry).toList
     var paraStyleColors: List[String] = Nil
     paraStyleColor.map { para =>
       paraStyleColors :::= List(para)
     }
-    val paraStyleMaterial = StyleMaterial.findAllStyleMaterial("Manicures").toList
+    val paraStyleMaterial = StyleMaterial.findAllStyleMaterial(industry).toList
     var paraStyleMaterials: List[String] = Nil
     paraStyleMaterial.map { para =>
       paraStyleMaterials :::= List(para)
     }
-    val paraStyleBase = StyleBase.findAllStyleBase("Manicures").toList
+    val paraStyleBase = StyleBase.findAllStyleBase(industry).toList
     var paraStyleBases: List[String] = Nil
     paraStyleBase.map { para =>
       paraStyleBases :::= List(para)
     }
-    val paraStyleImpression = StyleImpression.findAllStyleImpression("Manicures").toList
+    val paraStyleImpression = StyleImpression.findAllStyleImpression(industry).toList
     var paraStyleImpressions: List[String] = Nil
     paraStyleImpression.map { para =>
       paraStyleImpressions :::= List(para)
     }
-    val paraSocialScene = SocialScene.findAllSocialScene("Manicures").toList
+    val paraSocialScene = SocialScene.findAllSocialScene(industry).toList
     var paraSocialScenes: List[String] = Nil
     paraSocialScene.map { para =>
       paraSocialScenes :::= List(para)
     }
-    val paraPriceRange = PriceRange.findAllPriceRange("Manicures").toList
-    var paraPriceRanges: List[Tuple2[BigDecimal,BigDecimal]] = Nil
-    paraPriceRange.map { para =>
-      paraPriceRanges :::= List(para)
-    }
     //将检索出来的主表数据放到发型主表字段整合类中
-    val stylePara = new StylePara(paraServiceTypes, paraStyleColors, paraStyleMaterials, paraStyleBases, paraStyleImpressions, paraSocialScenes, paraPriceRanges)
+    val stylePara = new StylePara(paraServiceTypes, paraStyleColors, paraStyleMaterials, paraStyleBases, paraStyleImpressions, paraSocialScenes)
     stylePara
   }
 
@@ -277,10 +265,17 @@ object Nail extends MeifanNetModelCompanion[Nail] {
     if (searchPara.socialScene.nonEmpty) {
       srchConds :::= List("socialScene" $in searchPara.socialScene)
     }
-    //价格区间
-    srchConds :::= List("stylePrice" $lte searchPara.priceRange.maxPrice.toFloat $gte searchPara.priceRange.minPrice.toFloat)
     //有效性
     srchConds :::= List(commonsDBObject("isValid" -> true))
     srchConds
+  }
+
+  /**
+   * 通过技师ID检索该技师所有作品
+   * @param stylistId 技师ID
+   * @return 符合条件的所有美甲
+   */
+  def findByStylistId(stylistId: ObjectId): List[Nail] = {
+    dao.find(DBObject("stylistId" -> stylistId, "isValid" -> true)).toList.sortBy(_.createDate).reverse
   }
 }
