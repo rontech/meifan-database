@@ -119,7 +119,7 @@ object Stylist extends MeifanNetModelCompanion[Stylist] {
    * 最后将所有集合生成一个对象
    * @return
    */
-  def findGoodAtStyle: GoodAtStyle = {
+  def findGoodAtStyle(industryName: String): GoodAtStyle = {
     val position = Position.findAll().toList
     var positions: List[String] = Nil
     position.map { para =>
@@ -132,17 +132,11 @@ object Stylist extends MeifanNetModelCompanion[Stylist] {
       industrys :::= List(para.industryName)
     }
 
-    val paraStyleImpression = StyleImpression.findAll().toList
-    var paraStyleImpressions: List[String] = Nil
-    paraStyleImpression.map { para =>
-      paraStyleImpressions :::= List(para.styleImpression)
-    }
+    // 擅长风格
+    val paraStyleImpressions = StyleImpression.findAllStyleImpression(industryName).toList
 
-    val paraConsumerSocialScene = SocialScene.findAll().toList
-    var paraConsumerSocialScenes: List[String] = Nil
-    paraConsumerSocialScene.map { para =>
-      paraConsumerSocialScenes :::= List(para.socialScene)
-    }
+    // 擅长人群
+    val paraConsumerSocialScenes = SocialScene.findAllSocialScene(industryName).toList
 
     val paraConsumerSex = Sex.findAll().toList
     var paraConsumerSexs: List[String] = Nil
@@ -156,11 +150,9 @@ object Stylist extends MeifanNetModelCompanion[Stylist] {
       paraConsumerAgeGroups :::= List(para.ageGroup)
     }
 
-    val paraServiceType = ServiceType.findAll().toList
-    var paraServiceTypes: List[String] = Nil
-    paraServiceType.map { para =>
-      paraServiceTypes :::= List(para.serviceTypeName)
-    }
+    // 擅长服务
+    val paraServiceTypes = ServiceType.findAllServiceType(industryName).toList
+
     val goodAtStyle = new GoodAtStyle(positions, industrys, paraStyleImpressions, paraConsumerSocialScenes,
       paraServiceTypes, paraConsumerSexs, paraConsumerAgeGroups)
     goodAtStyle
