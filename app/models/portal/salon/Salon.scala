@@ -83,7 +83,10 @@ case class Salon(
   seatNums: Option[Int],
   salonFacilities: Option[SalonFacilities],
   salonPics: List[OnUsePicture],
-  registerDate: Date)
+  registerDate: Date,
+  salonStatus: SalonStatus)
+
+case class SalonStatus(applyMeifanFlag :Int, isValid :Boolean)
 
 object Salon extends MeifanNetModelCompanion[Salon] {
 
