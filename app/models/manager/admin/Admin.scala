@@ -7,24 +7,28 @@ import mongoContext._
 import com.meifannet.framework.db._
 import com.mongodb.casbah.commons.MongoDBObject
 import org.mindrot.jbcrypt.BCrypt
+import se.radley.plugin.salat.Binders._
+import org.bson.types.ObjectId
+import se.radley.plugin.salat.Binders.ObjectId
+import com.mongodb.casbah.Imports._
 
 /**
  * Created by CCC on 14/06/12.
  */
 
 case class Admin (
+            id : ObjectId = new ObjectId,
       adminId  : String,
      password  : String)
 
 
 
-object Admin  extends MeifanNetModelCompanion[Admin] {
+object Admin  extends MeifanNetModelCompanion[Admin] {//check the ID and Password if they can find in database return an Admin object else return none
   val dao = new MeifanNetDAO[Admin](collection = loadCollection()) {}
   def authenticate(adminId: String, password: String) : Option[Admin]= {
-    //val admin = dao.findOne(MongoDBObject("adminId" -> adminId))
-    if ( adminId.equals("admin")&&password.equals("123456")) {// admin.nonEmpty && BCrypt.checkpw(password, admin.get.password)
-       val a = new Admin("admin","123456")
-     Option(a)
+    val admin = dao.findOne(MongoDBObject("adminId" -> adminId))
+    if ( admin.nonEmpty && BCrypt.checkpw(password, admin.get.password)) {
+      admin
     } else {
       None
     }

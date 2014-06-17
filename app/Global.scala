@@ -1,3 +1,4 @@
+import models.manager.admin.Admin
 import play.api._
 import org.bson.types.ObjectId
 import java.util.Date
@@ -305,6 +306,15 @@ object InitialData {
    *--------------------------*/
   def insertSampleData() {
 
+    if (Admin.findAll.isEmpty){
+      Seq(
+      Admin(new ObjectId,"admin01","$2a$10$q0rl.qI.X9UTPZ6mDRbVhOvxYjk9S7RsrAmJ3aXaJaEcLV/3f/bU."),
+      Admin(new ObjectId,"admin01","$2a$10$q0rl.qI.X9UTPZ6mDRbVhOvxYjk9S7RsrAmJ3aXaJaEcLV/3f/bU."),
+      Admin(new ObjectId,"admin01","$2a$10$q0rl.qI.X9UTPZ6mDRbVhOvxYjk9S7RsrAmJ3aXaJaEcLV/3f/bU.")
+      ).foreach(Admin.save)
+
+
+    }
     if (Salon.findAll.isEmpty) {
       Seq(
         Salon(new ObjectId("530d7288d7f2861457771bdd"), SalonAccount("salon01", "$2a$10$q0rl.qI.X9UTPZ6mDRbVhOvxYjk9S7RsrAmJ3aXaJaEcLV/3f/bU."), "悦美月容吧", Some("悦容吧"), List("Hairdressing"), Some("www.yuerong.com"), Some("美丽从这里开始！"), Some(BriefIntroduction("美丽从这里开始", "最新的潮流资讯、最顶尖的时尚发布、最贴心的造型设计、最合理的价格优势。我们立志以最时尚的理念,打造最生活的状态,塑造最自信的你！", "欢迎光临悦美月容！")), Contact("0512-68320328", "王经理", "wzw1991@126.com"), List(OptContactMethod("QQ", List("99198121"))), Some(date("2014-03-12")), Some(Address("江苏省", Option("苏州市"), Option("高新区"), None, "竹园路209号", Some(100.0), Some(110.0), "地铁一号线汾湖路站1号出口向西步行500米可达")), Some(WorkTime("9:00", "18:00")), Some(RestDay("Fixed", List("Monday"))), Some(25), Some(SalonFacilities(true, true, false, false, true, true, true, true, true, "附近有")), List(new OnUsePicture(new ObjectId, "LOGO", Some(1), None), new OnUsePicture(new ObjectId, "Navigate", Some(1), None), new OnUsePicture(new ObjectId, "Navigate", Some(2), None), new OnUsePicture(new ObjectId, "Navigate", Some(3), Some("清新怡人")), new OnUsePicture(new ObjectId, "Atmosphere", Some(1), Some("清新怡人")), new OnUsePicture(new ObjectId, "Atmosphere", Some(2), Some("环境优雅！")), new OnUsePicture(new ObjectId, "Atmosphere", Some(3), Some("安静典雅！")), new OnUsePicture(new ObjectId, "SalonCheck", Some(1), Some("营业执照！"))), date("2014-01-12"), new SalonStatus(1, true)),
@@ -561,6 +571,7 @@ object InitialData {
         Message(new ObjectId("531964e0d4d57d0a43771811"), "您有新粉丝关注你了！！", "您有新粉丝关注你了,快去查看吧！！！", new Date),
         Message(new ObjectId("531964e0d4d57d0a43771812"), "您有新的消息！", "新消息！", new Date)).foreach(Message.save)
     }
+
 
     if (Question.findAll.isEmpty) {
       Seq(
@@ -1016,6 +1027,7 @@ object InitialData {
     println("hotest keywords = " + HotestKeyword.findTopKeywordsOfDiv("HairSalon", 8))
 
     */
+
   }
 }
 
