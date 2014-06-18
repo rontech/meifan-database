@@ -30,6 +30,9 @@ import models.portal.common.OnUsePicture
 import models.portal.relation.SalonAndStylist
 import models.portal.stylist.Stylist
 import models.portal.salon.Salon
+import models.portal.nail.NailWithAllInfo
+import models.portal.nail.SearchPara
+import models.portal.nail.StylePara
 
 
 /**
@@ -162,7 +165,7 @@ object Nail extends MeifanNetModelCompanion[Nail] {
     paraSocialScene.map { para =>
       paraSocialScenes :::= List(para)
     }
-    //将检索出来的主表数据放到发型主表字段整合类中
+    //将检索出来的主表数据放到美甲主表字段整合类中
     val stylePara = new StylePara(paraServiceTypes, paraStyleColors, paraStyleMaterials, paraStyleBases, paraStyleImpressions, paraSocialScenes)
     stylePara
   }
@@ -278,4 +281,45 @@ object Nail extends MeifanNetModelCompanion[Nail] {
   def findByStylistId(stylistId: ObjectId): List[Nail] = {
     dao.find(DBObject("stylistId" -> stylistId, "isValid" -> true)).toList.sortBy(_.createDate).reverse
   }
+  
+  /**
+   * 后台检索逻辑
+   * 通过技师ID和检索条件检索该技师的美甲
+   * @param nail 美甲检索条件
+   * @param stylistId 技师ID
+   * @return List[Nail] 符合条件的所有美甲
+   */
+  def findNailsByStylistBack(nail: SearchPara, stylistId: ObjectId): List[Nail] = {
+    //美甲主要检索条件
+    var srchConds = commonSrchConds(nail)
+    //追加检索条件技师ID
+    srchConds :::= List(commonsDBObject("stylistId" -> stylistId))
+    dao.find($and(srchConds)).toList.sortBy(_.createDate).reverse
+  }
+
+  /**
+   * 后台检索逻辑
+   * 通过店铺ID和检索条件检索该技师的美甲
+   * @param nail 美甲检索条件
+   * @param salonId 店铺ID
+   * @return List[Nail] 符合条件的所有美甲
+   */
+  def findNailsBySalonBack(nail: SearchPara, salonId: ObjectId): List[Nail] = {
+    //美甲主要检索条件
+    var srchConds = commonSrchConds(nail)
+    //利用传过来的stylistId判断后台检索是检索某一美甲师的美甲，还是检索店铺全部美甲师的美甲
+    val stylists = SalonAndStylist.findBySalonId(salonId)
+    var stylistIds: List[ObjectId] = Nil
+    stylists.map { stylist =>
+      stylistIds :::= List(stylist.stylistId)
+    }
+    //检索条件中包含技师ID时，将技师ID作为检索条件,否则检索该店铺所有技师的美甲
+    if (stylistIds.contains(new ObjectId(nail.stylistId))) {
+      srchConds :::= List(commonsDBObject("stylistId" -> new ObjectId(nail.stylistId)))
+    } else {
+      srchConds :::= List("stylistId" $in stylistIds)
+    }
+    dao.find($and(srchConds)).toList.sortBy(_.createDate).reverse
+  }
+  
 }
