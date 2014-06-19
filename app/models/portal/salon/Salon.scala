@@ -44,7 +44,7 @@ import models.portal.nail.Nail
 
 
 /**
- * Main Class: Salon.
+ * Main Class: salon.
  *
  * @param id ObjectId of salon in mongodb.
  * @param salonAccount The loginId and password for a salon.

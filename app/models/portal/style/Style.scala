@@ -494,7 +494,7 @@ object Style extends MeifanNetModelCompanion[Style] {
   /**
    * 通过发型中的技师ID查询其绑定的店铺
    * @param stylistId 技师ID
-   * @return Option[Salon] 该技师绑定的店铺
+   * @return Option[salon] 该技师绑定的店铺
    */
   def findSalonByStyle(stylistId: ObjectId): Option[Salon] = {
     val salonAndStylist = SalonAndStylist.findByStylistId(stylistId)

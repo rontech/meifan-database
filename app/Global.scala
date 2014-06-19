@@ -1086,12 +1086,12 @@ object InitialData {
     println("stfiles = " + stfiles)
 
     // Test for General fuzzy search.
-    println("general salon search = " + Salon.findSalonByFuzzyConds("千美悦美"))
-    println("general salon search = " + Salon.findSalonByFuzzyConds("千美 悦美"))
-    println("general salon search = " + Salon.findSalonByFuzzyConds("千美　悦美"))
-    println("general salon search = " + Salon.contactKwdsToFuzzyConds("千美悦美"))
-    println("general salon search = " + Salon.contactKwdsToFuzzyConds("千美 悦美"))
-    println("general salon search = " + Salon.contactKwdsToFuzzyConds("千美　悦美"))
+    println("general salon search = " + salon.findSalonByFuzzyConds("千美悦美"))
+    println("general salon search = " + salon.findSalonByFuzzyConds("千美 悦美"))
+    println("general salon search = " + salon.findSalonByFuzzyConds("千美　悦美"))
+    println("general salon search = " + salon.contactKwdsToFuzzyConds("千美悦美"))
+    println("general salon search = " + salon.contactKwdsToFuzzyConds("千美 悦美"))
+    println("general salon search = " + salon.contactKwdsToFuzzyConds("千美　悦美"))
 
 
     // Test for Geting hotest Styles from a salon.
