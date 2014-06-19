@@ -70,7 +70,7 @@ main.hairMessage = 我们提供最权威最新的时尚美容资讯！
 main.weAppeal=乐享生活 爱美有范
 main.contactUs=联系我们
 
-# Salon
+# salon
 salon.salonLogin=店铺登录
 salon.register=店铺注册
 salon.basicInformation=店铺基本信息填写

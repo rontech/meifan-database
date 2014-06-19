@@ -1188,6 +1188,7 @@ object InitialData {
     }
   }
 
+
   private def insertSampleSalonAndStylist {
     if (SalonAndStylist.findAll.isEmpty) {
       Seq(
