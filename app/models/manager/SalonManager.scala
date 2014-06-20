@@ -1,4 +1,4 @@
-package models.portal.manager
+package models.manager
 
 import com.meifannet.framework.db.{MeifanNetDAO, MeifanNetModelCompanion}
 import scala.concurrent.{ ExecutionContext, Future }
@@ -7,7 +7,6 @@ import com.mongodb.casbah.Imports._
 import se.radley.plugin.salat._
 import mongoContext._
 import com.mongodb.casbah.WriteConcern
-import se.radley.plugin.salat._
 import se.radley.plugin.salat.Binders._
 import mongoContext._
 import play.api.Play.current
@@ -19,29 +18,17 @@ import models.portal.salon._
 import java.util.Date
 import scala.util.matching.Regex
 import mongoContext._
-//import com.mongodb.casbah.query.Imports._
 import com.mongodb.casbah.query._
 import com.mongodb.casbah.commons.Imports.{ DBObject => commonsDBObject }
-import models.portal.salon.SalonStatus
-import models.portal.manager.MeifanSalonApySearch
 
-/**
- * Created by Ping-dou on 14/06/06.
- */
-
-
-case class Page[A](items: Seq[A], page: Int, offset: Long, total: Long) {
-  lazy val prev = Option(page - 1).filter(_ >= 0)
-  lazy val next = Option(page + 1).filter(_ => (offset + items.size) < total)
-}
 
 case class MeifanSalonApySearch(id :Option[String],
-                                 salonName :Option[String],
-                                 industry :Option[String],
-                                 registerStarDate: Option[Date],
-                                 registerEndDate: Option[Date],
-                                 flag: Option[Int]
-                                )
+                                salonName :Option[String],
+                                industry :Option[String],
+                                registerStarDate: Option[Date],
+                                registerEndDate: Option[Date],
+                                flag: Option[Int]
+                                 )
 
 case class SalonApply (salon: models.portal.salon.Salon,
                        finishedItem: List[String])
@@ -83,7 +70,7 @@ object SalonApply {
         finishedItem :::= List("ImageInfo")
       }else { flag = true }
 
-      if(flag || salon.salonStatus.applyMeifanFlag == meifanSalonFlag) {salonApplies :::= List(new SalonApply(salon,finishedItem))} else salonApplies
+      if(salon.salonStatus.applyMeifanFlag == meifanSalonFlag) {salonApplies :::= List(new SalonApply(salon,finishedItem))} else salonApplies
 
     }
     salonApplies
@@ -92,20 +79,31 @@ object SalonApply {
 
   /**
    * Agree the apply item from salon, set the verification valid is true
-   * @param salon The salon item which is apply
-   * @return unit
+   * @param salonId The salon ObjectId that can use method findOneById
+   * @return a option of salon name
    */
-  def agreeSalonApy(salon: models.portal.salon.Salon) = {
-    models.portal.salon.Salon.save(salon.copy(id = salon.id, salonStatus =new SalonStatus(1,true)))
+  def agreeSalonApy(salonId: ObjectId): Option[String] = {
+    Salon.findOneById(salonId).map{salon =>
+      Salon.save(salon.copy(id = salon.id, salonStatus =new SalonStatus(1,true)))
+      Option(salon.salonName)
+    } getOrElse{
+      None
+    }
+
   }
 
   /**
    * Reject the apply item from salon, set the verification valid is false
-   * @param salon The salon item which is apply
-   * @return
+   * @param salonId salon objectId
+   * @return option of salon name
    */
-  def rejectSalonApy(salon: models.portal.salon.Salon) = {
-    models.portal.salon.Salon.save(salon.copy(id = salon.id, salonStatus =new SalonStatus (2,false)))
+  def rejectSalonApy(salonId: ObjectId): Option[String] = {
+    Salon.findOneById(salonId).map{salon =>
+      Salon.save(salon.copy(id = salon.id, salonStatus =new SalonStatus (2,false)))
+      Option(salon.salonName)
+    } getOrElse {
+      None
+    }
   }
 
   /**
@@ -113,7 +111,6 @@ object SalonApply {
    * @param salonApySearch
    */
   def findSalonApyByCondition(salonApySearch :MeifanSalonApySearch) :List[SalonApply] = {
-    println("method in ..........")
     var srchConds: List[commonsDBObject] = Nil
     if(salonApySearch.id.nonEmpty){
       val id = salonApySearch.id.get
@@ -150,25 +147,33 @@ object SalonApply {
 
 }
 
+
 object SalonManager {
 
   /**
    * Delete salon by change it's valid is false
-   * @param salon
+   * @param salonId
    * @return
    */
-  def deleteSalon(salon :Salon) = {
-    val flag = salon.salonStatus.applyMeifanFlag
-    Salon.save(salon.copy(id = salon.id, salonStatus =  new SalonStatus(flag, false)))
+  def deleteSalon(salonId :ObjectId) = {
+    val salonr: Option[Salon] = Salon.findOneById(salonId)
+    salonr.map{salon =>
+      val flag = salon.salonStatus.applyMeifanFlag
+      Salon.save(salon.copy(id = salon.id, salonStatus =  new SalonStatus(flag, false)))
+    }
+
   }
 
   /**
    * Active salon account by change it's valid is true
-   * @param salon
+   * @param salonId
    * @return
    */
-  def activeSalon(salon :Salon) = {
-    val flag = salon.salonStatus.applyMeifanFlag
-    Salon.save(salon.copy(id = salon.id, salonStatus =  new SalonStatus(flag, true)))
+  def activeSalon(salonId :ObjectId) = {
+    val salonr: Option[Salon] = Salon.findOneById(salonId)
+    salonr.map{salon =>
+      val flag = salon.salonStatus.applyMeifanFlag
+      Salon.save(salon.copy(id = salon.id, salonStatus =  new SalonStatus(flag, true)))
+    }
   }
 }
