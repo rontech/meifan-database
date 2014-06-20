@@ -126,7 +126,7 @@ object DefaultLog extends MeifanNetModelCompanion[DefaultLog] {
 
 
 /*----------------------------
- * Embed Structure of Salon.
+ * Embed Structure of salon.
  -----------------------------*/
 
 /**
