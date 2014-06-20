@@ -484,6 +484,7 @@ object InitialData {
      *--------------------------*/
   def insertSampleData() {
 
+
     insertSampleSalon
 
     insertSampleStylist
@@ -875,7 +876,11 @@ object InitialData {
     }
   }
 
+
   private def insertSampleQuestion {
+
+
+
     if (Question.findAll.isEmpty) {
       Seq(
         Question(new ObjectId(), "发型师如何注册", """<p>
