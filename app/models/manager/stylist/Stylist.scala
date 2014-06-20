@@ -38,7 +38,7 @@ case class Page[A](items: Seq[A], page: Int, offset: Long, total: Long) {
 case class MeifanStylistSearch(userId :Option[String],
                                 nickName :Option[String],
                                 industry :Option[String],
-                                isVerified: Option[Boolean]
+                                isValid: Option[Boolean]
                                  )
 
 case class StylistApply (stylist : models.portal.stylist.Stylist)
@@ -56,39 +56,40 @@ object StylistApply  {
     println( ""+stylistSearch.industry.nonEmpty)
     var srchConds: List[commonsDBObject] = Nil
     if(stylistSearch.userId.nonEmpty){
-      println("stylistId")
-        srchConds :::= List(commonsDBObject("stylistId" -> stylistSearch.userId.get ))
+        srchConds :::= List(commonsDBObject("stylistId" -> models.portal.user.User.findOneByUserId(stylistSearch.userId.get).get.id  ))
       }
+    if(stylistSearch.nickName.nonEmpty){
+      srchConds :::= List(commonsDBObject("stylistId" -> models.portal.user.User.findOneByNickNm(stylistSearch.nickName.get).get.id  ))
+    }
     if(stylistSearch.industry.nonEmpty){
       if(stylistSearch.industry.get.equals("Hairdressing" )){
-        println("industry")
-        //srchConds :::= List("industry" $in List(stylistSearch.industry.get))
-      }
-      srchConds :::= List("industry" $in List(stylistSearch.industry.get))
+
+      }else{srchConds :::= List("industry" $in List(stylistSearch.industry.get))}  
     }
-    if(stylistSearch.isVerified.nonEmpty){
-      if(stylistSearch.isVerified.get.equals("true")){
-        println("true")
+    if(stylistSearch.isValid.nonEmpty){
+      println(stylistSearch.isValid.get.toString)
+      if(stylistSearch.isValid.get){
       srchConds :::= List(commonsDBObject("isValid"->true))}
       else{
-        println("false")
         srchConds :::= List(commonsDBObject("isValid"->false))}
 
     }
+    var stylist :List[models.portal.stylist.Stylist] = Nil
+    if(!srchConds.length.equals(0)){
+      println("^^^^^^^^^^^"+srchConds.toString())
+      stylist = models.portal.stylist.Stylist.find($and(srchConds)).toList}
 
-
-    var stylist :List[models.portal.stylist.Stylist] = models.portal.stylist.Stylist.find($and(srchConds)).toList
     stylist
 
 
   }
 
   def activeStylist(stylist:models.portal.stylist.Stylist) = {
-    models.portal.stylist.Stylist.save(stylist.copy(stylistId = stylist.stylistId, isValid = false))
+    models.portal.stylist.Stylist.save(stylist.copy(stylistId = stylist.stylistId, isValid = true))
   }
 
   def frozenStylist(stylist:models.portal.stylist.Stylist) = {
-    models.portal.stylist.Stylist.save(stylist.copy(stylistId = stylist.stylistId, isValid = true))
+    models.portal.stylist.Stylist.save(stylist.copy(stylistId = stylist.stylistId, isValid = false))
   }
   }
 
