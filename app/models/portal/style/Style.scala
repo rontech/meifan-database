@@ -256,7 +256,7 @@ object Style extends MeifanNetModelCompanion[Style] {
    */
   def findByRanking(limitCnt: Int = 0): List[StyleWithAllInfo] = {
     // get all reservations with styleId, ignore the data without style.
-    val bestRsv = Reservation.findBestReservedStyles(0)
+    val bestRsv = Reservation.findBestReservedStyles("Hairdressing", 0)
     val styleInfo: List[StyleWithAllInfo] = getStyleInfoFromRanking(bestRsv)(limitCnt)(x => true)
 
     styleInfo
@@ -272,7 +272,7 @@ object Style extends MeifanNetModelCompanion[Style] {
    */
   def findByRankingAndLenAndSex(styleLength: String, consumerSex: String, limitCnt: Int = 0): List[StyleWithAllInfo] = {
     // get all reservations with styleId, ignore the data without style.
-    val bestRsv = Reservation.findBestReservedStyles(0)
+    val bestRsv = Reservation.findBestReservedStyles("Hairdressing", 0)
 
     val styleInfo: List[StyleWithAllInfo] = getStyleInfoFromRanking(bestRsv)(limitCnt)(x =>
       (x.styleLength == styleLength) && (x.consumerSex == consumerSex))
@@ -321,7 +321,7 @@ object Style extends MeifanNetModelCompanion[Style] {
    */
   def findByRankingAndSex(consumerSex: String, limitCnt: Int = 0): List[StyleWithAllInfo] = {
     // get all reservations with styleId, ignore the data without style.
-    val bestRsv = Reservation.findBestReservedStyles(0)
+    val bestRsv = Reservation.findBestReservedStyles("Hairdressing", 0)
     val styleInfo: List[StyleWithAllInfo] = getStyleInfoFromRanking(bestRsv)(limitCnt)(x =>
       (x.consumerSex == consumerSex))
 
