@@ -33,6 +33,7 @@ import models.portal.salon.Salon
 import models.portal.nail.NailWithAllInfo
 import models.portal.nail.SearchPara
 import models.portal.nail.StylePara
+import models.portal.reservation.Reservation
 
 
 /**
@@ -281,17 +282,78 @@ object Nail extends MeifanNetModelCompanion[Nail] {
   def findByStylistId(stylistId: ObjectId): List[Nail] = {
     dao.find(DBObject("stylistId" -> stylistId, "isValid" -> true)).toList.sortBy(_.createDate).reverse
   }
-  
+
+  /**
+   * 前台检索逻辑
+   * 前台综合排名检索-按热度
+   * @param limitCnt 检索结果限制数量
+   * @return List[NailWithAllInfo] 美甲及相关表中数据整合类
+   */
+  def findByRanking(limitCnt: Int = 0): List[NailWithAllInfo] = {
+    // 获取所有的美甲业预约信息.
+    val bestRsv = Reservation.findBestReservedStyles("Manicures", 0)
+    val nailInfo: List[NailWithAllInfo] = getNailInfoFromRanking(bestRsv)(limitCnt)(x => true)
+
+    nailInfo
+  }
+
+  /**
+   * 前台检索逻辑
+   * 前台综合排名检索-按热度、风格
+   * @param styleImpression 检索结果限制数量
+   * @param limitCnt 检索结果限制数量
+   * @return List[NailWithAllInfo] 美甲及相关表中数据整合类
+   */
+  def findByRankingAndImpression(styleImpression: String, limitCnt: Int = 0): List[NailWithAllInfo] = {
+    // 获取所有的美甲业预约信息.
+    val bestRsv = Reservation.findBestReservedStyles("Manicures", 0)
+    val nailInfo: List[NailWithAllInfo] = getNailInfoFromRanking(bestRsv)(limitCnt)(x => x.styleImpression == styleImpression)
+
+    nailInfo
+  }
+
+  /**
+   * 添加店铺、技师信息到整合结果类中
+   * @param nailIds 美甲ID集合
+   * @param limitCnt 限制数量
+   * @param filter
+   * @return List[NailWithAllInfo] 美甲及相关表中数据整合类
+   */
+  def getNailInfoFromRanking(nailIds: List[ObjectId])(limitCnt: Int = 0)(filter: Nail => Boolean): List[NailWithAllInfo] = {
+    var nailInfo: List[NailWithAllInfo] = Nil
+    var cnt: Int = 0
+    for (nailId <- nailIds) {
+      if (limitCnt == 0 || cnt <= limitCnt) {
+        val nail = Nail.findOneById(nailId)
+        // Filter the data by function filter.
+        if (nail != None && filter(nail.get)) {
+          //只有该美甲所属技师仍与某一店铺存在绑定关系才被筛选出来
+          val salonAndStylist = SalonAndStylist.findByStylistId(nail.get.stylistId)
+          if (salonAndStylist != None) {
+            val salon = Salon.findOneById(salonAndStylist.get.salonId)
+            if (salon != None) {
+              val nailWithInfo = addNailWithInfo(nail.get, salon.get)
+              nailInfo = nailInfo ::: List(nailWithInfo)
+              cnt += 1
+            }
+          }
+        }
+      }
+    }
+    nailInfo
+  }
+
+
   /**
    * 后台检索逻辑
    * 通过技师ID和检索条件检索该技师的美甲
-   * @param nail 美甲检索条件
+   * @param searchPara 美甲检索条件
    * @param stylistId 技师ID
    * @return List[Nail] 符合条件的所有美甲
    */
-  def findNailsByStylistBack(nail: SearchPara, stylistId: ObjectId): List[Nail] = {
+  def findNailsByStylistBack(searchPara: SearchPara, stylistId: ObjectId): List[Nail] = {
     //美甲主要检索条件
-    var srchConds = commonSrchConds(nail)
+    var srchConds = commonSrchConds(searchPara)
     //追加检索条件技师ID
     srchConds :::= List(commonsDBObject("stylistId" -> stylistId))
     dao.find($and(srchConds)).toList.sortBy(_.createDate).reverse
@@ -300,13 +362,13 @@ object Nail extends MeifanNetModelCompanion[Nail] {
   /**
    * 后台检索逻辑
    * 通过店铺ID和检索条件检索该技师的美甲
-   * @param nail 美甲检索条件
+   * @param searchPara 美甲检索条件
    * @param salonId 店铺ID
    * @return List[Nail] 符合条件的所有美甲
    */
-  def findNailsBySalonBack(nail: SearchPara, salonId: ObjectId): List[Nail] = {
+  def findNailsBySalonBack(searchPara: SearchPara, salonId: ObjectId): List[Nail] = {
     //美甲主要检索条件
-    var srchConds = commonSrchConds(nail)
+    var srchConds = commonSrchConds(searchPara)
     //利用传过来的stylistId判断后台检索是检索某一美甲师的美甲，还是检索店铺全部美甲师的美甲
     val stylists = SalonAndStylist.findBySalonId(salonId)
     var stylistIds: List[ObjectId] = Nil
@@ -314,12 +376,21 @@ object Nail extends MeifanNetModelCompanion[Nail] {
       stylistIds :::= List(stylist.stylistId)
     }
     //检索条件中包含技师ID时，将技师ID作为检索条件,否则检索该店铺所有技师的美甲
-    if (stylistIds.contains(new ObjectId(nail.stylistId))) {
-      srchConds :::= List(commonsDBObject("stylistId" -> new ObjectId(nail.stylistId)))
+    if (stylistIds.contains(new ObjectId(searchPara.stylistId))) {
+      srchConds :::= List(commonsDBObject("stylistId" -> new ObjectId(searchPara.stylistId)))
     } else {
       srchConds :::= List("stylistId" $in stylistIds)
     }
     dao.find($and(srchConds)).toList.sortBy(_.createDate).reverse
   }
-  
+
+  /**
+   * 后台美甲删除 -将美甲无效
+   * @param id 美甲ID
+   * @return
+   */
+  def nailToInvalid(id: ObjectId) = {
+    dao.update(MongoDBObject("_id" -> id), MongoDBObject("$set" -> (MongoDBObject("isValid" -> false))))
+  }
+
 }

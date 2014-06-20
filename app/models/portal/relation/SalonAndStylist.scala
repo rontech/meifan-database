@@ -26,6 +26,7 @@ import mongoContext._
 import java.util.Date
 import models.portal.industry.IndustryAndPosition
 import models.portal.stylist.Stylist
+import models.portal.salon.Salon
 
 /**
  * the class for salon and stylist relationship
@@ -175,6 +176,23 @@ object SalonAndStylist extends MeifanNetModelCompanion[SalonAndStylist] {
       }
     }
     stylists
+  }
+
+  /**
+   * 通过技师Id查询绑定的店铺
+   * @param stylistId
+   * @return
+   */
+  def findSalonByStylistId(stylistId: ObjectId) = {
+    val salonAndStylist = dao.findOne(MongoDBObject("stylistId" -> stylistId, "isValid" -> true))
+    /*salonAndStylist.map(salonAndStylist => {
+      val salon = Salon.findOneById(salonAndStylist.id).map(salon => salon).getOrElse(None)
+      salon
+    }).getOrElse(None)*/
+    salonAndStylist.map(salonAndStylist => {
+      val salon = Salon.findOneById(salonAndStylist.id)
+      salon
+    }).getOrElse(None)
   }
 }
 

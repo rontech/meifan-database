@@ -360,4 +360,15 @@ object Stylist extends MeifanNetModelCompanion[Stylist] {
     }
     stylists
   }
+
+  /**
+   * 通过技师Id查看该技师的行业类别
+   * @param stylistId 技师Id
+   * @return 行业名
+   */
+  def findIndustryByStylistId(stylistId: ObjectId): String = {
+    val stylist = dao.findOne(MongoDBObject("stylistId" -> stylistId))
+    val industry = stylist.map(_.position(0).industryName)getOrElse(None)
+    industry.toString
+  }
 }
