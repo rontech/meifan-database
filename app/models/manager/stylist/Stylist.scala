@@ -47,7 +47,7 @@ case class MeifanStylistSearch(userId: Option[String],
 case class StylistApply(stylist: models.portal.stylist.Stylist)
 
 object StylistApply {
-  /*                                            */
+  /*    find all stylist                                        */
   def findAllAPStylists(): List[models.portal.stylist.Stylist] = {
 
     var stylistApplies: List[models.portal.stylist.Stylist] = Nil
@@ -55,7 +55,7 @@ object StylistApply {
     stylistApplies
   }
 
-  /*                                            */
+  /*    find stylist according condition                                        */
   def findStylistByCondition(stylistSearch: MeifanStylistSearch): List[models.portal.stylist.Stylist] = {
     println("" + stylistSearch.industry.nonEmpty)
     var srchConds: List[commonsDBObject] = Nil

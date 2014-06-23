@@ -20,7 +20,9 @@ case class Admin(
                   adminId: String,
                   password: String)
 
-
+/*
+admin class for manager
+ */
 object Admin extends MeifanNetModelCompanion[Admin] {
   //check the ID and Password if they can find in database return an Admin object else return none
   val dao = new MeifanNetDAO[Admin](collection = loadCollection()) {}
@@ -33,4 +35,5 @@ object Admin extends MeifanNetModelCompanion[Admin] {
       None
     }
   }
+
 }
