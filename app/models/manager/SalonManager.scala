@@ -33,9 +33,10 @@ case class MeifanSalonApySearch(id :Option[String],
 case class SalonApply (salon: models.portal.salon.Salon,
                        finishedItem: List[String])
 
-object SalonApply extends MeifanNetModelCompanion[SalonApply] {
+object SalonApply {
 
-  val dao = new MeifanNetDAO[SalonApply](collection = loadCollection()) {}
+  //val dao = new MeifanNetDAO[SalonApply](collection = loadCollection()) {}
+
 
   /**
    * check the salon information is finish
