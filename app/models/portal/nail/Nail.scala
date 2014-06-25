@@ -209,7 +209,7 @@ object Nail extends MeifanNetModelCompanion[Nail] {
     for (nail <- nails) {
       if (limitCnt == 0 || cnt <= limitCnt) {
         //通过美甲的技师Id查看与有绑定关系的店铺
-        val salon = Style.findSalonByStyle(nail.stylistId)
+        val salon = Style.findSalonByStylistId(nail.stylistId)
         //判断美甲对应的店铺是否在检索条件的地理区域中,进行检索条件中的城市、地区check
         salon.map(salon => {
           if (searchPara.region.equals("all")) {

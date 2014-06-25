@@ -106,6 +106,17 @@ object Service extends MeifanNetModelCompanion[Service] {
   }
 
   /**
+   * 获取某店铺所有服务中的最低价格
+   * Get the lowest price of a serviceType in a salon.
+   * @param salonId
+   * @return
+   */
+  def getLowestPriceOfSalonId(salonId: ObjectId): Option[BigDecimal] = {
+    val srvs = dao.find(MongoDBObject("salonId" -> salonId)).sort(MongoDBObject("price" -> -1)).toList
+    if (srvs.length > 0) Some(srvs(0).price) else None
+  }
+
+  /**
    * 根据服务类型和店铺ID获取服务列表
    * @param salonId 店铺ObjectId
    * @param serviceType 服务类型

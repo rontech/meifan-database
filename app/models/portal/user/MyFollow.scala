@@ -27,6 +27,7 @@ import models.portal.stylist.Stylist
 import models.portal.coupon.Coupon
 import models.portal.blog.Blog
 import models.portal.style.Style
+import models.portal.nail.Nail
 
 /**
  * 关注class的定义
@@ -39,7 +40,7 @@ case class MyFollow(
   id: ObjectId = new ObjectId,
   userId: ObjectId,
   followObjId: ObjectId,
-  //关注店铺:salon；关注技师:stylist；收藏风格:style；收藏优惠劵:coupon；收藏博客:blog;关注用户:user
+  //关注店铺:salon；关注技师:stylist；收藏发型:style；收藏优惠劵:coupon；收藏博客:blog;关注用户:user
   followObjType: String
   )
 
@@ -53,6 +54,7 @@ object MyFollow extends MeifanNetModelCompanion[MyFollow] {
   val FOLLOW_STYLE = "style"
   val FOLLOW_BLOG = "blog"
   val FOLLOW_COUPON = "coupon"
+  val FOLLOW_NAIL = "nail"
 
   /**
    * 根据用户Id和关系类型获取被关注或收藏的对象
@@ -145,15 +147,21 @@ object MyFollow extends MeifanNetModelCompanion[MyFollow] {
     val blogL = blogIdL.map(blogId =>
       Blog.findOneById(blogId).get)
 
-    // 收藏的风格
+    // 收藏的发型
     val styleIdL: List[ObjectId] = getAllFollowObjId(FOLLOW_STYLE, id)
     val styleL = styleIdL.map(styleId =>
       Style.findOneById(styleId).get)
 
+    // 收藏的美甲
+    val nailIdL: List[ObjectId] = getAllFollowObjId(FOLLOW_NAIL, id)
+    val nailL = nailIdL.map(nailId =>
+      Nail.findOneById(nailId).get)
+
     // 根据以上信息创建用户关注和被关注信息对象
-    FollowInformation(salonL, stylistL, userL, couponL, blogL, styleL, followerL)
+    FollowInformation(salonL, stylistL, userL, couponL, blogL, styleL, nailL, followerL)
 
   }
+
 }
 
 /**
@@ -163,7 +171,8 @@ object MyFollow extends MeifanNetModelCompanion[MyFollow] {
  * @param followUser 元素为user类的列表，关注的美丽达人
  * @param followCoupon 元素为coupon类的列表，收藏的博客
  * @param followBlog 元素为blog类的列表，收藏的博客
- * @param followStyle 元素为style类的列表，收藏的风格
+ * @param followStyle 元素为style类的列表，收藏的发型
+ * @param followNail 元素为nail类的列表，收藏的美甲
  * @param follower 元素为user类的列表，粉丝
  */
 case class FollowInformation(
@@ -173,4 +182,5 @@ case class FollowInformation(
   followCoupon: List[Coupon],
   followBlog: List[Blog],
   followStyle: List[Style],
+  followNail: List[Nail],
   follower: List[User])
