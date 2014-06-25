@@ -244,15 +244,16 @@ object Comment extends MeifanNetModelCompanion[Comment] {
     commentOfSalonList.sortBy(commentOfSalon => commentOfSalon.commentInfo.createTime).reverse
   }
 
+  val complainList = dao.find(MongoDBObject("isValid" -> true, "commentObjType" -> CommentType.Complain.id)).sort(MongoDBObject("createTime" -> -1)).toList
+
   /**
    * 查找评论表中店铺申诉的数据，该方法用于后台管理员查看店铺申诉的数据。
    * 这边的4代表店铺的申诉
    */
   // TODO
-  def findComplain : List[ComplainOfSalon] = {
+  def findComplainOfSalon(complainList: List[Comment]) : List[ComplainOfSalon] = {
     var complainOfSalonList: List[ComplainOfSalon] = Nil
-    val commentList = dao.find(MongoDBObject("isValid" -> true, "commentObjType" -> CommentType.Complain.id)).sort(MongoDBObject("createTime" -> -1)).toList
-    commentList.foreach({
+    complainList.foreach({
       row =>
         val commentInfo = Comment.findOneById(row.commentObjId)
         commentInfo match {
