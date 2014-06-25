@@ -142,6 +142,7 @@ case class ResvSchedule(
  * @param id
  * @param userId 预约者
  * @param salonId 沙龙id
+ * @param industry 行业名
  * @param status 预约状态
  * @param expectedDate 预约期望的时间
  * @param serviceDuration 预约服务总时间
@@ -160,6 +161,7 @@ case class Reservation(
   id: ObjectId = new ObjectId,
   userId: String,
   salonId: ObjectId,
+  industry: String,
   status: Int, // 0：已预约; 1：已消费; 2：已过期; -1：已取消; 3 : 已评论
   expectedDate: Date, // 预约时间 + 预约日期
   serviceDuration: Int,
@@ -195,10 +197,10 @@ object Reservation extends MeifanNetModelCompanion[Reservation] {
    * @param topN
    * @return
    */
-  def findBestReservedStyles(topN: Int = 0): List[ObjectId] = {
-    val reservs = dao.find($and(("styleId" $exists true), ("status" $in (0, 1)))).sort(
+  def findBestReservedStyles(industry: String ,topN: Int = 0): List[ObjectId] = {
+    val reservs = dao.find($and(("styleId" $exists true), ("status" $in (0, 1)), MongoDBObject("industry" -> industry))).sort(
       MongoDBObject("styleId" -> -1)).toList
-    // styleId is exists absolutely.
+    //styleId is exists absolutely.
     val topStyleIds = getBestRsvedStyleIds(reservs, topN)
     topStyleIds
   }
@@ -274,7 +276,7 @@ object Reservation extends MeifanNetModelCompanion[Reservation] {
   /**
    * 根据技师和预约时间查找状态为已预约的信息是否存在
    * @param expectedDate 预约时间
-   * @param userId 预约者
+   * @param stylistId 预约者
    */
   def findReservByDateAndStylist(expectedDate: Date, stylistId: ObjectId): Boolean = {
     val formattedDate = new SimpleDateFormat("yyyy/MM/dd HH:mm").format(expectedDate)
