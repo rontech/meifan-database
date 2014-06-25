@@ -362,7 +362,7 @@ object Salon extends MeifanNetModelCompanion[Salon] {
    */
   def findSalonBySearchPara(searchParaForSalon: SearchParaForSalon) = {
     var salonSrchRst: List[SalonGeneralSrchRst] = Nil
-    var salons: List[Salon] = Nil
+    //var salons: List[Salon] = Nil
     var salonList: List[Salon] = Nil
 
     // List to save search conditions.
@@ -417,6 +417,9 @@ object Salon extends MeifanNetModelCompanion[Salon] {
     // City
     srchConds :::= List(commonsDBObject("salonAddress.city" -> searchParaForSalon.city.r))
 
+    //status valid must be true
+    srchConds :::= List(commonsDBObject("salonStatus.isValid" -> true))
+
     // keywords Array for Fuzzy search: will be joined with "$or" DSL operation.  
     val fuzzyRegex = convertKwdsToFuzzyRegex(searchParaForSalon.keyWord.getOrElse(""))(x => (".*" + x + ".*|"))
     // from which fields the keyword be searched.
@@ -431,21 +434,35 @@ object Salon extends MeifanNetModelCompanion[Salon] {
     salonList = dao.find(srchCondsWithFuzzyKws).toList
 
     // 以serviceType/haircutPrice作为check条件
-    if (searchParaForSalon.serviceType.nonEmpty) {
-      salonList.map { salon =>
+    val salons: List[Salon] = if (searchParaForSalon.serviceType.nonEmpty) {
+      salonList.flatMap{ salon =>
+        if ((Service.findServiceTypeBySalonId(salon.id).intersect(searchParaForSalon.serviceType).length == searchParaForSalon.serviceType.length)
+          && (searchParaForSalon.priceRange.minPrice <= findLowestPriceBySalonId(salon.id))
+          && (findLowestPriceBySalonId(salon.id) <= searchParaForSalon.priceRange.maxPrice)) {
+          List(salon)
+        } else Nil
+      }
+      /*salonList.map { salon =>
         if ((Service.findServiceTypeBySalonId(salon.id).intersect(searchParaForSalon.serviceType).length == searchParaForSalon.serviceType.length)
           && (searchParaForSalon.priceRange.minPrice <= findLowestPriceBySalonId(salon.id))
           && (findLowestPriceBySalonId(salon.id) <= searchParaForSalon.priceRange.maxPrice)) {
           salons ::= salon
         }
-      }
+      }*/
     } else {
-      salonList.map { salon =>
+      salonList.flatMap{salon =>
+        if ((searchParaForSalon.priceRange.minPrice <= findLowestPriceBySalonId(salon.id))
+          && (findLowestPriceBySalonId(salon.id) <= searchParaForSalon.priceRange.maxPrice)) {
+           List(salon)
+        }else Nil
+
+      }
+      /*salonList.map { salon =>
         if ((searchParaForSalon.priceRange.minPrice <= findLowestPriceBySalonId(salon.id))
           && (findLowestPriceBySalonId(salon.id) <= searchParaForSalon.priceRange.maxPrice)) {
           salons ::= salon
         }
-      }
+      }*/
     }
 
     // exact regex keyword which used to get the exact words matched to the keyword.
