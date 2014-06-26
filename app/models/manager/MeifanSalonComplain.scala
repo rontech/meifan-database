@@ -23,6 +23,15 @@ import com.mongodb.casbah.commons.Imports.{ DBObject => commonsDBObject }
 import models.portal.review._
 import models.portal.reservation._
 
+/**
+ * 用于检索salon申诉的case class
+ *
+ * @param accountId salon的accoutId
+ * @param salonName salon的name
+ * @param complainStartDate 申诉的起始时间
+ * @param complainEndDate 申诉的终止时间
+ * @param flag 申诉的状态
+ */
 case class MeifanSalonComplainSearch(accountId :Option[String],
                                 salonName :Option[String],
                                 complainStartDate: Option[Date],
