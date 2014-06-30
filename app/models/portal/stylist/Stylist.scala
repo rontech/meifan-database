@@ -44,7 +44,7 @@ case class StylistDetailInfo(basicInfo: User, stylistInfo: Option[Stylist], work
 }
 
 /**
- * the class for stylist
+ * the class for Stylist
  * @param id
  * @param stylistId - 技师主键 primary key
  * @param workYears
@@ -178,7 +178,7 @@ object Stylist extends MeifanNetModelCompanion[Stylist] {
   }
 
   /**
-   * Find a stylist by its user.id[ObjectId]
+   * Find a Stylist by its user.id[ObjectId]
    *
    * @param stylistId
    * @return
@@ -188,7 +188,7 @@ object Stylist extends MeifanNetModelCompanion[Stylist] {
   }
 
   /**
-   * Find a stylist by its user.id[ObjectId]
+   * Find a Stylist by its user.id[ObjectId]
    *
    * @param stylistId
    * @return
@@ -198,7 +198,7 @@ object Stylist extends MeifanNetModelCompanion[Stylist] {
   }
 
   /**
-   * Find a stylist by its user.id[ObjectId]
+   * Find a Stylist by its user.id[ObjectId]
    *
    * @param userId
    * @return
@@ -231,7 +231,7 @@ object Stylist extends MeifanNetModelCompanion[Stylist] {
         val stylist = Stylist.findOneByStylistId(userObjId)
 
         // get the work info.(there is something we should pay attention to avoid errors.
-        // NOTICE:  we should find the work info by stylist table's real ObjectId not the publicId.
+        // NOTICE:  we should find the work info by Stylist table's real ObjectId not the publicId.
         val work = stylist match {
           case Some(st) => models.portal.relation.SalonAndStylist.findByStylistId(st.stylistId) // st.stylistId = userObjId
           case None => None
@@ -346,7 +346,7 @@ object Stylist extends MeifanNetModelCompanion[Stylist] {
 
   /**
    * find recommend stylists in meifan index pages
-   * @return List of stylist
+   * @return List of Stylist
    */
   def findRecommendStylists: List[Stylist] = {
     var stylists: List[Stylist] = Nil

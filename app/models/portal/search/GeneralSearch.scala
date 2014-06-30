@@ -240,7 +240,15 @@ trait SeatNumsDAO extends MeifanNetModelCompanion[SeatNums] {
   val dao = new MeifanNetDAO[SeatNums](collection = loadCollection()) {}
 }
 
-
+/**
+ * 检索用的品牌class
+ *
+ * @param id 主键id
+ * @param salonIndustry 店铺的行业，类似：美发行业，还是美甲行业
+ * @param salonName 品牌名
+ * @param point 积分，用于品牌显示的顺序
+ * @param description 描述
+ */
 case class Brand(
   id:ObjectId,
   salonIndustry : String,
@@ -251,6 +259,13 @@ object Brand extends BrandDAO
 trait BrandDAO extends MeifanNetModelCompanion[Brand] {
   val dao = new MeifanNetDAO[Brand](collection = loadCollection()) {}
 
+  /**
+   * 通过行业找到品牌，用于美发，美甲前台检索时显示的品牌名
+   * 根据积分的不同进行从高到低的排序
+   *
+   * @param salonIndustry 店铺的行业
+   * @return
+   */
   def findBrandByIndustry(salonIndustry : String) : List[Brand] = {
     dao.find(DBObject("salonIndustry" -> salonIndustry)).sort(MongoDBObject("point" -> -1)).toList
   }

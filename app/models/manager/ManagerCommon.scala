@@ -25,4 +25,8 @@ object ManagerCommon {
   val salonPage = "salonCurrentPage"
 
   val userPage = "userCurrentPage"
+
+  val meifanCommentSearch = "meifanCommentSearch"
+
+  val commentPage = "commentCurrentPage"
 }
