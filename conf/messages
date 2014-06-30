@@ -467,7 +467,7 @@ apply.accept = 1
 apply.reject = 2
 apply.termination = 3
 
-#Stylist
+#stylist
 stylist.updateBasicInfo = 技师基本资料更新
 stylist.searchResults = 搜索结果
 stylist.search = 搜索
@@ -508,7 +508,7 @@ stylist.salonNoStylist= 没有找到您希望的技师！
 
 
 
-#Stylist Apply
+#stylist Apply
 stylist.name = 昵称
 stylist.years = {0}年
 stylist.industry = 类别
@@ -539,7 +539,7 @@ stylistUploadIMG.prompt_2 = 2.您需要上传并设置形象照才能
 stylistUploadIMG.strong_1 = 成功申请成为技师，并被所有会员及店铺查看
 
 
-#Stylist management
+#stylist management
 stylistMag.mySalon = 我的店铺
 stylistMag.salonApply = 来自店铺邀请
 stylistMag.countSalonApply = 店铺邀请

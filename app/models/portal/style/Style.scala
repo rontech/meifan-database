@@ -178,7 +178,7 @@ object Style extends MeifanNetModelCompanion[Style] {
   /**
    * 通过店铺ID检索该店铺所有签约的发型师
    * @param salonId 店铺ID
-   * @return List[Stylist] 该店铺所有技师
+   * @return List[stylist] 该店铺所有技师
    */
   def findStylistBySalonId(salonId: ObjectId): List[Stylist] = {
     //获取店铺绑与技师关系表中该店铺相关的所有有效数据

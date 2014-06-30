@@ -2,23 +2,10 @@ package models.manager
 
 import com.meifannet.framework.db.{MeifanNetDAO, MeifanNetModelCompanion}
 import scala.concurrent.{ ExecutionContext, Future }
-import ExecutionContext.Implicits.global
 import com.mongodb.casbah.Imports._
-import se.radley.plugin.salat._
-import mongoContext._
-import com.mongodb.casbah.WriteConcern
 import se.radley.plugin.salat.Binders._
-import mongoContext._
-import play.api.Play.current
-import play.api.PlayException
-import play.Configuration
-import com.meifannet.framework.db._
-import ExecutionContext.Implicits.global
 import models.portal.salon._
 import java.util.Date
-import scala.util.matching.Regex
-import mongoContext._
-import com.mongodb.casbah.query._
 import com.mongodb.casbah.commons.Imports.{ DBObject => commonsDBObject }
 
 

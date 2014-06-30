@@ -426,7 +426,7 @@ object Reservation extends MeifanNetModelCompanion[Reservation] {
    * 技师查找正在处理中的预约自己的预约数据
    * 用于技师后台查看自己被预约的预约履历
    *
-   * @param stylistId Stylist model中的stylistId这个字段
+   * @param stylistId stylist model中的stylistId这个字段
    * @return
    */
   def findReservingByStylistId(stylistId : ObjectId) : List[Reservation] = {
@@ -438,7 +438,7 @@ object Reservation extends MeifanNetModelCompanion[Reservation] {
    * 技师查找预约自己的预约数据
    * 用于技师后台查看自己被预约的预约履历
    *
-   * @param stylistId Stylist model中的stylistId这个字段
+   * @param stylistId stylist model中的stylistId这个字段
    * @return
    */
   def findReservationHistoryByStylistId(stylistId : ObjectId) : List[Reservation] = {
