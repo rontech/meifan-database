@@ -88,7 +88,7 @@ case class SearchPara(
    city: String,
    region: String,
    stylistId:String,
-   serviceType: List[String],
+   serviceType: String,
    styleColor: List[String],
    styleMaterial: List[String],
    styleBase: List[String],
@@ -115,7 +115,7 @@ case class Nail(
   id: ObjectId = new ObjectId,
   styleName: String,
   stylistId: ObjectId,
-  serviceType: List[String],
+  serviceType: String,
   styleColor: List[String],
   styleMaterial: List[String],
   styleBase: List[String],
@@ -252,7 +252,7 @@ object Nail extends MeifanNetModelCompanion[Nail] {
     var srchConds: List[commonsDBObject] = Nil
 
     if (searchPara.serviceType.nonEmpty) {
-      srchConds :::= List("serviceType" $in searchPara.serviceType)
+      srchConds :::= List(commonsDBObject("serviceType" ->  searchPara.serviceType))
     }
     if (searchPara.styleColor.nonEmpty) {
       srchConds :::= List("styleColor" $in searchPara.styleColor)
