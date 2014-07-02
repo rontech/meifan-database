@@ -196,9 +196,7 @@ object Nail extends MeifanNetModelCompanion[Nail] {
    */
   def findNailBySearchPara(searchPara: SearchPara)(limitCnt: Int = 0) = {
     //获取美甲检索的主要检索条件
-    println("fh"+searchPara.serviceType)
     val srchConds = commonSrchConds(searchPara)
-    println("fh===11111================="+srchConds)
     val nailSrchRst = dao.find($and(srchConds)).toList
     val nailWithAllInfo: List[NailWithAllInfo] = getNailWithAllInfo(nailSrchRst)(searchPara)(limitCnt)
     nailWithAllInfo
