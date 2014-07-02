@@ -37,6 +37,17 @@ case class CommentOfSalon(commentInfo: Comment, salonInfo: Option[Salon]) {
 }
 
 /**
+ * A All Info structs of complain including belows
+ *
+ * @param complainInfo basic info as a complain
+ * @param commentInfo basic info as a comment
+ * @param salonInfo basic info as a salon
+ */
+case class ComplainOfSalon(complainInfo: Comment, commentInfo: Comment, salonInfo: Salon) {
+  def apply(complainInfo: Comment, commentInfo: Comment, salonInfo: Salon) = new ComplainOfSalon(complainInfo, commentInfo, salonInfo)
+}
+
+/**
  * 评价状况：好评率, 总评价数
  */
 case class ReviewsStat(
@@ -53,20 +64,21 @@ object ReviewRst extends Enumeration {
 }
 
 /**
- * Enumeration for review type: to salon| to blog| replay.
+ * Enumeration for review type: to salon| to blog| replay| complain.
  */
 object CommentType extends Enumeration {
   type CommentType = Value
   val ToBlog = Value(1)
   val ToSalon = Value(2)
   val Replay = Value(3)
+  val Complain = Value(4)
 }
 
 /**
  * Comment class for blog'comment, reservation's commnet and reply
  *
  * @param id ObjectId of record in mongodb
- * @param commentObjType 评论对象类型:  暂定 1: 对博客; 2: 对店铺; 3: 回复
+ * @param commentObjType 评论对象类型:  暂定 1: 对博客; 2: 对店铺; 3: 回复; 4:申诉
  * @param commentObjId 评论对象Id
  * @param content 内容
  * @param complex 综合分数
@@ -230,6 +242,31 @@ object Comment extends MeifanNetModelCompanion[Comment] {
         }
     })
     commentOfSalonList.sortBy(commentOfSalon => commentOfSalon.commentInfo.createTime).reverse
+  }
+
+  val complainList = dao.find(MongoDBObject("isValid" -> true, "commentObjType" -> CommentType.Complain.id)).sort(MongoDBObject("createTime" -> -1)).toList
+
+  /**
+   * 查找评论表中店铺申诉的数据，该方法用于后台管理员查看店铺申诉的数据。
+   * 这边的4代表店铺的申诉
+   */
+  // TODO
+  def findComplainOfSalon(complainList: List[Comment]) : List[ComplainOfSalon] = {
+    var complainOfSalonList: List[ComplainOfSalon] = Nil
+    complainList.foreach({
+      row =>
+        val commentInfo = Comment.findOneById(row.commentObjId)
+        commentInfo match {
+          case None => None
+          case Some(c) => {
+            val reservation = Reservation.findOneById(c.commentObjId)
+            val salon = Salon.findOneById(reservation.get.salonId)
+            val complainOfSalon = ComplainOfSalon(row, c,salon.get)
+            complainOfSalonList :::= List(complainOfSalon)
+          }
+        }
+    })
+    complainOfSalonList.sortBy(complainOfSalon => complainOfSalon.complainInfo.createTime).reverse
   }
 
   /**

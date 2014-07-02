@@ -1,3 +1,4 @@
+import models.manager.admin.Admin
 import play.api._
 import org.bson.types.ObjectId
 import java.util.Date
@@ -6,13 +7,13 @@ import play.api.mvc.Results._
 import play.api.mvc._
 import scala.concurrent.Future
 
-import models.portal.advert._ 
+import models.portal.advert._
 import models.portal.blog._ 
 import models.portal.common._ 
 import models.portal.coupon._ 
 import models.portal.industry._ 
-import models.portal.info._ 
-import models.portal.mail._ 
+import models.portal.info._
+import models.portal.mail._
 import models.portal.menu._ 
 import models.portal.question._ 
 import models.portal.relation._ 
@@ -25,6 +26,7 @@ import models.portal.style._
 import models.portal.stylist._ 
 import models.portal.user._
 import models.portal.nail._
+
 
 
 object Global extends GlobalSettings {
@@ -471,13 +473,23 @@ object InitialData {
         HotestKeyword(new ObjectId, "洗剪吹", "hairSalon", 1, true),
         HotestKeyword(new ObjectId, "悦容美发", "hairSalon", 1, true)).foreach(HotestKeyword.save)
     }
+    if (Admin.findAll.isEmpty){
+      Seq(
+        Admin(new ObjectId,"admin01","$2a$10$q0rl.qI.X9UTPZ6mDRbVhOvxYjk9S7RsrAmJ3aXaJaEcLV/3f/bU."),
+        Admin(new ObjectId,"admin02","$2a$10$q0rl.qI.X9UTPZ6mDRbVhOvxYjk9S7RsrAmJ3aXaJaEcLV/3f/bU."),
+        Admin(new ObjectId,"admin03","$2a$10$q0rl.qI.X9UTPZ6mDRbVhOvxYjk9S7RsrAmJ3aXaJaEcLV/3f/bU.")
+      ).foreach(Admin.save)
+    }
+
   }
+
 
   /*---------------------------
      * Sample Data For Test.
      * 测试数据
      *--------------------------*/
   def insertSampleData() {
+
 
     insertSampleSalon
 
@@ -884,7 +896,11 @@ object InitialData {
     }
   }
 
+
   private def insertSampleQuestion {
+
+
+
     if (Question.findAll.isEmpty) {
       Seq(
         Question(new ObjectId(), "发型师如何注册", """<p>
