@@ -158,12 +158,18 @@ object InitialData {
         ServiceType(new ObjectId("53167b3cd4d5cb7e816db359"), "Hairdressing", "Supple", "柔顺"),
         ServiceType(new ObjectId("5316c443d4d57997ce3e6d68"), "Hairdressing", "Other", "其他"),
 
-        ServiceType(new ObjectId("5316c443d4d57997ce3e6d69"), "Manicures", "Pen", "笔绘甲"),
+
+
+        /*ServiceType(new ObjectId("5316c443d4d57997ce3e6d69"), "Manicures", "Pen", "笔绘甲"),
         ServiceType(new ObjectId("5316c443d4d57997ce3e6d71"), "Manicures", "Delineation", "勾绘甲"),
         ServiceType(new ObjectId("5316c443d4d57997ce3e6d72"), "Manicures", "Airbrush", "喷绘甲"),
         ServiceType(new ObjectId("5316c443d4d57997ce3e6d73"), "Manicures", "Patch", "贴片甲"),
         ServiceType(new ObjectId("5316c443d4d57997ce3e6d74"), "Manicures", "Crystal", "水晶甲"),
-        ServiceType(new ObjectId("5316c443d4d57997ce3e6d75"), "Manicures", "Gel", "光疗树脂甲")).foreach(ServiceType.save)
+        ServiceType(new ObjectId("5316c443d4d57997ce3e6d75"), "Manicures", "Gel", "光疗树脂甲")*/
+
+        ServiceType(new ObjectId("5316c443d4d57997ce3e6d78"), "Manicures", "Eyelashes", "美睫"),
+        ServiceType(new ObjectId("5316c443d4d57997ce3e6d66"), "Manicures", "Nail", "美甲"),
+        ServiceType(new ObjectId("5316c443d4d57997ce3e6d77"), "Manicures", "HandCare", "手足护理")).foreach(ServiceType.save)
     }
   }
 
@@ -1120,13 +1126,15 @@ object InitialData {
   private def insertSampleNail {
     if (Nail.findAll.isEmpty) {
       Seq(
-        Nail(new ObjectId("5317c0d1d4d57996ce4b2a31"), "法式浪漫", new ObjectId("53202c29d4d5e3cd47efffe3"), List("Delineation", "Pen"), List("pink", "white", "silver", "beige", "gold", "orange", "brown", "yellow"), List("rhinestone", "pearl", "metal"), List("hand", "foot"), "natural", List("office", "bridal"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "清新动人", date("2014-03-12"), true),
-        Nail(new ObjectId("5317c0d1d4d57996ce4b2a32"), "反转法式", new ObjectId("53202c29d4d5e3cd47efffe3"), List("Airbrush", "Patch", "Crystal", "Gel"), List("pink", "white", "purple", "red", "black", "clear", "multi"), List("metal", "peucine", "bridal", "fruitSlices"), List("foot"), "fresh", List("office", "party", "sport"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "超炫闪亮登场", date("2014-03-12"), true),
-        Nail(new ObjectId("5317c0d1d4d57996ce4b2a33"), "清新~(ˇˍˇ）", new ObjectId("53202c29d4d5e3cd47efffe3"), List("Airbrush", "Patch", "Crystal", "Gel"), List("green", "blue", "purple", "red", "black", "clear", "multi"), List("metal", "peucine", "bridal", "fruitSlices"), List("foot"), "fresh", List("office"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "超炫闪亮登场", date("2014-03-12"), true),
-        Nail(new ObjectId("5317c0d1d4d57996ce4b2a34"), "炫丽", new ObjectId("53202c29d4d5e3cd47efffe3"), List("Airbrush", "Delineation"), List("green", "blue", "purple", "beige", "gold", "orange", "brown", "yellow"), List("metal", "peucine", "bridal", "fruitSlices"), List("hand"), "fresh", List("office", "party"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "超炫闪亮登场", date("2014-03-12"), true),
-        Nail(new ObjectId("5317c0d1d4d57996ce4b2a35"), "可爱(～ o ～)Y", new ObjectId("53202c29d4d5e3cd47efffe3"), List("Airbrush", "Patch", "Crystal", "Gel"), List("green", "blue", "purple", "red", "black", "clear", "multi"), List("metal", "peucine", "bridal", "fruitSlices"), List("hand", "foot"), "fresh", List( "party", "sport"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "超炫闪亮登场", date("2014-03-12"), true),
-        Nail(new ObjectId("5317c0d1d4d57996ce4b2a36"), "多色变幻", new ObjectId("53202c29d4d5e3cd47efffe3"), List("Patch", "Pen", "Gel"), List("green", "white", "purple", "red", "black", "clear", "multi"), List("metal", "peucine", "bridal", "fruitSlices"), List("hand"), "fresh", List("office", "date"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "超炫闪亮登场", date("2014-03-12"), true),
-        Nail(new ObjectId("5317c0d1d4d57996ce4b2a38"), "跳动的精灵", new ObjectId("53202c29d4d5e3cd47efffe3"), List("Airbrush", "Gel"), List("silver", "white", "gold", "orange", "black", "clear", "multi"), List("metal", "peucine", "bridal", "fruitSlices"), List("hand", "foot"), "fresh", List( "date"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "超炫闪亮登场", date("2014-03-12"), true)).foreach(Nail.save)
+        Nail(new ObjectId("5317c0d1d4d57996ce4b2a31"), "法式浪漫", new ObjectId("53202c29d4d5e3cd47efffe3"), "Nail", List("pink", "white", "silver", "beige", "gold", "orange", "brown", "yellow"), List("rhinestone", "pearl", "metal"), List("hand", "foot"), "natural", List("office", "bridal"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "清新动人", date("2014-03-12"), true),
+        Nail(new ObjectId("5317c0d1d4d57996ce4b2a32"), "反转法式", new ObjectId("53202c29d4d5e3cd47efffe3"), "Nail", List("pink", "white", "purple", "red", "black", "clear", "multi"), List("metal", "peucine", "bridal", "fruitSlices"), List("foot"), "fresh", List("office", "party", "sport"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "超炫闪亮登场", date("2014-03-12"), true),
+        Nail(new ObjectId("5317c0d1d4d57996ce4b2a33"), "清新~(ˇˍˇ）", new ObjectId("53202c29d4d5e3cd47efffe3"), "Nail", List("green", "blue", "purple", "red", "black", "clear", "multi"), List("metal", "peucine", "bridal", "fruitSlices"), List("foot"), "fresh", List("office"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "超炫闪亮登场", date("2014-03-12"), true),
+        Nail(new ObjectId("5317c0d1d4d57996ce4b2a34"), "炫丽", new ObjectId("53202c29d4d5e3cd47efffe3"), "Nail", List("green", "blue", "purple", "beige", "gold", "orange", "brown", "yellow"), List("metal", "peucine", "bridal", "fruitSlices"), List("hand"), "fresh", List("office", "party"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "超炫闪亮登场", date("2014-03-12"), true),
+        Nail(new ObjectId("5317c0d1d4d57996ce4b2a35"), "可爱(～ o ～)Y", new ObjectId("53202c29d4d5e3cd47efffe3"), "Nail", List("green", "blue", "purple", "red", "black", "clear", "multi"), List("metal", "peucine", "bridal", "fruitSlices"), List("hand", "foot"), "fresh", List( "party", "sport"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "超炫闪亮登场", date("2014-03-12"), true),
+        Nail(new ObjectId("5317c0d1d4d57996ce4b2a36"), "炫丽", new ObjectId("53202c29d4d5e3cd47efffe3"), "Nail", List("green", "blue", "purple", "beige", "gold", "orange", "brown", "yellow"), List("metal", "peucine", "bridal", "fruitSlices"), List("hand"), "fresh", List("office", "party"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "超炫闪亮登场", date("2014-03-12"), true),
+        Nail(new ObjectId("5317c0d1d4d57996ce4b2a38"), "可爱(～ o ～)Y", new ObjectId("53202c29d4d5e3cd47efffe3"), "Nail", List("green", "blue", "purple", "red", "black", "clear", "multi"), List("metal", "peucine", "bridal", "fruitSlices"), List("hand", "foot"), "fresh", List( "party", "sport"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "超炫闪亮登场", date("2014-03-12"), true),
+        Nail(new ObjectId("5317c0d1d4d57996ce4b2a41"), "多色变幻", new ObjectId("53202c29d4d5e3cd47efffe3"), "HandCare", List("green", "white", "purple", "red", "black", "clear", "multi"), List("metal", "peucine", "bridal", "fruitSlices"), List("hand"), "fresh", List("office", "date"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "超炫闪亮登场", date("2014-03-12"), true),
+        Nail(new ObjectId("5317c0d1d4d57996ce4b2a42"), "跳动的精灵", new ObjectId("53202c29d4d5e3cd47efffe3"), "Eyelashes", List("silver", "white", "gold", "orange", "black", "clear", "multi"), List("metal", "peucine", "bridal", "fruitSlices"), List("hand", "foot"), "fresh", List( "date"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "超炫闪亮登场", date("2014-03-12"), true)).foreach(Nail.save)
     }
   }
 
