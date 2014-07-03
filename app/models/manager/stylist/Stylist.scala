@@ -1,16 +1,10 @@
 package models.manager.stylist
 
 import com.mongodb.casbah.Imports._
-import se.radley.plugin.salat.Binders._
 import mongoContext._
-import play.api.PlayException
 import scala.concurrent.{ExecutionContext, Future}
-import ExecutionContext.Implicits.global
 import com.meifannet.framework.db._
-import play.api.data.Forms._
-import com.mongodb.casbah.commons.MongoDBObject
 import com.mongodb.casbah.commons.Imports._
-import models.manager.stylist.MeifanStylistSearch
 import com.mongodb.casbah.commons.Imports.{DBObject => commonsDBObject}
 
 /**
@@ -33,11 +27,6 @@ object Stylist extends MeifanNetModelCompanion[Stylist] {
   val dao = new MeifanNetDAO[Stylist](collection = loadCollection()) {}
 }
 
-case class Page[A](items: Seq[A], page: Int, offset: Long, total: Long) {
-  lazy val prev = Option(page - 1).filter(_ >= 0)
-  lazy val next = Option(page + 1).filter(_ => (offset + items.size) < total)
-}
-
 case class MeifanStylistSearch(userId: Option[String],
                                nickName: Option[String],
                                industry: Option[String],
@@ -57,7 +46,6 @@ object StylistApply {
 
   /*    find stylist according condition                                        */
   def findStylistByCondition(stylistSearch: MeifanStylistSearch): List[models.portal.stylist.Stylist] = {
-    println("" + stylistSearch.industry.nonEmpty)
     var srchConds: List[commonsDBObject] = Nil
     if (stylistSearch.userId.nonEmpty) {
       srchConds :::= List(commonsDBObject("stylistId" -> models.portal.user.User.findOneByUserId(stylistSearch.userId.get).get.id))
@@ -73,7 +61,6 @@ object StylistApply {
       }
     }
     if (stylistSearch.isValid.nonEmpty) {
-      println(stylistSearch.isValid.get.toString)
       if (stylistSearch.isValid.get) {
         srchConds :::= List(commonsDBObject("isValid" -> true))
       }
@@ -84,7 +71,6 @@ object StylistApply {
     }
     var stylist: List[models.portal.stylist.Stylist] = Nil
     if (!srchConds.length.equals(0)) {
-      println("^^^^^^^^^^^" + srchConds.toString())
       stylist = models.portal.stylist.Stylist.find($and(srchConds)).toList
     }
 
@@ -101,11 +87,3 @@ object StylistApply {
     models.portal.stylist.Stylist.save(stylist.copy(stylistId = stylist.stylistId, isValid = false))
   }
 }
-
-
-//
-
-
-
-
-
