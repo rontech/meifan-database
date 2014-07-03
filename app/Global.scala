@@ -168,9 +168,9 @@ object InitialData {
         ServiceType(new ObjectId("5316c443d4d57997ce3e6d74"), "Manicures", "Crystal", "水晶甲"),
         ServiceType(new ObjectId("5316c443d4d57997ce3e6d75"), "Manicures", "Gel", "光疗树脂甲")*/
 
+        ServiceType(new ObjectId("5316c443d4d57997ce3e6d77"), "Manicures", "HandCare", "手足护理"),
         ServiceType(new ObjectId("5316c443d4d57997ce3e6d78"), "Manicures", "Eyelashes", "美睫"),
-        ServiceType(new ObjectId("5316c443d4d57997ce3e6d66"), "Manicures", "Nail", "美甲"),
-        ServiceType(new ObjectId("5316c443d4d57997ce3e6d77"), "Manicures", "HandCare", "手足护理")).foreach(ServiceType.save)
+        ServiceType(new ObjectId("5316c443d4d57997ce3e6d66"), "Manicures", "Nail", "美甲")).foreach(ServiceType.save)
     }
   }
 
@@ -226,11 +226,11 @@ object InitialData {
         StyleImpression(new ObjectId, "Hairdressing", "intellectual", "知性"),
         StyleImpression(new ObjectId, "Hairdressing", "natural", "自然"),
 
-        StyleImpression(new ObjectId, "Hairdressing", "personality", "个性"),
-        StyleImpression(new ObjectId, "Hairdressing", "gorgeous", "华丽"),
-        StyleImpression(new ObjectId, "Hairdressing", "fresh", "清新"),
-        StyleImpression(new ObjectId, "Hairdressing", "fashion", "时尚"),
-        StyleImpression(new ObjectId, "Hairdressing", "natural", "自然")).foreach(StyleImpression.save)
+        StyleImpression(new ObjectId, "Manicures", "personality", "个性"),
+        StyleImpression(new ObjectId, "Manicures", "gorgeous", "华丽"),
+        StyleImpression(new ObjectId, "Manicures", "fresh", "清新"),
+        StyleImpression(new ObjectId, "Manicures", "fashion", "时尚"),
+        StyleImpression(new ObjectId, "Manicures", "natural", "自然")).foreach(StyleImpression.save)
     }
   }
 
