@@ -175,7 +175,11 @@ object InitialData {
 
         ServiceType(new ObjectId("5316c443d4d57997ce3e6d77"), "Manicures", "HandCare", "手足护理"),
         ServiceType(new ObjectId("5316c443d4d57997ce3e6d78"), "Manicures", "Eyelashes", "美睫"),
-        ServiceType(new ObjectId("5316c443d4d57997ce3e6d66"), "Manicures", "Nail", "美甲")).foreach(ServiceType.save)
+        ServiceType(new ObjectId("5316c443d4d57997ce3e6d66"), "Manicures", "Nail", "美甲"),
+
+        ServiceType(new ObjectId("5316c443d4d57997ce3e6d90"), "Healthcare", "Spa", "Spa"),
+        ServiceType(new ObjectId("5316c443d4d57997ce3e6d91"), "Healthcare", "Footbath", "足浴"),
+        ServiceType(new ObjectId("5316c443d4d57997ce3e6d92"), "Healthcare", "Massage", "按摩")).foreach(ServiceType.save)
     }
   }
 
