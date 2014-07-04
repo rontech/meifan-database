@@ -35,5 +35,4 @@ object Admin extends MeifanNetModelCompanion[Admin] {
       None
     }
   }
-
 }

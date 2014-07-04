@@ -139,115 +139,122 @@ object InitialData {
   private def insertInitPosition {
     if (Position.findAll.isEmpty) {
       Seq(
-        Position(new ObjectId("531964e0d4d57d0a43771411"), "Manager"), // 店长
-        Position(new ObjectId("531964e0d4d57d0a43771412"), "ChiefStylist"), // 首席发型师
-        Position(new ObjectId("531964e0d4d57d0a43771414"), "AdvancedStylist"), // 高级发型师
+        Position(new ObjectId("531964e0d4d57d0a43771416"), "Assistant"), // 助手
         Position(new ObjectId("531964e0d4d57d0a43771413"), "Stylist"), // 发型师
-        Position(new ObjectId("531964e0d4d57d0a43771416"), "Assistant") // 助手
-      ).foreach(Position.save)
+        Position(new ObjectId("531964e0d4d57d0a43771414"), "AdvancedStylist"), // 高级发型师
+        Position(new ObjectId("531964e0d4d57d0a43771412"), "ChiefStylist"), // 首席发型师
+        Position(new ObjectId("531964e0d4d57d0a43771411"), "Manager")).foreach(Position.save) // 店长
     }
   }
 
   private def insertInitServiceType {
     if (ServiceType.findAll.isEmpty) {
       Seq(
-        ServiceType(new ObjectId("5316798cd4d5cb7e816db34b"), "Hairdressing", "Cut", "剪"),
-        ServiceType(new ObjectId("53167a91d4d5cb7e816db34d"), "Hairdressing", "Wash", "洗"),
-        ServiceType(new ObjectId("53167abbd4d5cb7e816db34f"), "Hairdressing", "Blow", "吹"),
-        ServiceType(new ObjectId("53167aced4d5cb7e816db351"), "Hairdressing", "Dye", "染"),
-        ServiceType(new ObjectId("53167ad9d4d5cb7e816db353"), "Hairdressing", "Care", "护理"),
-        ServiceType(new ObjectId("53167ae7d4d5cb7e816db355"), "Hairdressing", "Perm", "烫"),
-        ServiceType(new ObjectId("53167b3cd4d5cb7e816db359"), "Hairdressing", "Supple", "柔顺"),
         ServiceType(new ObjectId("5316c443d4d57997ce3e6d68"), "Hairdressing", "Other", "其他"),
+        ServiceType(new ObjectId("53167b3cd4d5cb7e816db359"), "Hairdressing", "Supple", "柔顺"),
+        ServiceType(new ObjectId("53167ae7d4d5cb7e816db355"), "Hairdressing", "Perm", "烫"),
+        ServiceType(new ObjectId("53167ad9d4d5cb7e816db353"), "Hairdressing", "Care", "护理"),
+        ServiceType(new ObjectId("53167aced4d5cb7e816db351"), "Hairdressing", "Dye", "染"),
+        ServiceType(new ObjectId("53167abbd4d5cb7e816db34f"), "Hairdressing", "Blow", "吹"),
+        ServiceType(new ObjectId("53167a91d4d5cb7e816db34d"), "Hairdressing", "Wash", "洗"),
+        ServiceType(new ObjectId("5316798cd4d5cb7e816db34b"), "Hairdressing", "Cut", "剪"),
 
-        ServiceType(new ObjectId("5316c443d4d57997ce3e6d69"), "Manicures", "Pen", "笔绘甲"),
+
+
+        /*ServiceType(new ObjectId("5316c443d4d57997ce3e6d69"), "Manicures", "Pen", "笔绘甲"),
         ServiceType(new ObjectId("5316c443d4d57997ce3e6d71"), "Manicures", "Delineation", "勾绘甲"),
         ServiceType(new ObjectId("5316c443d4d57997ce3e6d72"), "Manicures", "Airbrush", "喷绘甲"),
         ServiceType(new ObjectId("5316c443d4d57997ce3e6d73"), "Manicures", "Patch", "贴片甲"),
         ServiceType(new ObjectId("5316c443d4d57997ce3e6d74"), "Manicures", "Crystal", "水晶甲"),
-        ServiceType(new ObjectId("5316c443d4d57997ce3e6d75"), "Manicures", "Gel", "光疗树脂甲"),
 
         ServiceType(new ObjectId("5316c443d4d57997ce3e6d90"), "Healthcare", "Spa", "Spa"),
         ServiceType(new ObjectId("5316c443d4d57997ce3e6d91"), "Healthcare", "Footbath", "足浴"),
         ServiceType(new ObjectId("5316c443d4d57997ce3e6d92"), "Healthcare", "Massage", "按摩")).foreach(ServiceType.save)
+
+        ServiceType(new ObjectId("5316c443d4d57997ce3e6d75"), "Manicures", "Gel", "光疗树脂甲")*/
+
+        ServiceType(new ObjectId("5316c443d4d57997ce3e6d77"), "Manicures", "HandCare", "手足护理"),
+        ServiceType(new ObjectId("5316c443d4d57997ce3e6d78"), "Manicures", "Eyelashes", "美睫"),
+        ServiceType(new ObjectId("5316c443d4d57997ce3e6d66"), "Manicures", "Nail", "美甲")).foreach(ServiceType.save)
     }
   }
 
   private def insertInitStyleColor {
     if (StyleColor.findAll.isEmpty) {
       Seq(
-        StyleColor(new ObjectId, "Hairdressing", "black", "黑色"),
-        StyleColor(new ObjectId, "Hairdressing", "chocolate", "巧克力色"),
-        StyleColor(new ObjectId, "Hairdressing", "brown", "棕色"),
-        StyleColor(new ObjectId, "Hairdressing", "flax", "亚麻"),
-        StyleColor(new ObjectId, "Hairdressing", "red", "红色"),
         StyleColor(new ObjectId, "Hairdressing", "alternative", "另类"),
+        StyleColor(new ObjectId, "Hairdressing", "red", "红色"),
+        StyleColor(new ObjectId, "Hairdressing", "brown", "棕色"),
+        StyleColor(new ObjectId, "Hairdressing", "chocolate", "巧克力色"),
+        StyleColor(new ObjectId, "Hairdressing", "flax", "亚麻"),
+        StyleColor(new ObjectId, "Hairdressing", "black", "黑色"),
 
-        StyleColor(new ObjectId, "Manicures", "pink", "粉红色"),
-        StyleColor(new ObjectId, "Manicures", "white", "白色"),
-        StyleColor(new ObjectId, "Manicures", "silver", "银色"),
-        StyleColor(new ObjectId, "Manicures", "beige", "浅褐色"),
-        StyleColor(new ObjectId, "Manicures", "gold", "金色"),
-        StyleColor(new ObjectId, "Manicures", "orange", "橙色"),
+
+        StyleColor(new ObjectId, "Manicures", "multi", "混合色"),
+        StyleColor(new ObjectId, "Manicures", "clear", "透明"),
+        StyleColor(new ObjectId, "Manicures", "black", "黑色"),
+        StyleColor(new ObjectId, "Manicures", "red", "红色"),
+        StyleColor(new ObjectId, "Manicures", "purple", "紫色"),
+        StyleColor(new ObjectId, "Manicures", "blue", "蓝色"),
+        StyleColor(new ObjectId, "Manicures", "green", "绿色"),
         StyleColor(new ObjectId, "Manicures", "brown", "棕色"),
         StyleColor(new ObjectId, "Manicures", "yellow", "黄色"),
-        StyleColor(new ObjectId, "Manicures", "green", "绿色"),
-        StyleColor(new ObjectId, "Manicures", "blue", "蓝色"),
-        StyleColor(new ObjectId, "Manicures", "purple", "紫色"),
-        StyleColor(new ObjectId, "Manicures", "red", "红色"),
-        StyleColor(new ObjectId, "Manicures", "black", "黑色"),
-        StyleColor(new ObjectId, "Manicures", "clear", "透明"),
-        StyleColor(new ObjectId, "Manicures", "multi", "混合色")).foreach(StyleColor.save)
+        StyleColor(new ObjectId, "Manicures", "orange", "橙色"),
+        StyleColor(new ObjectId, "Manicures", "gold", "金色"),
+        StyleColor(new ObjectId, "Manicures", "beige", "浅褐色"),
+        StyleColor(new ObjectId, "Manicures", "silver", "银色"),
+        StyleColor(new ObjectId, "Manicures", "white", "白色"),
+        StyleColor(new ObjectId, "Manicures", "pink", "粉红色")).foreach(StyleColor.save)
     }
   }
 
   private def insertInitStyleLength {
     if (StyleLength.findAll.isEmpty) {
       Seq(
-        StyleLength(new ObjectId, "super-short", "超短"),
-        StyleLength(new ObjectId, "short", "短"),
-        StyleLength(new ObjectId, "near-shoulder-length", "及肩"),
-        StyleLength(new ObjectId, "shoulder-length", "齐肩"),
-        StyleLength(new ObjectId, "mid-length", "中长"),
-        StyleLength(new ObjectId, "long", "长")).foreach(StyleLength.save)
+        StyleLength(new ObjectId, "long", "长"),
+          StyleLength(new ObjectId, "mid-length", "中长"),
+          StyleLength(new ObjectId, "shoulder-length", "齐肩"),
+          StyleLength(new ObjectId, "near-shoulder-length", "及肩"),
+          StyleLength(new ObjectId, "short", "短"),
+          StyleLength(new ObjectId, "super-short", "超短")).foreach(StyleLength.save)
     }
   }
 
   private def insertInitStyleImpression {
     if (StyleImpression.findAll.isEmpty) {
       Seq(
-        StyleImpression(new ObjectId, "Hairdressing", "natural", "自然"),
-        StyleImpression(new ObjectId, "Hairdressing", "intellectual", "知性"),
-        StyleImpression(new ObjectId, "Hairdressing", "sweet", "甜美"),
-        StyleImpression(new ObjectId, "Hairdressing", "fashion", "时尚"),
-        StyleImpression(new ObjectId, "Hairdressing", "fresh", "清新"),
-        StyleImpression(new ObjectId, "Hairdressing", "gorgeous", "华丽"),
         StyleImpression(new ObjectId, "Hairdressing", "personality", "个性"),
+        StyleImpression(new ObjectId, "Hairdressing", "gorgeous", "华丽"),
+        StyleImpression(new ObjectId, "Hairdressing", "fresh", "清新"),
+        StyleImpression(new ObjectId, "Hairdressing", "fashion", "时尚"),
+        StyleImpression(new ObjectId, "Hairdressing", "sweet", "甜美"),
+        StyleImpression(new ObjectId, "Hairdressing", "intellectual", "知性"),
+        StyleImpression(new ObjectId, "Hairdressing", "natural", "自然"),
 
-        StyleImpression(new ObjectId, "Manicures", "natural", "自然"),
-        StyleImpression(new ObjectId, "Manicures", "fashion", "时尚"),
-        StyleImpression(new ObjectId, "Manicures", "fresh", "清新"),
+        StyleImpression(new ObjectId, "Manicures", "personality", "个性"),
         StyleImpression(new ObjectId, "Manicures", "gorgeous", "华丽"),
-        StyleImpression(new ObjectId, "Manicures", "personality", "个性")).foreach(StyleImpression.save)
+        StyleImpression(new ObjectId, "Manicures", "fresh", "清新"),
+        StyleImpression(new ObjectId, "Manicures", "fashion", "时尚"),
+        StyleImpression(new ObjectId, "Manicures", "natural", "自然")).foreach(StyleImpression.save)
     }
   }
 
   private def insertInitStyleAmount {
     if (StyleAmount.findAll.isEmpty) {
       Seq(
-        StyleAmount(new ObjectId, "much", "多"),
+        StyleAmount(new ObjectId, "few", "少"),
         StyleAmount(new ObjectId, "moderate", "适中"),
-        StyleAmount(new ObjectId, "few", "少")).foreach(StyleAmount.save)
+        StyleAmount(new ObjectId, "much", "多")).foreach(StyleAmount.save)
     }
   }
 
   private def insertInitStyleQuality {
     if (StyleQuality.findAll.isEmpty) {
       Seq(
-        StyleQuality(new ObjectId, "silky", "柔顺"),
-        StyleQuality(new ObjectId, "greasy", "油性"),
+        StyleQuality(new ObjectId, "general", "一般"),
         StyleQuality(new ObjectId, "dry", "干性"),
-        StyleQuality(new ObjectId, "general", "一般")).foreach(StyleQuality.save)
+        StyleQuality(new ObjectId, "greasy", "油性"),
+        StyleQuality(new ObjectId, "silky", "柔顺")).foreach(StyleQuality.save)
     }
   }
 
@@ -263,29 +270,29 @@ object InitialData {
   private def insertInitFaceShape {
     if (FaceShape.findAll.isEmpty) {
       Seq(
-        FaceShape(new ObjectId, "oval-face", "椭圆脸"),
-        FaceShape(new ObjectId, "round-face", "圆脸"),
-        FaceShape(new ObjectId, "long-face", "长脸"),
-        FaceShape(new ObjectId, "square-face", "方脸"),
+        FaceShape(new ObjectId, "diamond-face", "菱形"),
         FaceShape(new ObjectId, "pointed-face", "尖脸"),
-        FaceShape(new ObjectId, "diamond-face", "菱形")).foreach(FaceShape.save)
+        FaceShape(new ObjectId, "square-face", "方脸"),
+        FaceShape(new ObjectId, "long-face", "长脸"),
+        FaceShape(new ObjectId, "round-face", "圆脸"),
+        FaceShape(new ObjectId, "oval-face", "椭圆脸")).foreach(FaceShape.save)
     }
   }
 
   private def insertInitSocialScene {
     if (SocialScene.findAll.isEmpty) {
       Seq(
-        SocialScene(new ObjectId, "Hairdressing", "evening-wear", "晚装"),
-        SocialScene(new ObjectId, "Hairdressing", "brief", "简约"),
-        SocialScene(new ObjectId, "Hairdressing", "star", "明星"),
-        SocialScene(new ObjectId, "Hairdressing", "street", "街拍"),
-        SocialScene(new ObjectId, "Hairdressing", "T-stage", "T台"),
         SocialScene(new ObjectId, "Hairdressing", "others", "其它"),
+        SocialScene(new ObjectId, "Hairdressing", "T-stage", "T台"),
+        SocialScene(new ObjectId, "Hairdressing", "street", "街拍"),
+        SocialScene(new ObjectId, "Hairdressing", "star", "明星"),
+        SocialScene(new ObjectId, "Hairdressing", "brief", "简约"),
+        SocialScene(new ObjectId, "Hairdressing", "evening-wear", "晚装"),
 
-        SocialScene(new ObjectId, "Manicures", "office", "办公室"),
-        SocialScene(new ObjectId, "Manicures", "party", "聚会"),
-        SocialScene(new ObjectId, "Manicures", "sport", "运动"),
         SocialScene(new ObjectId, "Manicures", "date", "约会"),
+        SocialScene(new ObjectId, "Manicures", "sport", "运动"),
+        SocialScene(new ObjectId, "Manicures", "party", "聚会"),
+        SocialScene(new ObjectId, "Manicures", "office", "办公室"),
         SocialScene(new ObjectId, "Manicures", "bridal", "婚礼")).foreach(SocialScene.save)
     }
   }
@@ -293,112 +300,112 @@ object InitialData {
   private def insertInitStyleMaterial {
     if (StyleMaterial.findAll.isEmpty) {
       Seq(
-        StyleMaterial(new ObjectId, "Manicures", "rhinestone", "水钻"),
-        StyleMaterial(new ObjectId, "Manicures", "pearl", "珍珠"),
-        StyleMaterial(new ObjectId, "Manicures", "metal", "金属"),
+        StyleMaterial(new ObjectId, "Manicures", "fruitSlices", "水果片"),
         StyleMaterial(new ObjectId, "Manicures", "peucine", "树脂"),
+        StyleMaterial(new ObjectId, "Manicures", "metal", "金属"),
         StyleMaterial(new ObjectId, "Manicures", "bridal", "玉石"),
-        StyleMaterial(new ObjectId, "Manicures", "fruitSlices", "水果片")).foreach(StyleMaterial.save)
+        StyleMaterial(new ObjectId, "Manicures", "pearl", "珍珠"),
+        StyleMaterial(new ObjectId, "Manicures", "rhinestone", "水钻")).foreach(StyleMaterial.save)
     }
   }
 
   private def insertInitStyleBase {
     if (StyleBase.findAll.isEmpty) {
       Seq(
-        StyleBase(new ObjectId, "Manicures", "hand", "手"),
-        StyleBase(new ObjectId, "Manicures", "foot", "足")).foreach(StyleBase.save)
+        StyleBase(new ObjectId, "Manicures", "foot", "足"),
+        StyleBase(new ObjectId, "Manicures", "hand", "手")).foreach(StyleBase.save)
     }
   }
 
   private def insertInitSex {
     if (Sex.findAll.isEmpty) {
       Seq(
-        Sex(new ObjectId, "male"),
-        Sex(new ObjectId, "female")).foreach(Sex.save)
+        Sex(new ObjectId, "female"),
+        Sex(new ObjectId, "male")).foreach(Sex.save)
     }
   }
 
   private def insertInitAgeGroup {
     if (AgeGroup.findAll.isEmpty) {
       Seq(
-        AgeGroup(new ObjectId, "one--fifteen", "1—15"),
-        AgeGroup(new ObjectId, "one--twenty-five", "15—25"),
-        AgeGroup(new ObjectId, "twenty-five--thirty-five", "25—35"),
-        AgeGroup(new ObjectId, "thirty-five--forty-five", "35—45"),
+        AgeGroup(new ObjectId, "fifty-five--", "55以上"),
         AgeGroup(new ObjectId, "forty-five--fifty-five", "45—55"),
-        AgeGroup(new ObjectId, "fifty-five--", "55以上")).foreach(AgeGroup.save)
+        AgeGroup(new ObjectId, "thirty-five--forty-five", "35—45"),
+        AgeGroup(new ObjectId, "twenty-five--thirty-five", "25—35"),
+        AgeGroup(new ObjectId, "one--twenty-five", "15—25"),
+        AgeGroup(new ObjectId, "one--fifteen", "1—15")).foreach(AgeGroup.save)
     }
   }
 
   private def insertInitStylePicDescription {
     if (StylePicDescription.findAll.isEmpty) {
       Seq(
-        StylePicDescription(new ObjectId, "FRONT", "正面"),
-        StylePicDescription(new ObjectId, "BACK", "背面"),
+        StylePicDescription(new ObjectId, "FASHION", "FASHION"),
         StylePicDescription(new ObjectId, "SIDE", "侧面"),
-        StylePicDescription(new ObjectId, "FASHION", "FASHION")).foreach(StylePicDescription.save)
+        StylePicDescription(new ObjectId, "BACK", "背面"),
+        StylePicDescription(new ObjectId, "FRONT", "正面")).foreach(StylePicDescription.save)
     }
   }
 
   private def insertInitBlogCategory {
     if (BlogCategory.findAll.isEmpty) {
       Seq(
-        BlogCategory(new ObjectId("53195fb4a89e175858abce82"), "美容资讯", true),
-        BlogCategory(new ObjectId("53195fb4a89e175858abce83"), "健康养生", true),
-        BlogCategory(new ObjectId("53195fb4a89e175858abce85"), "个人", true),
-        BlogCategory(new ObjectId("53195fb4a89e175858abce86"), "工作", true),
+        BlogCategory(new ObjectId("53195fb4a89e175858abce84"), "其他", true),
         BlogCategory(new ObjectId("53195fb4a89e175858abce87"), "喜欢", true),
-        BlogCategory(new ObjectId("53195fb4a89e175858abce84"), "其他", true)).foreach(BlogCategory.save)
+        BlogCategory(new ObjectId("53195fb4a89e175858abce86"), "工作", true),
+        BlogCategory(new ObjectId("53195fb4a89e175858abce85"), "个人", true),
+        BlogCategory(new ObjectId("53195fb4a89e175858abce83"), "健康养生", true),
+        BlogCategory(new ObjectId("53195fb4a89e175858abce82"), "美容资讯", true)).foreach(BlogCategory.save)
     }
   }
 
   private def insertInitContMethodType {
     if (ContMethodType.findAll.isEmpty) {
       Seq(
-        ContMethodType(new ObjectId, "QQ", "QQ"),
-        ContMethodType(new ObjectId, "MSN", "MSN"),
-        ContMethodType(new ObjectId, "we-chat", "微信"),
-        ContMethodType(new ObjectId, "skype", "Skype"),
-        ContMethodType(new ObjectId, "fetion", "Fetion"),
+        ContMethodType(new ObjectId, "line", "line"),
         ContMethodType(new ObjectId, "YY", "YY语音"),
-        ContMethodType(new ObjectId, "line", "line")).foreach(ContMethodType.save)
+        ContMethodType(new ObjectId, "fetion", "Fetion"),
+        ContMethodType(new ObjectId, "MSN", "MSN"),
+        ContMethodType(new ObjectId, "skype", "Skype"),
+        ContMethodType(new ObjectId, "we-chat", "微信"),
+        ContMethodType(new ObjectId, "QQ", "QQ")).foreach(ContMethodType.save)
     }
   }
 
   private def insertInitSearchByLengthForF {
     if (SearchByLengthForF.findAll.isEmpty) {
       Seq(
-        SearchByLengthForF(new ObjectId, "female", "super-short", new ObjectId, "女-超短"),
-        SearchByLengthForF(new ObjectId, "female", "short", new ObjectId, "女-短"),
-        SearchByLengthForF(new ObjectId, "female", "near-shoulder-length", new ObjectId, "女-及肩"),
-        SearchByLengthForF(new ObjectId, "female", "shoulder-length", new ObjectId, "女-齐肩"),
+        SearchByLengthForF(new ObjectId, "female", "long", new ObjectId, "女-长"),
         SearchByLengthForF(new ObjectId, "female", "mid-length", new ObjectId, "女-中长"),
-        SearchByLengthForF(new ObjectId, "female", "long", new ObjectId, "女-长")).foreach(SearchByLengthForF.save)
+        SearchByLengthForF(new ObjectId, "female", "shoulder-length", new ObjectId, "女-齐肩"),
+        SearchByLengthForF(new ObjectId, "female", "near-shoulder-length", new ObjectId, "女-及肩"),
+        SearchByLengthForF(new ObjectId, "female", "short", new ObjectId, "女-短"),
+        SearchByLengthForF(new ObjectId, "female", "super-short", new ObjectId, "女-超短")).foreach(SearchByLengthForF.save)
     }
   }
 
   private def insertInitSearchByLengthForM {
     if (SearchByLengthForM.findAll.isEmpty) {
       Seq(
-        SearchByLengthForM(new ObjectId, "male", "super-short", new ObjectId, "男-超短"),
-        SearchByLengthForM(new ObjectId, "male", "short", new ObjectId, "男-短"),
-        SearchByLengthForM(new ObjectId, "male", "near-shoulder-length", new ObjectId, "男-及肩"),
-        SearchByLengthForM(new ObjectId, "male", "shoulder-length", new ObjectId, "男-齐肩"),
+        SearchByLengthForM(new ObjectId, "male", "long", new ObjectId, "男-长"),
         SearchByLengthForM(new ObjectId, "male", "mid-length", new ObjectId, "男-中长"),
-        SearchByLengthForM(new ObjectId, "male", "long", new ObjectId, "男-长")).foreach(SearchByLengthForM.save)
+        SearchByLengthForM(new ObjectId, "male", "shoulder-length", new ObjectId, "男-齐肩"),
+        SearchByLengthForM(new ObjectId, "male", "near-shoulder-length", new ObjectId, "男-及肩"),
+        SearchByLengthForM(new ObjectId, "male", "short", new ObjectId, "男-短"),
+        SearchByLengthForM(new ObjectId, "male", "super-short", new ObjectId, "男-超短")).foreach(SearchByLengthForM.save)
     }
   }
 
   private def insertInitSearchByImpression {
     if (SearchByImpression.findAll.isEmpty) {
       Seq(
-        SearchByImpression(new ObjectId, "female", "natural", new ObjectId, "女-自然"),
-        SearchByImpression(new ObjectId, "female", "intellectual", new ObjectId, "女-知性"),
-        SearchByImpression(new ObjectId, "female", "sweet", new ObjectId, "女-甜美"),
-        SearchByImpression(new ObjectId, "female", "fashion", new ObjectId, "女-时尚"),
-        SearchByImpression(new ObjectId, "female", "fresh", new ObjectId, "女-清新"),
+        SearchByImpression(new ObjectId, "female", "personality", new ObjectId, "女-个性"),
         SearchByImpression(new ObjectId, "female", "gorgeous", new ObjectId, "女-华丽"),
-        SearchByImpression(new ObjectId, "female", "personality", new ObjectId, "女-个性")).foreach(SearchByImpression.save)
+        SearchByImpression(new ObjectId, "female", "sweet", new ObjectId, "女-甜美"),
+        SearchByImpression(new ObjectId, "female", "fresh", new ObjectId, "女-清新"),
+        SearchByImpression(new ObjectId, "female", "fashion", new ObjectId, "女-时尚"),
+        SearchByImpression(new ObjectId, "female", "intellectual", new ObjectId, "女-知性"),
+        SearchByImpression(new ObjectId, "female", "natural", new ObjectId, "女-自然")).foreach(SearchByImpression.save)
     }
   }
 
@@ -1154,13 +1161,15 @@ object InitialData {
   private def insertSampleNail {
     if (Nail.findAll.isEmpty) {
       Seq(
-        Nail(new ObjectId("5317c0d1d4d57996ce4b2a31"), "法式浪漫", new ObjectId("53202c29d4d5e3cd47efffe3"), List("Delineation", "Pen"), List("pink", "white", "silver", "beige", "gold", "orange", "brown", "yellow"), List("rhinestone", "pearl", "metal"), List("hand", "foot"), "natural", List("office", "bridal"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "清新动人", date("2014-03-12"), true),
-        Nail(new ObjectId("5317c0d1d4d57996ce4b2a32"), "反转法式", new ObjectId("53202c29d4d5e3cd47efffe3"), List("Airbrush", "Patch", "Crystal", "Gel"), List("pink", "white", "purple", "red", "black", "clear", "multi"), List("metal", "peucine", "bridal", "fruitSlices"), List("foot"), "fresh", List("office", "party", "sport"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "超炫闪亮登场", date("2014-03-12"), true),
-        Nail(new ObjectId("5317c0d1d4d57996ce4b2a33"), "清新~(ˇˍˇ）", new ObjectId("53202c29d4d5e3cd47efffe3"), List("Airbrush", "Patch", "Crystal", "Gel"), List("green", "blue", "purple", "red", "black", "clear", "multi"), List("metal", "peucine", "bridal", "fruitSlices"), List("foot"), "fresh", List("office"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "超炫闪亮登场", date("2014-03-12"), true),
-        Nail(new ObjectId("5317c0d1d4d57996ce4b2a34"), "炫丽", new ObjectId("53202c29d4d5e3cd47efffe3"), List("Airbrush", "Delineation"), List("green", "blue", "purple", "beige", "gold", "orange", "brown", "yellow"), List("metal", "peucine", "bridal", "fruitSlices"), List("hand"), "fresh", List("office", "party"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "超炫闪亮登场", date("2014-03-12"), true),
-        Nail(new ObjectId("5317c0d1d4d57996ce4b2a35"), "可爱(～ o ～)Y", new ObjectId("53202c29d4d5e3cd47efffe3"), List("Airbrush", "Patch", "Crystal", "Gel"), List("green", "blue", "purple", "red", "black", "clear", "multi"), List("metal", "peucine", "bridal", "fruitSlices"), List("hand", "foot"), "fresh", List( "party", "sport"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "超炫闪亮登场", date("2014-03-12"), true),
-        Nail(new ObjectId("5317c0d1d4d57996ce4b2a36"), "多色变幻", new ObjectId("53202c29d4d5e3cd47efffe3"), List("Patch", "Pen", "Gel"), List("green", "white", "purple", "red", "black", "clear", "multi"), List("metal", "peucine", "bridal", "fruitSlices"), List("hand"), "fresh", List("office", "date"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "超炫闪亮登场", date("2014-03-12"), true),
-        Nail(new ObjectId("5317c0d1d4d57996ce4b2a38"), "跳动的精灵", new ObjectId("53202c29d4d5e3cd47efffe3"), List("Airbrush", "Gel"), List("silver", "white", "gold", "orange", "black", "clear", "multi"), List("metal", "peucine", "bridal", "fruitSlices"), List("hand", "foot"), "fresh", List( "date"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "超炫闪亮登场", date("2014-03-12"), true)).foreach(Nail.save)
+        Nail(new ObjectId("5317c0d1d4d57996ce4b2a31"), "法式浪漫", new ObjectId("53202c29d4d5e3cd47efffe3"), "Nail", List("pink", "white", "silver", "beige", "gold", "orange", "brown", "yellow"), List("rhinestone", "pearl", "metal"), List("hand", "foot"), "natural", List("office", "bridal"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "清新动人", date("2014-03-12"), true),
+        Nail(new ObjectId("5317c0d1d4d57996ce4b2a32"), "反转法式", new ObjectId("53202c29d4d5e3cd47efffe3"), "Nail", List("pink", "white", "purple", "red", "black", "clear", "multi"), List("metal", "peucine", "bridal", "fruitSlices"), List("foot"), "fresh", List("office", "party", "sport"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "超炫闪亮登场", date("2014-03-12"), true),
+        Nail(new ObjectId("5317c0d1d4d57996ce4b2a33"), "清新~(ˇˍˇ）", new ObjectId("53202c29d4d5e3cd47efffe3"), "Nail", List("green", "blue", "purple", "red", "black", "clear", "multi"), List("metal", "peucine", "bridal", "fruitSlices"), List("foot"), "fresh", List("office"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "超炫闪亮登场", date("2014-03-12"), true),
+        Nail(new ObjectId("5317c0d1d4d57996ce4b2a34"), "炫丽", new ObjectId("53202c29d4d5e3cd47efffe3"), "Nail", List("green", "blue", "purple", "beige", "gold", "orange", "brown", "yellow"), List("metal", "peucine", "bridal", "fruitSlices"), List("hand"), "fresh", List("office", "party"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "超炫闪亮登场", date("2014-03-12"), true),
+        Nail(new ObjectId("5317c0d1d4d57996ce4b2a35"), "可爱(～ o ～)Y", new ObjectId("53202c29d4d5e3cd47efffe3"), "Nail", List("green", "blue", "purple", "red", "black", "clear", "multi"), List("metal", "peucine", "bridal", "fruitSlices"), List("hand", "foot"), "fresh", List( "party", "sport"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "超炫闪亮登场", date("2014-03-12"), true),
+        Nail(new ObjectId("5317c0d1d4d57996ce4b2a36"), "炫丽", new ObjectId("53202c29d4d5e3cd47efffe3"), "Nail", List("green", "blue", "purple", "beige", "gold", "orange", "brown", "yellow"), List("metal", "peucine", "bridal", "fruitSlices"), List("hand"), "fresh", List("office", "party"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "超炫闪亮登场", date("2014-03-12"), true),
+        Nail(new ObjectId("5317c0d1d4d57996ce4b2a38"), "可爱(～ o ～)Y", new ObjectId("53202c29d4d5e3cd47efffe3"), "Nail", List("green", "blue", "purple", "red", "black", "clear", "multi"), List("metal", "peucine", "bridal", "fruitSlices"), List("hand", "foot"), "fresh", List( "party", "sport"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "超炫闪亮登场", date("2014-03-12"), true),
+        Nail(new ObjectId("5317c0d1d4d57996ce4b2a41"), "多色变幻", new ObjectId("53202c29d4d5e3cd47efffe3"), "HandCare", List("green", "white", "purple", "red", "black", "clear", "multi"), List("metal", "peucine", "bridal", "fruitSlices"), List("hand"), "fresh", List("office", "date"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "超炫闪亮登场", date("2014-03-12"), true),
+        Nail(new ObjectId("5317c0d1d4d57996ce4b2a42"), "跳动的精灵", new ObjectId("53202c29d4d5e3cd47efffe3"), "Eyelashes", List("silver", "white", "gold", "orange", "black", "clear", "multi"), List("metal", "peucine", "bridal", "fruitSlices"), List("hand", "foot"), "fresh", List( "date"), List(new OnUsePicture(new ObjectId, "main", Some(1), Option("FRONT"))), "超炫闪亮登场", date("2014-03-12"), true)).foreach(Nail.save)
     }
   }
 

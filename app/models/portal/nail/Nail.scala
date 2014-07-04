@@ -88,7 +88,7 @@ case class SearchPara(
    city: String,
    region: String,
    stylistId:String,
-   serviceType: List[String],
+   serviceType: String,
    styleColor: List[String],
    styleMaterial: List[String],
    styleBase: List[String],
@@ -115,7 +115,7 @@ case class Nail(
   id: ObjectId = new ObjectId,
   styleName: String,
   stylistId: ObjectId,
-  serviceType: List[String],
+  serviceType: String,
   styleColor: List[String],
   styleMaterial: List[String],
   styleBase: List[String],
@@ -141,31 +141,37 @@ object Nail extends MeifanNetModelCompanion[Nail] {
     paraServiceType.map { para =>
       paraServiceTypes :::= List(para)
     }
+
     val paraStyleColor = StyleColor.findAllStyleColor(industry).toList
     var paraStyleColors: List[String] = Nil
     paraStyleColor.map { para =>
       paraStyleColors :::= List(para)
     }
+
     val paraStyleMaterial = StyleMaterial.findAllStyleMaterial(industry).toList
     var paraStyleMaterials: List[String] = Nil
     paraStyleMaterial.map { para =>
       paraStyleMaterials :::= List(para)
     }
+
     val paraStyleBase = StyleBase.findAllStyleBase(industry).toList
     var paraStyleBases: List[String] = Nil
     paraStyleBase.map { para =>
       paraStyleBases :::= List(para)
     }
+
     val paraStyleImpression = StyleImpression.findAllStyleImpression(industry).toList
     var paraStyleImpressions: List[String] = Nil
     paraStyleImpression.map { para =>
       paraStyleImpressions :::= List(para)
     }
+
     val paraSocialScene = SocialScene.findAllSocialScene(industry).toList
     var paraSocialScenes: List[String] = Nil
     paraSocialScene.map { para =>
       paraSocialScenes :::= List(para)
     }
+
     //将检索出来的主表数据放到美甲主表字段整合类中
     val stylePara = new StylePara(paraServiceTypes, paraStyleColors, paraStyleMaterials, paraStyleBases, paraStyleImpressions, paraSocialScenes)
     stylePara
@@ -252,7 +258,7 @@ object Nail extends MeifanNetModelCompanion[Nail] {
     var srchConds: List[commonsDBObject] = Nil
 
     if (searchPara.serviceType.nonEmpty) {
-      srchConds :::= List("serviceType" $in searchPara.serviceType)
+      srchConds :::= List(commonsDBObject("serviceType" ->  searchPara.serviceType))
     }
     if (searchPara.styleColor.nonEmpty) {
       srchConds :::= List("styleColor" $in searchPara.styleColor)

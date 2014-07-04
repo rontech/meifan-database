@@ -164,11 +164,12 @@ object Service extends MeifanNetModelCompanion[Service] {
    */
   def findServiceTypeBySalonId(salonId: ObjectId): List[String] = {
     val serviceAll = findBySalonId(salonId)
-    val services = serviceAll.groupBy(_.serviceType)
+    val serviceTypes = serviceAll.map(_.serviceType).distinct
+   /* val services = serviceAll.groupBy(_.serviceType)
     var serviceTypes: List[String] = Nil
     services.map { service =>
       serviceTypes = service._1 :: serviceTypes
-    }
+    }*/
     serviceTypes
   }
 }

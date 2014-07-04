@@ -47,4 +47,7 @@ object Relax extends MeifanNetModelCompanion[Relax] {
     dao.update(MongoDBObject("_id" -> relax.id), MongoDBObject("$set" -> MongoDBObject("isValid" -> false)))
   }
 
+  def checkRelaxIsExist(relaxNm: String, salonId: ObjectId): Boolean =
+    dao.find(MongoDBObject("styleName" -> relaxNm, "salonId" -> salonId)).hasNext
+
 }
