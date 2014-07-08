@@ -101,7 +101,7 @@ object Service extends MeifanNetModelCompanion[Service] {
    * @return
    */
   def getLowestPriceOfSrvType(salonId: ObjectId, srvType: String): Option[BigDecimal] = {
-    val srvs = dao.find(MongoDBObject("salonId" -> salonId, "serviceType" -> srvType)).sort(MongoDBObject("price" -> -1)).toList
+    val srvs = dao.find(MongoDBObject("salonId" -> salonId, "serviceType" -> srvType)).sort(MongoDBObject("price" -> 1)).toList
     if (srvs.length > 0) Some(srvs(0).price) else None
   }
 
@@ -111,8 +111,8 @@ object Service extends MeifanNetModelCompanion[Service] {
    * @param salonId
    * @return
    */
-  def getLowestPriceOfSalonId(salonId: ObjectId): Option[BigDecimal] = {
-    val srvs = dao.find(MongoDBObject("salonId" -> salonId)).sort(MongoDBObject("price" -> -1)).toList
+  def getLowestPriceOfSalonBySalonId(salonId: ObjectId): Option[BigDecimal] = {
+    val srvs = dao.find(MongoDBObject("salonId" -> salonId)).sort(MongoDBObject("price" -> 1)).toList
     if (srvs.length > 0) Some(srvs(0).price) else None
   }
 
