@@ -120,11 +120,8 @@ object Stylist extends MeifanNetModelCompanion[Stylist] {
    * @return
    */
   def findGoodAtStyle(industryName: String): GoodAtStyle = {
-    val position = Position.findAll().toList
-    var positions: List[String] = Nil
-    position.map { para =>
-      positions :::= List(para.positionName)
-    }
+
+    val positions = IndustryAndPosition.findAllIndustryAndPosition(industryName)
 
     val industry = Industry.findAll.toList
     var industrys: List[String] = Nil
@@ -370,5 +367,12 @@ object Stylist extends MeifanNetModelCompanion[Stylist] {
     val stylist = dao.findOne(MongoDBObject("stylistId" -> stylistId))
     val industry = stylist.map(_.position(0).industryName)getOrElse(None)
     industry.toString
+  }
+
+  def delete(stylistId: ObjectId) = {
+    val stylist = dao.find(DBObject("isValid" -> false, "stylistId" -> stylistId)).toList
+    stylist.map( sty=>
+      dao.remove(sty)
+    )
   }
 }

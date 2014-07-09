@@ -71,6 +71,8 @@ object InitialData {
 
     insertInitPosition
 
+    insertInitIndustryAndPosition
+
     insertInitServiceType
 
     insertInitStyleColor
@@ -144,6 +146,30 @@ object InitialData {
         Position(new ObjectId("531964e0d4d57d0a43771414"), "AdvancedStylist"), // 高级发型师
         Position(new ObjectId("531964e0d4d57d0a43771412"), "ChiefStylist"), // 首席发型师
         Position(new ObjectId("531964e0d4d57d0a43771411"), "Manager")).foreach(Position.save) // 店长
+    }
+  }
+
+  private def insertInitIndustryAndPosition {
+    if (IndustryAndPosition.findAll().isEmpty) {
+      Seq(
+        IndustryAndPosition(new ObjectId(), "Manager", "Hairdressing"), //美发店长
+        IndustryAndPosition(new ObjectId(), "ChiefStylist", "Hairdressing"), //美发总监/主管
+        IndustryAndPosition(new ObjectId(), "Consultant", "Hairdressing"), //美发顾问
+        IndustryAndPosition(new ObjectId(), "AdvancedStylist", "Hairdressing"), //高级发型师
+        IndustryAndPosition(new ObjectId(), "Stylist", "Hairdressing"), //发型师
+        IndustryAndPosition(new ObjectId(), "Assistant", "Hairdressing"), //美发助理，？美发学员，洗头工暂时都放在助理中
+        IndustryAndPosition(new ObjectId(), "Manager", "Manicures"), //美甲店长
+        IndustryAndPosition(new ObjectId(), "ChiefManicurist", "Manicures"), //美甲总监/主管
+        IndustryAndPosition(new ObjectId(), "Consultant", "Manicures"), //美甲顾问
+        IndustryAndPosition(new ObjectId(), "AdvancedManicurist", "Manicures"), //高级美甲师
+        IndustryAndPosition(new ObjectId(), "Manicurist", "Manicures"), //美甲师
+        IndustryAndPosition(new ObjectId(), "Assistant", "Manicures"), //美甲助理
+        IndustryAndPosition(new ObjectId(), "Manager", "Healthcare"), //休闲保健店长
+        IndustryAndPosition(new ObjectId(), "Consultant", "Healthcare"), //保健顾问
+        IndustryAndPosition(new ObjectId(), "AdvancedArtificer", "Healthcare"), //高级技师
+        IndustryAndPosition(new ObjectId(), "Artificer", "Healthcare"), //技师
+        IndustryAndPosition(new ObjectId(), "Assistant", "Healthcare"), //助理
+        IndustryAndPosition(new ObjectId(), "", "Cosmetic")).foreach(IndustryAndPosition.save)
     }
   }
 
