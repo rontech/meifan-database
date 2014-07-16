@@ -6,11 +6,13 @@ import scala.concurrent.{ExecutionContext, Future}
 import com.meifannet.framework.db._
 import com.mongodb.casbah.commons.Imports._
 import com.mongodb.casbah.commons.Imports.{DBObject => commonsDBObject}
+import models.portal.user.User
+import models.portal.stylist.Stylist
 
 /**
  * Created by CCC on 14/06/18.
  */
-class Stylist(
+class StylistManager(
                //需要字段：技师ID 技师账号 行业 昵称 联系电话 邮箱 是否签约店铺 状态 操作
                id: ObjectId = new ObjectId,
                stylistId: ObjectId,
@@ -23,43 +25,44 @@ class Stylist(
                isValid: Boolean //技师是否有效
                )
 
-object Stylist extends MeifanNetModelCompanion[Stylist] {
-  val dao = new MeifanNetDAO[Stylist](collection = loadCollection()) {}
-}
-
 case class MeifanStylistSearch(userId: Option[String],
                                nickName: Option[String],
                                industry: Option[String],
                                isValid: Option[Boolean]
                                 )
 
-case class StylistApply(stylist: models.portal.stylist.Stylist)
-
-object StylistApply {
+object StylistManager {
   /*    find all stylist                                        */
-  def findAllAPStylists(): List[models.portal.stylist.Stylist] = {
+  def findAllAPStylists(): List[Stylist] = {
 
-    var stylistApplies: List[models.portal.stylist.Stylist] = Nil
-    stylistApplies = models.portal.stylist.Stylist.findAll.toList
+    var stylistApplies: List[Stylist] = Nil
+    stylistApplies = Stylist.findAll.toList
     stylistApplies
   }
 
   /*    find stylist according condition                                        */
-  def findStylistByCondition(stylistSearch: MeifanStylistSearch): List[models.portal.stylist.Stylist] = {
+  def findStylistByCondition(stylistSearch: MeifanStylistSearch): List[Stylist] = {
     var srchConds: List[commonsDBObject] = Nil
     if (stylistSearch.userId.nonEmpty) {
-      srchConds :::= List(commonsDBObject("stylistId" -> models.portal.user.User.findOneByUserId(stylistSearch.userId.get).get.id))
-    }
-    if (stylistSearch.nickName.nonEmpty) {
-      srchConds :::= List(commonsDBObject("stylistId" -> models.portal.user.User.findOneByNickNm(stylistSearch.nickName.get).get.id))
-    }
-    if (stylistSearch.industry.nonEmpty) {
-      if (stylistSearch.industry.get.equals("Hairdressing")) {
-
-      } else {
-        srchConds :::= List("industry" $in List(stylistSearch.industry.get))
+      User.findOneByUserId(stylistSearch.userId.get) match {
+        case Some(user) =>{
+          srchConds :::= List(commonsDBObject("stylistId" -> user.id))
+        }
+        case None =>
+          srchConds :::= List(commonsDBObject("stylistId" -> None))
       }
     }
+    if (stylistSearch.nickName.nonEmpty) {
+      User.findOneByNickNm(stylistSearch.nickName.get) match {
+        case Some(user) => {
+          srchConds :::= List(commonsDBObject("stylistId" -> user.id))
+        }
+        case None =>
+          srchConds :::= List(commonsDBObject("stylistId" -> None))
+      }
+
+    }
+
     if (stylistSearch.isValid.nonEmpty) {
       if (stylistSearch.isValid.get) {
         srchConds :::= List(commonsDBObject("isValid" -> true))
@@ -69,21 +72,21 @@ object StylistApply {
       }
 
     }
-    var stylist: List[models.portal.stylist.Stylist] = Nil
-    if (!srchConds.length.equals(0)) {
-      stylist = models.portal.stylist.Stylist.find($and(srchConds)).toList
+
+    val stylist :List[Stylist] = if(srchConds.nonEmpty){ Stylist.find($and(srchConds)).toList } else Stylist.findAll.toList
+
+    if (stylistSearch.industry.nonEmpty) {
+      return stylist.filter(_.position.head.industryName == stylistSearch.industry.get)
     }
 
     stylist
-
-
   }
 
-  def activeStylist(stylist: models.portal.stylist.Stylist) = {
-    models.portal.stylist.Stylist.save(stylist.copy(stylistId = stylist.stylistId, isValid = true))
+  def activeStylist(stylist: Stylist) = {
+    Stylist.save(stylist.copy(stylistId = stylist.stylistId, isValid = true))
   }
 
-  def frozenStylist(stylist: models.portal.stylist.Stylist) = {
-    models.portal.stylist.Stylist.save(stylist.copy(stylistId = stylist.stylistId, isValid = false))
+  def frozenStylist(stylist: Stylist) = {
+    Stylist.save(stylist.copy(stylistId = stylist.stylistId, isValid = false))
   }
 }

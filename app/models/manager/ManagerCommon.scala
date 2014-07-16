@@ -19,12 +19,16 @@ object ManagerCommon {
   val meifanSalonSearch = "meifanSalonSearch"
 
   val meifanUserSearch = "meifanUserSearch"
-  //
+
+  val meifanStylistSearch = "meifanStylistSearch"
+
   val meifanAppliedSalons :String = "meifanAppliedSalons"
 
   val salonPage = "salonCurrentPage"
 
   val userPage = "userCurrentPage"
+
+  val stylistPage = "stylistCurrentPage"
 
   val meifanCommentSearch = "meifanCommentSearch"
 

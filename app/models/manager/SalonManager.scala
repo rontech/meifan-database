@@ -109,6 +109,10 @@ object SalonApply {
         srchConds :::= List(commonsDBObject("salonAccount.accountId" -> salonApySearch.id))
       }
     }
+    // TODO fuzzy query
+    if(salonApySearch.salonName.nonEmpty) {
+      srchConds :::= List(commonsDBObject("salonName" -> salonApySearch.salonName.get))
+    }
 
     //industry condition
     if(salonApySearch.industry.nonEmpty) {
@@ -119,7 +123,7 @@ object SalonApply {
       srchConds :::= List("registerDate" $gte salonApySearch.registerStarDate.get)
     }
 
-    if(salonApySearch.registerStarDate.nonEmpty){
+    if(salonApySearch.registerEndDate.nonEmpty){
       srchConds :::= List("registerDate" $lte salonApySearch.registerEndDate.get)
     }
 

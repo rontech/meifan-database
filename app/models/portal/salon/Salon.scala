@@ -117,7 +117,7 @@ object Salon extends MeifanNetModelCompanion[Salon] {
    * @return
    */
   def loginCheck(salonAccount: SalonAccount): Option[Salon] = {
-    val salon = dao.findOne(MongoDBObject("salonAccount.accountId" -> salonAccount.accountId))
+    val salon = dao.findOne(MongoDBObject("salonAccount.accountId" -> salonAccount.accountId, "salonStatus.isValid" -> true))
     if (salon.nonEmpty && BCrypt.checkpw(salonAccount.password, salon.get.salonAccount.password)) {
       return salon
     } else {
