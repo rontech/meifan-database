@@ -1,4 +1,4 @@
-package models.manager.keyword
+package models.manager.SensitiveWord
 
 import mongoContext._
 import com.meifannet.framework.db._
