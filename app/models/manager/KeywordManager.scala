@@ -9,7 +9,7 @@ import com.mongodb.casbah.Imports._
 
 case class WordManage(
     id: ObjectId = new ObjectId,
-    keyword: String
+    sensitiveWord: String
 )
 
 object WordManage extends MeifanNetModelCompanion[WordManage] {
@@ -17,6 +17,6 @@ object WordManage extends MeifanNetModelCompanion[WordManage] {
 
   /** 重複データ検索メソッド */
   def findWord(checkWord: String): Option[WordManage] = {
-    dao.findOne(MongoDBObject("keyword" -> checkWord))
+    dao.findOne(MongoDBObject("sensitiveWord" -> checkWord))
   }
 }
