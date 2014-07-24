@@ -205,6 +205,7 @@ object InitialData {
 
         ServiceType(new ObjectId("5316c443d4d57997ce3e6d90"), "Healthcare", "Spa", "Spa"),
         ServiceType(new ObjectId("5316c443d4d57997ce3e6d91"), "Healthcare", "Footbath", "足浴"),
+        ServiceType(new ObjectId("5316c443d4d57997ce3e6d93"), "Healthcare", "Yoga", "瑜伽"),
         ServiceType(new ObjectId("5316c443d4d57997ce3e6d92"), "Healthcare", "Massage", "按摩")).foreach(ServiceType.save)
     }
   }
@@ -265,6 +266,9 @@ object InitialData {
         StyleImpression(new ObjectId, "Manicures", "gorgeous", "华丽"),
         StyleImpression(new ObjectId, "Manicures", "fresh", "清新"),
         StyleImpression(new ObjectId, "Manicures", "fashion", "时尚"),
+        StyleImpression(new ObjectId, "Manicures", "sweet", "甜美"),
+        StyleImpression(new ObjectId, "Manicures", "intellectual", "知性"),
+        StyleImpression(new ObjectId, "Manicures", "retro", "复古"),
         StyleImpression(new ObjectId, "Manicures", "natural", "自然")).foreach(StyleImpression.save)
     }
   }

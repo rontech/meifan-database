@@ -347,7 +347,7 @@ object Stylist extends MeifanNetModelCompanion[Stylist] {
    */
   def findRecommendStylists: List[Stylist] = {
     var stylists: List[Stylist] = Nil
-    models.portal.relation.SalonAndStylist.findAll.toList.map { releation =>
+    models.portal.relation.SalonAndStylist.findAll.filter(salAndStl => Salon.findOneById(salAndStl.salonId).get.salonStatus.isValid == true).toList.map { releation =>
       if (releation.isValid) {
         val stylist = Stylist.findOneByStylistId(releation.stylistId).get
         stylists :::= List(stylist)

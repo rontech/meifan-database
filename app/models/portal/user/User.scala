@@ -128,7 +128,7 @@ object User extends MeifanNetModelCompanion[User] {
    * @return
    */
   def authenticate(userId: String, password: String): Option[User] = {
-    val user = dao.findOne(MongoDBObject("userId" -> userId))
+    val user = dao.findOne(MongoDBObject("userId" -> userId, "isValid" -> true))
     if (user.nonEmpty && BCrypt.checkpw(password, user.get.password)) {
       return user
     } else {
