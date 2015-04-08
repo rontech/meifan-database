@@ -1,16 +1,10 @@
 package models.manager
 
-import com.meifannet.framework.db.MeifanNetDAO
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext
-import ExecutionContext.Implicits.global
 import com.mongodb.casbah.Imports._
-import se.radley.plugin.salat._
-import com.meifannet.framework.db._
 import java.util.Date
 import models.portal.user._
 import com.mongodb.casbah.commons.Imports.{DBObject => commonsDBObject, _}
-import java.text.SimpleDateFormat
+
 
 
 /**
@@ -34,7 +28,7 @@ object UserManager {
    * @return
    */
   def findAllUsers(isVaild: Boolean = true): List[UserManager] = {
-    val users: List[User] = User.findAll().toList.filter(_.isValid == isVaild)
+    val users: List[User] = User.findAll().toList
     var list = List.empty[UserManager]
     users.map{ user =>
       list :::= List(apply(user))
@@ -74,7 +68,7 @@ object UserManager {
    * @param id user id
    * @return
    */
-  def setUserVaild(id: ObjectId) = {
+  def setUserValid(id: ObjectId) = {
     User.findOneById(id).map{ user =>
       User.save(user.copy(isValid = true))
     }
@@ -104,7 +98,6 @@ object UserManager {
     Option(userSearch.endTime).filterNot(_.isEmpty).map{ end =>
       srchConds :::= List("registerTime" $lte end.get.getTime)
     }
-    //println("is valid"+userSearch.isVaild)
     userSearch.isVaild.filterNot(_.isEmpty).map{ isValid =>
       isValid match {
         case "1" => srchConds :::= List(commonsDBObject("isValid" -> true))
@@ -129,11 +122,4 @@ object UserManager {
  */
 case class UserSearch(id: Option[String], startTime: Option[Date], endTime: Option[Date], isVaild: Option[String])
 
-/**
- * the class for select all user delete or active
- * operate by user id and according operate type
- * @param id user objectId
- * @param operate the type match is active or delete
- */
-case class UserBatch(id: List[String], operate :String)
 

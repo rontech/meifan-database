@@ -226,7 +226,7 @@ object Comment extends MeifanNetModelCompanion[Comment] {
   // TODO
   def findCommentForHome(num: Int): List[CommentOfSalon] = {
     var commentOfSalonList: List[CommentOfSalon] = Nil
-    val commentList = dao.find(MongoDBObject("isValid" -> true, "commentObjType" -> CommentType.ToSalon.id)).sort(MongoDBObject("createTime" -> -1)).limit(num).toList
+    val commentList = dao.find(MongoDBObject("isValid" -> true, "commentObjType" -> CommentType.ToSalon.id)).sort(MongoDBObject("createTime" -> -1)).toList
     commentList.foreach({
       row =>
 //        val coupon = Coupon.findOneById(row.commentObjId)
@@ -236,8 +236,14 @@ object Comment extends MeifanNetModelCompanion[Comment] {
           case None => None
           case Some(coupon) => {
             val salon = Salon.findOneById(coupon.salonId)
-            val commentOfSalon = CommentOfSalon(row, salon)
-            commentOfSalonList :::= List(commentOfSalon)
+            if(salon.get.salonStatus.isValid == true){
+              val commentOfSalon = CommentOfSalon(row, salon)
+              commentOfSalonList :::= List(commentOfSalon)
+            }
+            if(commentOfSalonList.size == num){
+              return  commentOfSalonList.sortBy(commentOfSalon => commentOfSalon.commentInfo.createTime).reverse
+            }
+
           }
         }
     })

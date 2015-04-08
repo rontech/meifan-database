@@ -117,7 +117,9 @@ object Salon extends MeifanNetModelCompanion[Salon] {
    * @return
    */
   def loginCheck(salonAccount: SalonAccount): Option[Salon] = {
-    val salon = dao.findOne(MongoDBObject("salonAccount.accountId" -> salonAccount.accountId))
+    // TODO
+    val salon = dao.findOne(MongoDBObject("salonAccount.accountId" -> salonAccount.accountId, "salonStatus.isValid" -> true))
+//    val salon = dao.findOne(MongoDBObject("salonAccount.accountId" -> salonAccount.accountId))
     if (salon.nonEmpty && BCrypt.checkpw(salonAccount.password, salon.get.salonAccount.password)) {
       return salon
     } else {
@@ -235,9 +237,10 @@ object Salon extends MeifanNetModelCompanion[Salon] {
    * @param salonId
    * @return
    */
-  def getLowestPriceOfCut(salonId: ObjectId): Option[BigDecimal] = {
-    val cutSrvKey = "Cut"
-    Service.getLowestPriceOfSrvType(salonId, cutSrvKey)
+  def getLowestPriceOfSalon(salonId: ObjectId): Option[BigDecimal] = {
+//    val cutSrvKey = "Cut"
+//    Service.getLowestPriceOfSrvType(salonId, cutSrvKey)
+    Service.getLowestPriceOfSalonBySalonId(salonId)
   }
 
   /**
@@ -470,7 +473,7 @@ object Salon extends MeifanNetModelCompanion[Salon] {
     // from which fields the keyword be searched.
     for (sl <- salons) {
       // get the lowest price for cut.
-      val priceOfCut = Salon.getLowestPriceOfCut(sl.id)
+      val lowestPriceOfSalon = Salon.getLowestPriceOfSalon(sl.id)
       // get top 2 styles of salon.
       val selStyles = Style.getBestRsvedStylesInSalon(sl.id, 2)
       val selCoupons = Coupon.findValidCouponBySalon(sl.id)
@@ -479,7 +482,7 @@ object Salon extends MeifanNetModelCompanion[Salon] {
       val kwsHits: List[String] = getKeywordsHit(sl, targetFields, exactRegex)
 
       salonSrchRst :::= List(SalonGeneralSrchRst(salonInfo = sl, selectedStyles = selStyles, selectedCoupons = selCoupons,
-        priceForCut = priceOfCut, reviewsStat = rvwStat, keywordsHitStrs = kwsHits))
+        lowestPriceOfSalon = lowestPriceOfSalon, reviewsStat = rvwStat, keywordsHitStrs = kwsHits))
     }
 
     // Sort the result by sort conditions.
@@ -523,7 +526,7 @@ object Salon extends MeifanNetModelCompanion[Salon] {
 
     // Sort By price.
     if (sortConds.selSortKey == "price") {
-      sortRst = orgRst.sortBy(_.priceForCut)
+      sortRst = orgRst.sortBy(_.lowestPriceOfSalon)
       if (!sortConds.sortByPriceAsc) {
         sortRst = sortRst.reverse
       }
@@ -714,7 +717,8 @@ object Salon extends MeifanNetModelCompanion[Salon] {
   def findLowestPriceBySalonId(salonId: ObjectId): BigDecimal = {
     var lowestPrice: BigDecimal = 0
     //获取最低剪发价格
-    Service.getLowestPriceOfSrvType(salonId, "Cut") match {
+//    Service.getLowestPriceOfSrvType(salonId, "Cut") match {
+      Service.getLowestPriceOfSalonBySalonId(salonId) match {
       case Some(lowPrice) => { lowestPrice = lowPrice }
       case None => None
     }

@@ -40,6 +40,10 @@ case class IndustryAndPosition(
 
 object IndustryAndPosition extends MeifanNetModelCompanion[IndustryAndPosition] {
   val dao = new MeifanNetDAO[IndustryAndPosition](collection = loadCollection()) {}
+
+  def findAllIndustryAndPosition(industryName: String) = dao.find(MongoDBObject("industryName" -> industryName)).toList.map {
+    industryAndPosition => industryAndPosition.positionName
+  }
 }
 
 /**

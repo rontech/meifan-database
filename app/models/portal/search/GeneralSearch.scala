@@ -175,7 +175,7 @@ trait HotestKeywordDAO extends MeifanNetModelCompanion[HotestKeyword] {
  * @param salonInfo 沙龙基本情报
  * @param selectedStyles 沙龙发型集合
  * @param selectedCoupons 沙龙优惠券集合
- * @param priceForCut 最低剪发价格
+ * @param lowestPriceOfSalon salon服务最低价格
  * @param reviewsStat 店铺评价状况
  * @param keywordsHitStrs 检索中和关键字匹配的内容拔粹
  */
@@ -183,7 +183,7 @@ case class SalonGeneralSrchRst(
   salonInfo: Salon, 
   selectedStyles: List[Style], 
   selectedCoupons: List[Coupon], 
-  priceForCut: Option[BigDecimal], 
+  lowestPriceOfSalon: Option[BigDecimal],
   reviewsStat: ReviewsStat, 
   keywordsHitStrs: List[String] 
 )
