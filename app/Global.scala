@@ -38,11 +38,11 @@ object Global extends GlobalSettings {
    */
   override def onStart(app: Application) {
     // Initial Master Data.
-    InitialData.insertMaster()
+//    InitialData.insertMaster()
     // Initial Base Data.
-    InitialData.insertBaseData()
+//    InitialData.insertBaseData()
     // Initial Test Data.
-    InitialData.insertSampleData()
+//    InitialData.insertSampleData()
   }
 
 }
