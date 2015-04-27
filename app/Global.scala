@@ -526,9 +526,9 @@ object InitialData {
     }
     if (Admin.findAll.isEmpty){
       Seq(
-        Admin(new ObjectId,"admin01","$2a$10$q0rl.qI.X9UTPZ6mDRbVhOvxYjk9S7RsrAmJ3aXaJaEcLV/3f/bU."),
-        Admin(new ObjectId,"admin02","$2a$10$q0rl.qI.X9UTPZ6mDRbVhOvxYjk9S7RsrAmJ3aXaJaEcLV/3f/bU."),
-        Admin(new ObjectId,"admin03","$2a$10$q0rl.qI.X9UTPZ6mDRbVhOvxYjk9S7RsrAmJ3aXaJaEcLV/3f/bU.")
+        Admin(new ObjectId,"cheng-zhang@sz-rontech.com", "cheng-zhang", "rontech.1"),
+        Admin(new ObjectId,"jie-zhang@sz-rontech.com", "jie-zhang", "rontech.1"),
+        Admin(new ObjectId,"admin@sz-rontech.com", "Administrator", "rontech.1")
       ).foreach(Admin.save)
     }
 
