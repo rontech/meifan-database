@@ -27,8 +27,8 @@ object Admin extends MeifanNetModelCompanion[Admin] {
 
   def authenticate(email: String, password: String): Option[Admin] = {
     val admin = dao.findOne(MongoDBObject("email" -> email))
-    // TODO BCrypt.checkpw(password, admin.get.password)
-    if (admin.nonEmpty && password.compareTo(admin.get.password) == 0) {
+    // println("BCrypted password:" + BCrypt.hashpw("rontech.1", BCrypt.gensalt()))
+    if (admin.nonEmpty && BCrypt.checkpw(password, admin.get.password)) {
       admin
     } else {
       None

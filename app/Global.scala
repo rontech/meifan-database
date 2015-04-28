@@ -67,9 +67,10 @@ object InitialData {
   def insertAdmin() = {
     if (Admin.findAll.isEmpty){
       Seq(
-        Admin(new ObjectId,"cheng-zhang@sz-rontech.com", "cheng-zhang", "rontech.1"),
-        Admin(new ObjectId,"jie-zhang@sz-rontech.com", "jie-zhang", "rontech.1"),
-        Admin(new ObjectId,"admin@sz-rontech.com", "Administrator", "rontech.1")
+        // initial password is "rontech.1" for temp.
+        Admin(new ObjectId,"cheng-zhang@sz-rontech.com", "cheng-zhang", "$2a$10$pHIxh5nqCyunIef.wkwGaeni6HyVyXlZpj3rAvmJhJkMvD6mIet9."),
+        Admin(new ObjectId,"jie-zhang@sz-rontech.com", "jie-zhang", "$2a$10$pHIxh5nqCyunIef.wkwGaeni6HyVyXlZpj3rAvmJhJkMvD6mIet9."),
+        Admin(new ObjectId,"admin@sz-rontech.com", "Administrator", "$2a$10$pHIxh5nqCyunIef.wkwGaeni6HyVyXlZpj3rAvmJhJkMvD6mIet9.")
       ).foreach(Admin.save)
     }
   }
