@@ -43,6 +43,8 @@ object Global extends GlobalSettings {
 //    InitialData.insertBaseData()
     // Initial Test Data.
 //    InitialData.insertSampleData()
+    InitialData.insertAdmin()
+
   }
 
 }
@@ -58,6 +60,19 @@ object InitialData {
 
   def dateTime(str: String) = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm").parse(str)
 
+  /*---------------------------
+ * Admin Data For Initialization.
+ * 预先需要登录的Admin数据
+ *--------------------------*/
+  def insertAdmin() = {
+    if (Admin.findAll.isEmpty){
+      Seq(
+        Admin(new ObjectId,"cheng-zhang@sz-rontech.com", "cheng-zhang", "rontech.1"),
+        Admin(new ObjectId,"jie-zhang@sz-rontech.com", "jie-zhang", "rontech.1"),
+        Admin(new ObjectId,"admin@sz-rontech.com", "Administrator", "rontech.1")
+      ).foreach(Admin.save)
+    }
+  }
   /*---------------------------
    * Master Data For Initialization. 
    * 预先需要登录的主表数据
@@ -578,13 +593,6 @@ object InitialData {
         HotestKeyword(new ObjectId, "剪头发", "hairSalon", 1, true),
         HotestKeyword(new ObjectId, "洗剪吹", "hairSalon", 1, true),
         HotestKeyword(new ObjectId, "悦容美发", "hairSalon", 1, true)).foreach(HotestKeyword.save)
-    }
-    if (Admin.findAll.isEmpty){
-      Seq(
-        Admin(new ObjectId,"cheng-zhang@sz-rontech.com", "cheng-zhang", "rontech.1"),
-        Admin(new ObjectId,"jie-zhang@sz-rontech.com", "jie-zhang", "rontech.1"),
-        Admin(new ObjectId,"admin@sz-rontech.com", "Administrator", "rontech.1")
-      ).foreach(Admin.save)
     }
 
   }
