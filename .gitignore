@@ -44,3 +44,6 @@ dist
 
 # exclude directory under test
 !test/framework/db/
+
+# exclude database backup directory
+conf/dbackup
