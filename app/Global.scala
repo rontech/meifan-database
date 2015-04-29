@@ -1,4 +1,31 @@
 import models.manager.admin.Admin
+import models.portal.common.Address
+import models.portal.common.Address
+import models.portal.common.Address
+import models.portal.common.OptContactMethod
+import models.portal.common.OptContactMethod
+import models.portal.common.OptContactMethod
+import models.portal.reservation.ResvItem
+import models.portal.reservation.ResvItem
+import models.portal.reservation.ResvItem
+import models.portal.salon.BriefIntroduction
+import models.portal.salon.BriefIntroduction
+import models.portal.salon.BriefIntroduction
+import models.portal.salon.Contact
+import models.portal.salon.Contact
+import models.portal.salon.Contact
+import models.portal.salon.RestDay
+import models.portal.salon.RestDay
+import models.portal.salon.RestDay
+import models.portal.salon.SalonAccount
+import models.portal.salon.SalonAccount
+import models.portal.salon.SalonAccount
+import models.portal.salon.SalonStatus
+import models.portal.salon.SalonStatus
+import models.portal.salon.SalonStatus
+import models.portal.salon.WorkTime
+import models.portal.salon.WorkTime
+import models.portal.salon.WorkTime
 import play.api._
 import org.bson.types.ObjectId
 import java.util.Date
@@ -26,7 +53,9 @@ import models.portal.style._
 import models.portal.stylist._ 
 import models.portal.user._
 import models.portal.nail._
-
+import scala.Some
+import scala.Some
+import scala.Some
 
 
 object Global extends GlobalSettings {
@@ -43,8 +72,9 @@ object Global extends GlobalSettings {
 //    InitialData.insertBaseData()
     // Initial Test Data.
 //    InitialData.insertSampleData()
-    InitialData.insertAdmin()
-
+//    InitialData.insertAdmin()
+    // 临时追加，发型导航数据
+//    InitialData.insertGuide()
   }
 
 }
@@ -74,6 +104,18 @@ object InitialData {
       ).foreach(Admin.save)
     }
   }
+
+  // 临时追加，发型导航数据
+  def insertGuide() = {
+    insertInitSearchByLengthForF
+
+    insertInitSearchByLengthForM
+
+    insertInitSearchByImpression
+
+    insertInitPicture
+  }
+
   /*---------------------------
    * Master Data For Initialization. 
    * 预先需要登录的主表数据
@@ -480,37 +522,37 @@ object InitialData {
   private def insertInitSearchByLengthForF {
     if (SearchByLengthForF.findAll.isEmpty) {
       Seq(
-        SearchByLengthForF(new ObjectId, "female", "long", new ObjectId, "女-长"),
-        SearchByLengthForF(new ObjectId, "female", "mid-length", new ObjectId, "女-中长"),
-        SearchByLengthForF(new ObjectId, "female", "shoulder-length", new ObjectId, "女-齐肩"),
-        SearchByLengthForF(new ObjectId, "female", "near-shoulder-length", new ObjectId, "女-及肩"),
+        SearchByLengthForF(new ObjectId, "female", "super-short", new ObjectId, "女-超短"),
         SearchByLengthForF(new ObjectId, "female", "short", new ObjectId, "女-短"),
-        SearchByLengthForF(new ObjectId, "female", "super-short", new ObjectId, "女-超短")).foreach(SearchByLengthForF.save)
+        SearchByLengthForF(new ObjectId, "female", "near-shoulder-length", new ObjectId, "女-及肩"),
+        SearchByLengthForF(new ObjectId, "female", "shoulder-length", new ObjectId, "女-齐肩"),
+        SearchByLengthForF(new ObjectId, "female", "mid-length", new ObjectId, "女-中长"),
+        SearchByLengthForF(new ObjectId, "female", "long", new ObjectId, "女-长")).foreach(SearchByLengthForF.save)
     }
   }
 
   private def insertInitSearchByLengthForM {
     if (SearchByLengthForM.findAll.isEmpty) {
       Seq(
-        SearchByLengthForM(new ObjectId, "male", "long", new ObjectId, "男-长"),
-        SearchByLengthForM(new ObjectId, "male", "mid-length", new ObjectId, "男-中长"),
-        SearchByLengthForM(new ObjectId, "male", "shoulder-length", new ObjectId, "男-齐肩"),
-        SearchByLengthForM(new ObjectId, "male", "near-shoulder-length", new ObjectId, "男-及肩"),
+        SearchByLengthForM(new ObjectId, "male", "super-short", new ObjectId, "男-超短"),
         SearchByLengthForM(new ObjectId, "male", "short", new ObjectId, "男-短"),
-        SearchByLengthForM(new ObjectId, "male", "super-short", new ObjectId, "男-超短")).foreach(SearchByLengthForM.save)
+        SearchByLengthForM(new ObjectId, "male", "near-shoulder-length", new ObjectId, "男-及肩"),
+        SearchByLengthForM(new ObjectId, "male", "shoulder-length", new ObjectId, "男-齐肩"),
+        SearchByLengthForM(new ObjectId, "male", "mid-length", new ObjectId, "男-中长"),
+        SearchByLengthForM(new ObjectId, "male", "long", new ObjectId, "男-长")).foreach(SearchByLengthForM.save)
     }
   }
 
   private def insertInitSearchByImpression {
     if (SearchByImpression.findAll.isEmpty) {
       Seq(
-        SearchByImpression(new ObjectId, "female", "personality", new ObjectId, "女-个性"),
-        SearchByImpression(new ObjectId, "female", "gorgeous", new ObjectId, "女-华丽"),
-        SearchByImpression(new ObjectId, "female", "sweet", new ObjectId, "女-甜美"),
-        SearchByImpression(new ObjectId, "female", "fresh", new ObjectId, "女-清新"),
-        SearchByImpression(new ObjectId, "female", "fashion", new ObjectId, "女-时尚"),
+        SearchByImpression(new ObjectId, "female", "natural", new ObjectId, "女-自然"),
         SearchByImpression(new ObjectId, "female", "intellectual", new ObjectId, "女-知性"),
-        SearchByImpression(new ObjectId, "female", "natural", new ObjectId, "女-自然")).foreach(SearchByImpression.save)
+        SearchByImpression(new ObjectId, "female", "fashion", new ObjectId, "女-时尚"),
+        SearchByImpression(new ObjectId, "female", "fresh", new ObjectId, "女-清新"),
+        SearchByImpression(new ObjectId, "female", "sweet", new ObjectId, "女-甜美"),
+        SearchByImpression(new ObjectId, "female", "gorgeous", new ObjectId, "女-华丽"),
+        SearchByImpression(new ObjectId, "female", "personality", new ObjectId, "女-个性")).foreach(SearchByImpression.save)
     }
   }
 
