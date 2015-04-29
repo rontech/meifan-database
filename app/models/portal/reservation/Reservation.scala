@@ -420,7 +420,7 @@ object Reservation extends MeifanNetModelCompanion[Reservation] {
    * @return
    */
   def findReservationHistory(userId : String) : List[Reservation] = {
-    dao.find($and(DBObject("userId" -> userId), $or("expectedDate" $lt new Date(), "status" $in (1,2,-1)))).toList
+    dao.find($and(DBObject("userId" -> userId), $or("expectedDate" $lt new Date(), "status" $in (1,2,-1,3)))).toList
   }
 
   /**
