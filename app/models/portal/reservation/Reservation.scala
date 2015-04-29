@@ -199,7 +199,7 @@ object Reservation extends MeifanNetModelCompanion[Reservation] {
    * @return
    */
   def findBestReservedStyles(industry: String ,topN: Int = 0): List[ObjectId] = {
-    val reservs = dao.find($and(("styleId" $exists true), ("status" $in (0, 1)), MongoDBObject("industry" -> industry)))
+    val reservs = dao.find($and(("styleId" $exists true), ("status" $in (1, 3)), MongoDBObject("industry" -> industry)))
       .sort(MongoDBObject("styleId" -> -1)).toList.filter(resv => Salon.findOneById(resv.salonId).get.salonStatus.isValid.equals(true))
     //styleId is exists absolutely.
     val topStyleIds = getBestRsvedStyleIds(reservs, topN)
